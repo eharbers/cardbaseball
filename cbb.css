@@ -6,7 +6,7 @@ body {
 	position:relative;
 	border-radius:8px; 
 	box-shadow:black 0px 0px 2px; 
-	width: 600px; 
+	width: 800px; 
 	background:#FFF; 
 	margin:20px auto; 
 	border:solid 1px black; 
@@ -32,7 +32,7 @@ img.preload {
 	display:none;
 }
 h1 {
-	font-size:60px;
+	font-size:30px;
 	text-align:center;
 	padding:0px;
 	margin:10px auto;
@@ -40,8 +40,8 @@ h1 {
 
 #card-table {
 	background-color:green;
-	height:500px;
-	width:600px;
+	height:600px;
+	width:800px;
 	border:solid 6px brown;
 	border-radius:8px;
 	-webkit-border-radius:8px;
@@ -56,6 +56,18 @@ a:visited {color:blue;}
 	position: absolute;
 	left:310px;
 	top:170px;
+}
+#messageboard {
+	position: absolute;
+	resize: none;
+	overflow: hidden;
+	background-color: green;
+	left: 600px;
+	top: 300px;
+	height: 50px;
+	width:150px;
+	font-size: 20px;
+	text-align: center;
 }
 
 footer {
