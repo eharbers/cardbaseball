@@ -1,30 +1,30 @@
 
 //Tell the library which element to use for the table
-cards.init({table:'#card-table'});
+cards.init({ table: '#card-table' });
 
 //Create a new deck of cards
-deck = new cards.Deck(); 
+deck = new cards.Deck();
 //By default it's in the middle of the container, put it slightly to the side
 deck.x -= 150;
 deck.y -= -40;
 
 //cards.all contains all cards, put them all in the deck
-deck.addCards(cards.all); 
+deck.addCards(cards.all);
 //No animation here, just get the deck onto the table.
-deck.render({immediate:true});
+deck.render({ immediate: true });
 
 // discardPile voor gespeelde kaarten.
 // deze moeten later weer worden toegevoegd aan deck
-discardPile = new cards.Deck({faceUp:false});
+discardPile = new cards.Deck({ faceUp: false });
 discardPile.x -= 150;
 discardPile.y -= 80;
 
 //Now lets create a couple of hands, one face down (now up), one face up.
-upperhand = new cards.Hand({faceUp:true, y:60});
-lowerhand = new cards.Hand({faceUp:true, y:440});
+upperhand = new cards.Hand({ faceUp: true, y: 60 });
+lowerhand = new cards.Hand({ faceUp: true, y: 440 });
 
-upperPlay = new cards.Hand({faceUp:true, y:200});
-lowerPlay = new cards.Hand({faceUp:true, y:300});
+upperPlay = new cards.Hand({ faceUp: true, y: 200 });
+lowerPlay = new cards.Hand({ faceUp: true, y: 300 });
 
 // TODO bepalen wie er begint door een kaart te trekken. de hoogste kaart bepaalt start field of atBat 
 var turnLower = true; // in dev & test begint Lower met pitchen/veld
@@ -55,10 +55,10 @@ hRun.push(0) // nulde element moet gevuld worden. verder innings-gewijs updaten
 var endOfGame = false;
 
 // activeren van het spel met de DEAL button (of Play Ball)
-$('#deal').click(function() {
+$('#deal').click(function () {
 	//Deck has a built in method to deal to hands.
 	$('#deal').hide();
-	deck.deal(6, [upperhand, lowerhand], 50, function() {
+	deck.deal(6, [upperhand, lowerhand], 50, function () {
 		//This is a callback function, called when the dealing
 		//is done.
 		sendMessage("PLAY BALL !!")
@@ -72,10 +72,10 @@ $('#deal').click(function() {
 // vergelijk met sitepoint website of dat beter is
 window.requestAnimationFrame(playBall);
 
-function playBall(){
-		//slagbeurt 
-		console.log('playBall atBatStatus: ', atBatStatus);
-		playCard(objHand, objPlay);	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
+function playBall() {
+	//slagbeurt 
+	console.log('playBall atBatStatus: ', atBatStatus);
+	playCard(objHand, objPlay);	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
 	if (endOfGame === true) { // dit stukje zorgt voor de herhaling, todat endOfGame 'waar' is
 		gameOver();
 	} else {
@@ -86,20 +86,20 @@ function playBall(){
 
 // functie om kaart te klikken uit de hand die aan de beurt is.
 function playCard(objHand, objPlay) { // kan dat ook op een 'naam' van het object-manier??
-										// nu ontstaat er volgens mij een tweede object...
-										// wellicht terugkopieren?
-	objHand.click(function(card) {
-			console.log ('turnLower: ', turnLower, 'turnUpper: ', turnUpper);
-			objPlay.addCard(card);
-			objPlay.render();
-			objHand.render();
-			deck.render();
-			playValidate();
+	// nu ontstaat er volgens mij een tweede object...
+	// wellicht terugkopieren?
+	objHand.click(function (card) {
+		console.log('turnLower: ', turnLower, 'turnUpper: ', turnUpper);
+		objPlay.addCard(card);
+		objPlay.render();
+		objHand.render();
+		deck.render();
+		playValidate();
 	});
 }
 
 
-function playValidate() {
+async function playValidate() {
 	console.log('inside playValidate');
 	// feitelijke controle op de kaart die als laatste aan lowerPlay of upperPlay is toegevoegd
 	// dit gaat dan met topCard() gebeuren
@@ -111,6 +111,7 @@ function playValidate() {
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
+				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				atBatStatus = 'pitch'; // new pitch
 			} else {
@@ -122,17 +123,19 @@ function playValidate() {
 		case 'swing':
 			console.log('atBatStatus: ', 'swing');
 			refillHand(objHand);
-			if (objPlay.topCard().rank >=11) { // plaatje => foul
-				if (numStrikes <2) { // <2 => strike
-					numStrikes +=1;
+			if (objPlay.topCard().rank >= 11) { // plaatje => foul
+				if (numStrikes < 2) { // <2 => strike
+					numStrikes += 1;
 					sendMessage('FOUL - STRIKE ' + numStrikes);
 					updateScoreboard();
+					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					changePlayer();
 					atBatStatus = 'pitch'; // new pitch
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
+					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					changePlayer();
@@ -142,29 +145,31 @@ function playValidate() {
 				numStrikes += 1;
 				sendMessage('STRIKE ' + numStrikes);
 				updateScoreboard();
+				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				moveCards(objOtherPlay, discardPile); // en die andere ook !!
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
 			} else if (objPlay.topCard().rank < objOtherPlay.topCard().rank) { // lager dan pitch => ball
-					numBalls += 1;
-					sendMessage('BALL' +  numBalls)
-					updateScoreboard();
-					console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
-					// cleanup playing hands !!
-					moveCards(objPlay, discardPile);
-					// en die andere ook
-					moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
-					atBatStatus = 'pitch'; // new pitch
-					changePlayer();					
+				numBalls += 1;
+				sendMessage('BALL' + numBalls)
+				updateScoreboard();
+				console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
+				// cleanup playing hands !!
+				await sleep(2000);
+				moveCards(objPlay, discardPile);
+				// en die andere ook
+				moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
+				atBatStatus = 'pitch'; // new pitch
+				changePlayer();
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the ball');
 				atBatStatus = 'connect';
 				// go-to pick card to place hit
-			}							
+			}
 			console.log('atBatStatus is now: ', atBatStatus);
 			break;
-		case 'connect': 
+		case 'connect':
 			console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			// a card is picked to place hit
@@ -187,7 +192,7 @@ function playValidate() {
 			if (cardColor(objPlay.topCard()) != cardColor(objOtherPlay.topCard())) { // ongelijke kleur
 				result = result * 3;
 				console.log('result * 3:', result);
-			} else if (objPlay.topCard().suit === objOtherPlay.topCard().suit ) { // dezelfde suit
+			} else if (objPlay.topCard().suit === objOtherPlay.topCard().suit) { // dezelfde suit
 				result = result * 1;
 				console.log('result * 1: ', result);
 			} else {
@@ -197,7 +202,7 @@ function playValidate() {
 			console.log('Eind result: ', result);
 
 			switch (true) {
-				case (result > 9 ):
+				case (result > 9):
 					sendMessage('HOME RUN')
 					moveRunners();
 					break;
@@ -209,7 +214,7 @@ function playValidate() {
 					sendMessage('DOUBLE');
 					moveRunners()
 					break;
-				case (result > 3 ):
+				case (result > 3):
 					sendMessage('SINGLE');
 					moveRunners();
 					break;
@@ -226,6 +231,8 @@ function playValidate() {
 			// de honklopers zijn verplaatst
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
+			console.log('start sleep(2000)');
+			await sleep(2000);
 			moveCards(objPlay, discardPile);
 			moveCards(objOtherPlay, discardPile);
 			numStrikes = 0;
@@ -276,23 +283,24 @@ function refillHand(objHand) {
 // hierin in blijkbaar niet voorzien in card.js
 function moveCards(from, to) {
 	//sleep(5000) // stopt ie of gaat ie wel door met andere dingen
-	for (let i=0; i < from.length; i++) {
+	for (let i = 0; i < from.length; i++) {
 		to.push(from[i]);
-		from.splice(i,1);
+		from.splice(i, 1);
 		i--;
 	}
 	from.render();
 	to.render();
 }
 
-function sleep(milliseconds) {
-	var start = new Date().getTime();
-	for (var i = 0; i < 1e7; i++) {
-	  if ((new Date().getTime() - start) > milliseconds){
-		break;
-	  }
-	}
-  }
+
+// sitepoint sleep function met async ...await
+// https://www.sitepoint.com/delay-sleep-pause-wait/
+// de functie die moet een slaapmoment moet hebben wordt vooraf gegaan met async
+// in de functie wordt het slaapmoment aangeroepen met await sleep(ms)
+// zie de movecards aanroepen
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 	if (kaart.suit === 'd' || kaart.suit === 'c') {
@@ -330,7 +338,7 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 	var hTotalRun = 0;
 
 	// update VISITOR score
-	for (i=1; i < vRun.length; i++) { //starten bij index 1)
+	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
 		var vRunBoard = document.getElementById("scoreboard").rows[1].cells;
 		vRunBoard[inning].innerHTML = vRun[i];
 		vTotalRun = vTotalRun + vRun[i];
@@ -346,7 +354,7 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 	vError[13].innerHTML = vErrors;
 
 	// update HOME score
-	for (i=1; i < hRun.length; i++) { // starten bij index 1)
+	for (i = 1; i < hRun.length; i++) { // starten bij index 1)
 		var hRunBoard = document.getElementById("scoreboard").rows[2].cells;
 		hRunBoard[inning].innerHTML = hRun[i];
 		hTotalRun = hTotalRun + hRun[i];
