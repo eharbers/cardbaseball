@@ -32,8 +32,8 @@ $("#lower").css("background-color", "red");
 var turnUpper = false;
 $("#upper").css("background-color", "green");
 
-var objHand = lowerhand; // het zetten van de eerste speler, omdat
-var objPlay = lowerPlay; // er nog geen functie voor de ad random selectie is
+var objHand = lowerhand; // het zetten van de eerste speler,
+var objPlay = lowerPlay; // omdat er nog geen functie voor de ad random selectie is
 var objOtherHand = upperhand // die ander moet ook herkend worden
 var objOtherPlay = upperPlay // en deze andere ook
 var atBatStatus = 'pitch';
@@ -42,7 +42,7 @@ var numStrikes = 0;
 var numBalls = 0;
 var numOuts = 0;
 var inning = 0;
-var vHits = 0;
+var vHits = 0; // wellicht niet een slimme keus
 var vErrors = 0;
 var hHits = 0;
 var hErrors = 0;
@@ -91,7 +91,6 @@ function playCard(objHand, objPlay) { // kan dat ook op een 'naam' van het objec
 	objHand.click(function(card) {
 			console.log ('turnLower: ', turnLower, 'turnUpper: ', turnUpper);
 			objPlay.addCard(card);
-			//playRender();
 			objPlay.render();
 			objHand.render();
 			deck.render();
@@ -107,48 +106,35 @@ function playValidate() {
 	switch (atBatStatus) {
 		case 'pitch':
 			console.log('atBatStatus: ', 'pitch');
-			console.log(objPlay.topCard().name);
+			refillHand(objHand); // speelhand aanvullen
 			if (objPlay.topCard().rank >= 11) { // een plaatje => ball
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
-				// cleanup playing hands !!
-				moveCards(objPlay, discardPile);
-				refillHand(objHand);
+				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				atBatStatus = 'pitch'; // new pitch
 			} else {
 				atBatStatus = 'swing'; // kaarten laten liggen
-				refillHand(objHand); // eerst aanvullen
 				changePlayer(); // dan pas van speler wisselen
 			}
 			console.log('atBatStatus is now: ', atBatStatus);
 			break;
 		case 'swing':
 			console.log('atBatStatus: ', 'swing');
-			console.log(objPlay.topCard().name);
+			refillHand(objHand);
 			if (objPlay.topCard().rank >=11) { // plaatje => foul
 				if (numStrikes <2) { // <2 => strike
 					numStrikes +=1;
 					sendMessage('FOUL - STRIKE ' + numStrikes);
 					updateScoreboard();
-					console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
-					// cleanup playing hands !!
-					moveCards(objPlay, discardPile);
-					refillHand(objHand);
-					// en die andere ook
-					moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
-					//refillHand(objOtherHand);
+					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					moveCards(objOtherPlay, discardPile); // en die andere ook
 					changePlayer();
 					atBatStatus = 'pitch'; // new pitch
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
-					console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
-					// cleanup playing hands !!
-					moveCards(objPlay, discardPile);
-					refillHand(objHand);
-					// en die andere ook
-					moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
-					//refillHand(objOtherHand);
+					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					moveCards(objOtherPlay, discardPile); // en die andere ook
 					changePlayer();
 					atBatStatus = 'pitch'; // new pitch
 				}
@@ -156,13 +142,9 @@ function playValidate() {
 				numStrikes += 1;
 				sendMessage('STRIKE ' + numStrikes);
 				updateScoreboard();
-				console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
-				// cleanup playing hands !!
-				moveCards(objPlay, discardPile);
-				// en die andere ook !!
-				moveCards(objOtherPlay, discardPile);
+				moveCards(objPlay, discardPile); // cleanup playing hands !!
+				moveCards(objOtherPlay, discardPile); // en die andere ook !!
 				atBatStatus = 'pitch'; // new pitch
-				refillHand(objHand);
 				changePlayer();
 			} else if (objPlay.topCard().rank < objOtherPlay.topCard().rank) { // lager dan pitch => ball
 					numBalls += 1;
@@ -171,7 +153,6 @@ function playValidate() {
 					console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
 					// cleanup playing hands !!
 					moveCards(objPlay, discardPile);
-					refillHand(objHand);
 					// en die andere ook
 					moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
 					atBatStatus = 'pitch'; // new pitch
@@ -179,18 +160,15 @@ function playValidate() {
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the ball');
 				atBatStatus = 'connect';
-				refillHand(objHand);
 				// go-to pick card to place hit
 			}							
 			console.log('atBatStatus is now: ', atBatStatus);
 			break;
 		case 'connect': 
 			console.log('atBatStatus: ', atBatStatus);
-			console.log(objPlay.topCard().name);
-			// a card is picked to place hit
-
-			atBatStatus = 'fielding';
 			refillHand(objHand);
+			// a card is picked to place hit
+			atBatStatus = 'fielding';
 			changePlayer();
 			break;
 		case 'fielding': // er zal een reactie van het veld moeten komen
@@ -290,18 +268,8 @@ function changePlayer() {
 // functie om de Hand aan te vullen met een kaart van deck
 function refillHand(objHand) {
 	objHand.addCard(deck.topCard());
-	//playRender();
 	objHand.render();
 	deck.render();
-}
-
-function playRender() {
-	console.log('inside playRender');
-	deck.render();
-	upperhand.render();
-	upperPlay.render();
-	lowerhand.render();
-	lowerPlay.render();
 }
 
 // functie om een HAND met kaarten te verplaatsten
