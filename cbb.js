@@ -29,6 +29,7 @@ lowerPlay = new cards.Hand({ faceUp: true, y: 300 });
 // TODO bepalen wie er begint door een kaart te trekken. de hoogste kaart bepaalt start field of atBat 
 var turnLower = true; // in dev & test begint Lower met pitchen/veld
 $("#lower").css("background-color", "red");
+$("#lower").val('pitch');
 var turnUpper = false;
 $("#upper").css("background-color", "green");
 
@@ -189,15 +190,15 @@ async function playValidate() {
 					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
-					changePlayer();
 					atBatStatus = 'pitch'; // new pitch
+					changePlayer();					
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
 					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
-					changePlayer();
 					atBatStatus = 'pitch'; // new pitch
+					changePlayer();
 				}
 			} else if (objPlay.topCard().suit != objOtherPlay.topCard().suit) { // suit ongelijk => strike
 				numStrikes += 1;
@@ -223,6 +224,11 @@ async function playValidate() {
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the ball');
 				atBatStatus = 'connect';
+				if (turnLower) {
+					$("#lower").val(atBatStatus);
+				} else {
+					$("#upper").val(atBatStatus);
+				}
 				// go-to pick card to place hit
 			}
 			console.log('atBatStatus is now: ', atBatStatus);
@@ -238,6 +244,11 @@ async function playValidate() {
 			console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			atBatStatus = 'result';
+			if (turnLower) {
+				$("#lower").val(atBatStatus);
+			} else {
+				$("#upper").val(atBatStatus);
+			}
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		case 'result': // berekening van het resultaat van de connect vs fielding
@@ -299,6 +310,11 @@ async function playValidate() {
 			checkInning();
 			updateScoreboard(); // naar game-loop ??
 			atBatStatus = 'pitch' // nieuwe slagman
+			if (turnLower) {
+				$("#lower").val(atBatStatus);
+			} else {
+				$("#upper").val(atBatStatus);
+			}
 			break;
 		default:
 			console.log('playValidate default');
