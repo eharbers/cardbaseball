@@ -70,7 +70,7 @@ a:visited {color:blue;}
 	text-align: center;
 }
 
-#upper {
+#visitor {
 	position: absolute;
 	resize: none;
 	overflow: hidden;
@@ -84,7 +84,7 @@ a:visited {color:blue;}
 	text-align: center;
 }
 
-#lower {
+#home {
 	position: absolute;
 	resize: none;
 	overflow: hidden;

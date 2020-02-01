@@ -20,23 +20,23 @@ discardPile.x -= 150;
 discardPile.y -= 80;
 
 //Now lets create a couple of hands, one face down (now up), one face up.
-upperhand = new cards.Hand({ faceUp: true, y: 60 });
-lowerhand = new cards.Hand({ faceUp: true, y: 440 });
+visitorHand = new cards.Hand({ faceUp: true, y: 60 });
+homeHand = new cards.Hand({ faceUp: true, y: 440 });
 
-upperPlay = new cards.Hand({ faceUp: true, y: 200 });
-lowerPlay = new cards.Hand({ faceUp: true, y: 300 });
+visitorPlay = new cards.Hand({ faceUp: true, y: 200 });
+homePlay = new cards.Hand({ faceUp: true, y: 300 });
 
 // TODO bepalen wie er begint door een kaart te trekken. de hoogste kaart bepaalt start field of atBat 
-var turnLower = true; // in dev & test begint Lower met pitchen/veld
-$("#lower").css("background-color", "red");
-$("#lower").val('pitch');
-var turnUpper = false;
-$("#upper").css("background-color", "green");
+var turnHome = true; // in dev & test begint Lower met pitchen/veld
+$("#home").css("background-color", "red");
+$("#home").val('pitch');
+var turnVisitor = false;
+$("#visitor").css("background-color", "green");
 
-var objHand = lowerhand; // het zetten van de eerste speler,
-var objPlay = lowerPlay; // omdat er nog geen functie voor de ad random selectie is
-var objOtherHand = upperhand // die ander moet ook herkend worden
-var objOtherPlay = upperPlay // en deze andere ook
+var objHand = homeHand; // het zetten van de eerste speler,
+var objPlay = homePlay; // omdat er nog geen functie voor de ad random selectie is
+var objOtherHand = visitorHand // die ander moet ook herkend worden
+var objOtherPlay = visitorPlay // en deze andere ook
 var atBatStatus = 'pitch';
 
 var numStrikes = 0;
@@ -45,7 +45,7 @@ var numOuts = 0;
 var halfInning = 0;
 var inning = 0;
 var vAtBat = true;
-var vHits = 0; // wellicht niet een slimme keus
+var vHits = 0; 
 var vErrors = 0;
 var hAtBat = false;
 var hHits = 0;
@@ -68,7 +68,7 @@ var endOfGame = false;
 $('#deal').click(function () {
 	//Deck has a built in method to deal to hands.
 	$('#deal').hide();
-	deck.deal(6, [upperhand, lowerhand], 50, function () {
+	deck.deal(6, [visitorHand, homeHand], 50, function () {
 		//This is a callback function, called when the dealing
 		//is done.
 		sendMessage("PLAY BALL !!")
@@ -111,7 +111,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			};
 		} // end for
 		if (playable === true) { //valid card/player 	
-			console.log('turnLower: ', turnLower, 'turnUpper: ', turnUpper);
+			console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
 			objPlay.addCard(card);
 			objPlay.render();
 			objHand.render();
@@ -121,10 +121,10 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			console.log('playable:', playable);
 			console.log('Op beurt wachten');
 			var msgBeurt = "WACHTEN !";
-			if (turnLower) {
-				$("#upper").val(msgBeurt);
+			if (turnHome) {
+				$("#visitor").val(msgBeurt);
 			} else {
-				$("#lower").val(msgBeurt);
+				$("#home").val(msgBeurt);
 			}
 		}
 	}); // end click objHand
@@ -155,28 +155,28 @@ function checkInning() {
 	if (numOuts === 3 ) {
 		console.log('end of half inning')
 		sendMessage('3-OUTS Change fields')
+		if (vAtBat) {
+			vAtBat = false;
+			hAtBat = true;
+		} else {
+			hAtBat = false;
+			vAtBat = true;
+		}
 		numOuts= 0;
 		halfInning++
+		changePlayer();
+		atBatStatus = 'pitch';
 	}	
 	if (halfInning  < 3 ) {
 		inning = 1;
 	} else {
 		inning = Math.floor(halfInning /2)
 	}
-
-	if (vAtBat) {
-		vAtBat = false;
-		hAtBat = true;
-	} else {
-		hAtBat = false;
-		vAtBat = true;
-	}
-
 }
 
 function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
 	console.log('Inside checkDeck: ',deck.length);
-	if (deck.length === 7) {
+	if (deck.length === 10) {
 		console.log('Het worden er te weinig')
 		moveCards(discardPile, deck)
 	}
@@ -184,8 +184,10 @@ function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
 
 async function playValidate() {
 	console.log('inside playValidate');
-	// feitelijke controle op de kaart die als laatste aan lowerPlay of upperPlay is toegevoegd
+	// feitelijke controle op de kaart die als laatste aan homePlay of visitorPlay is toegevoegd
 	// dit gaat dan met topCard() gebeuren
+	// refillHand(objHand); // speelhand aanvullen....maar te vaak als ie hier staat
+	checkDeck();
 	switch (atBatStatus) {
 		case 'pitch':
 			console.log('atBatStatus: ', 'pitch');
@@ -248,10 +250,10 @@ async function playValidate() {
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the ball');
 				atBatStatus = 'connect';
-				if (turnLower) {
-					$("#lower").val(atBatStatus);
+				if (turnHome) {
+					$("#home").val(atBatStatus);
 				} else {
-					$("#upper").val(atBatStatus);
+					$("#visitor").val(atBatStatus);
 				}
 				// go-to pick card to place hit
 			}
@@ -268,10 +270,10 @@ async function playValidate() {
 			console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			atBatStatus = 'result';
-			if (turnLower) {
-				$("#lower").val(atBatStatus);
+			if (turnHome) {
+				$("#home").val(atBatStatus);
 			} else {
-				$("#upper").val(atBatStatus);
+				$("#visitor").val(atBatStatus);
 			}
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
@@ -294,7 +296,7 @@ async function playValidate() {
 			}
 			console.log('Eind result: ', result);
 
-			switch (true) {
+			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases
 				case (result > 9):
 					sendMessage('HOME RUN')
 					numBases = 4;
@@ -331,17 +333,16 @@ async function playValidate() {
 			console.log('start sleep(2000)');
 			await sleep(2000);
 			moveCards(objPlay, discardPile);
-			moveCards(objOtherPlay, discardPile);
-			numStrikes = 0; // hoort dit bij check AtBAt??
-			numBalls = 0;
-			checkAtBat();
-			checkInning();
-			updateScoreboard(); // naar game-loop ??
+			moveCards(objOtherPlay, discardPile);		
 			atBatStatus = 'pitch' // nieuwe slagman
-			if (turnLower) {
-				$("#lower").val(atBatStatus);
+			baseRunners[0] = 1;
+			numStrikes = 0; // hoort dit bij check AtBAt??
+			numBalls = 0; // of hoort dat op deze plek???????
+			renderRunners();
+			if (turnHome) {
+				$("#home").val(atBatStatus);
 			} else {
-				$("#upper").val(atBatStatus);
+				$("#visitor").val(atBatStatus);
 			}
 			break;
 		default:
@@ -351,32 +352,35 @@ async function playValidate() {
 	}
 	// check met strikes, balls, outs & innings
 	// die staat nu in de game-loop
+	checkAtBat();
+	checkInning();
+	updateScoreboard(); // naar game-loop ??
 }
 
 // beurt wisselen
 function changePlayer() {
-	if (turnLower) {
-		turnUpper = true;
-		$("#upper").css("background-color", "red");
-		$("#upper").val(atBatStatus);
-		turnLower = false;
-		$("#lower").css("background-color", "green");
-		$("#lower").val("");
-		objHand = upperhand;
-		objPlay = upperPlay;
-		objOtherHand = lowerhand;
-		objOtherPlay = lowerPlay;
+	if (turnHome) {
+		turnVisitor = true;
+		$("#visitor").css("background-color", "red");
+		$("#visitor").val(atBatStatus);
+		turnHome = false;
+		$("#home").css("background-color", "green");
+		$("#home").val("");
+		objHand = visitorHand;
+		objPlay = visitorPlay;
+		objOtherHand = homeHand;
+		objOtherPlay = homePlay;
 	} else {
-		turnLower = true;
-		$("#lower").css("background-color", "red");
-		$("#lower").val(atBatStatus);
-		turnUpper = false;
-		$("#upper").css("background-color", "green");
-		$("#upper").val("");
-		objHand = lowerhand;
-		objPlay = lowerPlay;
-		objOtherHand = upperhand;
-		objOtherPlay = upperPlay;
+		turnHome = true;
+		$("#home").css("background-color", "red");
+		$("#home").val(atBatStatus);
+		turnVisitor = false;
+		$("#visitor").css("background-color", "green");
+		$("#visitor").val("");
+		objHand = homeHand;
+		objPlay = homePlay;
+		objOtherHand = visitorHand;
+		objOtherPlay = visitorPlay;
 	}
 }
 
@@ -477,7 +481,7 @@ function renderRunners() {
 	}
 
 	if (baseRunners[0] != 0) {
-		bottomRow[2].innerHTML ="H";
+		bottomRow[2].innerHTML ="AB";
 	} else {
 		bottomRow[2].innerHTML = "O";
 	}
