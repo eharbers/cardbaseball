@@ -111,9 +111,6 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			console.log('Op beurt wachten');
 		}
 	}); // end click objHand
-	checkAtBat();
-	checkInning();
-	updateScoreboard();
 	checkDeck();
 }
 
@@ -125,6 +122,14 @@ function checkAtBat() {
 		numStrikes=0;
 		numBalls=0;
 		numOuts++
+	}
+
+	if (numBalls === 4) {
+		console.log('walk');
+		sendMessage('WALK');
+		moveRunners();
+		numStrikes=0;
+		numBalls=0;
 	}
 }
 
@@ -309,8 +314,10 @@ function changePlayer() {
 	if (turnLower) {
 		turnUpper = true;
 		$("#upper").css("background-color", "red");
+		$("#upper").val(atBatStatus);
 		turnLower = false;
 		$("#lower").css("background-color", "green");
+		$("#lower").val("");
 		objHand = upperhand;
 		objPlay = upperPlay;
 		objOtherHand = lowerhand;
@@ -318,8 +325,10 @@ function changePlayer() {
 	} else {
 		turnLower = true;
 		$("#lower").css("background-color", "red");
+		$("#lower").val(atBatStatus);
 		turnUpper = false;
 		$("#upper").css("background-color", "green");
+		$("#upper").val("");
 		objHand = lowerhand;
 		objPlay = lowerPlay;
 		objOtherHand = upperhand;
@@ -341,7 +350,7 @@ function moveCards(from, to) {
 	for (let i = 0; i < from.length; i++) {
 	//	to.push(from[i]);
 	//	from.splice(i, 1);
-	//  ander aanpak?? met addcard??:
+	//  andere aanpak?? met addcard??:
 		to.addCard(from[i]);
 
 		i--; // de from stapel-length wordt steeds kleiner ...
@@ -376,7 +385,7 @@ function moveRunners() {
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
 	// en alle andere ook het eerstvolgende
-	// dan pas het volgende honk...
+	// dan pas het volgende (tweede) honk...
 	// elke run meteen scoren => updateScoreboard
 }
 
