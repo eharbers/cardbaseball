@@ -44,10 +44,18 @@ var numBalls = 0;
 var numOuts = 0;
 var halfInning = 0;
 var inning = 0;
+var vAtBat = true;
 var vHits = 0; // wellicht niet een slimme keus
 var vErrors = 0;
+var hAtBat = false;
 var hHits = 0;
 var hErrors = 0;
+var numBases = 0; // aantal honken op geslagen bal (of walk...)
+var baseRunners =[];
+for (i=0; i<=3; i++) {
+	baseRunners[i] = 0;
+}
+renderRunners();
 
 var vRun = [];
 vRun.push(0) // nulde element moet gevuld worden. verder innings-gewijs updaten
@@ -69,6 +77,8 @@ $('#deal').click(function () {
 		inning = 1;
 		vRun.push(0); // de bottom first wordt gevuld met 0. geeft de actieve slagbeurt aan
 		updateScoreboard();
+		baseRunners[0] = 1;
+		renderRunners();
 	});
 })
 
@@ -110,9 +120,15 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 		} else {
 			console.log('playable:', playable);
 			console.log('Op beurt wachten');
+			var msgBeurt = "WACHTEN !";
+			if (turnLower) {
+				$("#upper").val(msgBeurt);
+			} else {
+				$("#lower").val(msgBeurt);
+			}
 		}
 	}); // end click objHand
-	checkDeck();
+	//checkDeck();
 }
 
 function checkAtBat() {
@@ -146,6 +162,14 @@ function checkInning() {
 		inning = 1;
 	} else {
 		inning = Math.floor(halfInning /2)
+	}
+
+	if (vAtBat) {
+		vAtBat = false;
+		hAtBat = true;
+	} else {
+		hAtBat = false;
+		vAtBat = true;
 	}
 
 }
@@ -273,21 +297,25 @@ async function playValidate() {
 			switch (true) {
 				case (result > 9):
 					sendMessage('HOME RUN')
-					moveRunners();
+					numBases = 4;
+					moveRunners(numBases);
 					break;
 				case (result > 7):
 					sendMessage('TRIPLE');
-					moveRunners();
+					numBases = 3;
+					moveRunners(numBases);
 					break;
 				case (result > 5):
 					sendMessage('DOUBLE');
-					moveRunners()
+					numBases = 2;
+					moveRunners(numBases);
 					break;
 				case (result > 3):
 					sendMessage('SINGLE');
-					moveRunners();
+					numBases = 1;
+					moveRunners(numBases);
 					break;
-				case (result > 0):
+				case (result >= 0):
 					sendMessage('OUT');
 					console.log('no runner to move (yes)');
 					numOuts += 1; // en daar hoort ook een check voor 3 out bij
@@ -354,6 +382,7 @@ function changePlayer() {
 
 // functie om de Hand aan te vullen met een kaart van deck
 function refillHand(objHand) {
+	checkDeck();
 	objHand.addCard(deck.topCard());
 	objHand.render();
 	deck.render();
@@ -362,6 +391,7 @@ function refillHand(objHand) {
 // functie om een Hand met kaarten te verplaatsten
 // hierin in blijkbaar niet voorzien in card.js
 function moveCards(from, to) {
+	checkDeck();
 	//sleep(5000) // stopt ie of gaat ie wel door met andere dingen
 	for (let i = 0; i < from.length; i++) {
 	//	to.push(from[i]);
@@ -370,9 +400,11 @@ function moveCards(from, to) {
 		to.addCard(from[i]);
 
 		i--; // de from stapel-length wordt steeds kleiner ...
+		from.render();
+		to.render();
 	}
-	from.render();
-	to.render();
+	//from.render(); // verplaatst naar in de loop
+	//to.render();
 }
 
 
@@ -395,37 +427,78 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 	return color;
 }
 
-function moveRunners() {
+function moveRunners(bases) { // TODO walk = true bij 4-wijd...
 	console.log('inside moveRunners');
-	//sendMessage('move runners');
+	sendMessage(bases, ' bases');
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
 	// en alle andere ook het eerstvolgende
 	// dan pas het volgende (tweede) honk...
 	// elke run meteen scoren => updateScoreboard
+	for (var b=3; b>=0; b--) {
+		if (baseRunners[b] != 0) {
+			if (b + bases >= 4) {
+				baseRunners[b] = 0;
+				if (vAtBat) { //visitor scoort...
+					vRun[inning]++;
+				} else { // home scoort
+					hRun[inning]++;
+				}
+			} else {
+				baseRunners[b] = 0;
+				baseRunners[b+ bases] = 1;
+			}
+		}
+	}
+	renderRunners();
+}
+
+
+function renderRunners() {
+	var topRow = document.getElementById("bases").rows[0].cells
+	var bottomRow = document.getElementById("bases").rows[2].cells
+
+	if (baseRunners[3] != 0) {
+		bottomRow[0].innerHTML = "3B";
+	} else {
+		bottomRow[0].innerHTML = "O";
+	}
+
+	if (baseRunners[2] != 0) {
+		topRow[0].innerHTML = "2B";
+	} else {
+		topRow[0].innerHTML = "O";
+	}
+
+	if (baseRunners[1] != 0) {
+		topRow[2].innerHTML = "1B";
+	} else {
+		topRow[2].innerHTML = "O";
+	}
+
+	if (baseRunners[0] != 0) {
+		bottomRow[2].innerHTML ="H";
+	} else {
+		bottomRow[2].innerHTML = "O";
+	}
 }
 
 function updateScoreboard() { // een-op-een van solitaire overgenomen
-
 	// update inning in cell rij 3 kolom 2
 	var inn = document.getElementById("scoreboard").rows[3].cells;
 	inn[2].innerHTML = inning;
-
 	// update balls in cell rij 3 kolom 5
 	var ball = document.getElementById("scoreboard").rows[3].cells;
 	ball[5].innerHTML = numBalls;
-
 	// update strikes in cell rij 3 kolom 8
 	var strike = document.getElementById("scoreboard").rows[3].cells;
 	strike[8].innerHTML = numStrikes;
-
 	// update outs in cell rij 3 kolom 11
 	var out = document.getElementById("scoreboard").rows[3].cells;
 	out[11].innerHTML = numOuts;
 
 	var vTotalRun = 0;
 	var hTotalRun = 0;
-
 	// update VISITOR score
 	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
 		var vRunBoard = document.getElementById("scoreboard").rows[1].cells;
@@ -433,11 +506,9 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 		vTotalRun = vTotalRun + vRun[i];
 		vRunBoard[11].innerHTML = vTotalRun;
 	}
-
 	// update hits in cell rij 1 kolom 12
 	var vHit = document.getElementById("scoreboard").rows[1].cells;
 	vHit[12].innerHTML = vHits;
-
 	// update errors in cell rij 1 kolom 13
 	var vError = document.getElementById("scoreboard").rows[1].cells;
 	vError[13].innerHTML = vErrors;
@@ -449,18 +520,18 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 		hTotalRun = hTotalRun + hRun[i];
 		hRunBoard[11].innerHTML = hTotalRun;
 	}
-
 	// update hits in cell rij 2 kolom 12
 	var hHit = document.getElementById("scoreboard").rows[2].cells;
 	hHit[12].innerHTML = hHits;
-
 	// update errors in cell rij 2 kolom 13
 	var hError = document.getElementById("scoreboard").rows[2].cells;
 	hError[13].innerHTML = hErrors;
 }
 
-function sendMessage(message) {
+async function sendMessage(message) {
 	document.getElementById("messageboard").innerHTML = message;
+	await sleep(2000);
+	document.getElementById("messageboard").innerHTML = "";
 }
 
 function gameOver() {
