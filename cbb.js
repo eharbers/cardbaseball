@@ -41,6 +41,7 @@ var atBatStatus = 'pitch';
 var numStrikes = 0;
 var numBalls = 0;
 var numOuts = 0;
+var halfInning = 0;
 var inning = 0;
 var vHits = 0; // wellicht niet een slimme keus
 var vErrors = 0;
@@ -62,7 +63,9 @@ $('#deal').click(function () {
 		//This is a callback function, called when the dealing
 		//is done.
 		sendMessage("PLAY BALL !!")
-		inning++;
+		halfInning = 1;
+		//inning = Math.floor(halfInning / 2);
+		inning = 1;
 		vRun.push(0); // de bottom first wordt gevuld met 0. geeft de actieve slagbeurt aan
 		updateScoreboard();
 	});
@@ -75,7 +78,7 @@ window.requestAnimationFrame(playBall);
 function playBall() {
 	//slagbeurt 
 	console.log('playBall atBatStatus: ', atBatStatus);
-	playCard(objHand, objPlay);	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
+	playCard();	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
 	if (endOfGame === true) { // dit stukje zorgt voor de herhaling, todat endOfGame 'waar' is
 		gameOver();
 	} else {
@@ -85,19 +88,69 @@ function playBall() {
 // einde game-loop
 
 // functie om kaart te klikken uit de hand die aan de beurt is.
-function playCard(objHand, objPlay) { // kan dat ook op een 'naam' van het object-manier??
+function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
-	objHand.click(function (card) {
-		console.log('turnLower: ', turnLower, 'turnUpper: ', turnUpper);
-		objPlay.addCard(card);
-		objPlay.render();
-		objHand.render();
-		deck.render();
-		playValidate();
-	});
+	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
+		var playable = false
+		for (i=0 ; i < objHand.length; i++) {
+			if ( card === objHand[i]) {
+				playable = true;
+				console.log('playable:', playable);
+			};
+		} // end for
+		if (playable === true) { //valid card/player 	
+			console.log('turnLower: ', turnLower, 'turnUpper: ', turnUpper);
+			objPlay.addCard(card);
+			objPlay.render();
+			objHand.render();
+			deck.render();
+			playValidate();
+		} else {
+			console.log('playable:', playable);
+			console.log('Op beurt wachten');
+		}
+	}); // end click objHand
+	checkAtBat();
+	checkInning();
+	updateScoreboard();
+	checkDeck();
 }
 
+function checkAtBat() {
+	console.log('Inside checkAtBat');
+	if (numStrikes === 3) {
+		console.log('strik-out');
+		sendMessage('STRIKE-OUT');
+		numStrikes=0;
+		numBalls=0;
+		numOuts++
+	}
+}
+
+function checkInning() {
+	console.log('Inside checkInning');
+	if (numOuts === 3 ) {
+		console.log('end of half inning')
+		sendMessage('3-OUTS Change fields')
+		numOuts= 0;
+		halfInning++
+	}	
+	if (halfInning  < 3 ) {
+		inning = 1;
+	} else {
+		inning = Math.floor(halfInning /2)
+	}
+
+}
+
+function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
+	console.log('Inside checkDeck: ',deck.length);
+	if (deck.length === 7) {
+		console.log('Het worden er te weinig')
+		moveCards(discardPile, deck)
+	}
+}
 
 async function playValidate() {
 	console.log('inside playValidate');
@@ -222,7 +275,7 @@ async function playValidate() {
 					sendMessage('OUT');
 					console.log('no runner to move (yes)');
 					numOuts += 1; // en daar hoort ook een check voor 3 out bij
-					updateScoreboard();
+					updateScoreboard(); // naar game-loop ??
 					break;
 				default:
 					console.log('RESULT default');
@@ -235,9 +288,11 @@ async function playValidate() {
 			await sleep(2000);
 			moveCards(objPlay, discardPile);
 			moveCards(objOtherPlay, discardPile);
-			numStrikes = 0;
+			numStrikes = 0; // hoort dit bij check AtBAt??
 			numBalls = 0;
-			updateScoreboard();
+			checkAtBat();
+			checkInning();
+			updateScoreboard(); // naar game-loop ??
 			atBatStatus = 'pitch' // nieuwe slagman
 			break;
 		default:
@@ -246,7 +301,7 @@ async function playValidate() {
 			break;
 	}
 	// check met strikes, balls, outs & innings
-
+	// die staat nu in de game-loop
 }
 
 // beurt wisselen
@@ -279,14 +334,17 @@ function refillHand(objHand) {
 	deck.render();
 }
 
-// functie om een HAND met kaarten te verplaatsten
+// functie om een Hand met kaarten te verplaatsten
 // hierin in blijkbaar niet voorzien in card.js
 function moveCards(from, to) {
 	//sleep(5000) // stopt ie of gaat ie wel door met andere dingen
 	for (let i = 0; i < from.length; i++) {
-		to.push(from[i]);
-		from.splice(i, 1);
-		i--;
+	//	to.push(from[i]);
+	//	from.splice(i, 1);
+	//  ander aanpak?? met addcard??:
+		to.addCard(from[i]);
+
+		i--; // de from stapel-length wordt steeds kleiner ...
 	}
 	from.render();
 	to.render();
@@ -295,7 +353,8 @@ function moveCards(from, to) {
 
 // sitepoint sleep function met async ...await
 // https://www.sitepoint.com/delay-sleep-pause-wait/
-// de functie die moet een slaapmoment moet hebben wordt vooraf gegaan met async
+// de functie die een slaapmoment moet hebben wordt vooraf gegaan met async
+// zoals de playValidate-function
 // in de functie wordt het slaapmoment aangeroepen met await sleep(ms)
 // zie de movecards aanroepen
 function sleep(ms) {
@@ -314,6 +373,11 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 function moveRunners() {
 	console.log('inside moveRunners');
 	//sendMessage('move runners');
+	// lopers tegelijkertijd en honk-voor-honk laten lopen.
+	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
+	// en alle andere ook het eerstvolgende
+	// dan pas het volgende honk...
+	// elke run meteen scoren => updateScoreboard
 }
 
 function updateScoreboard() { // een-op-een van solitaire overgenomen
