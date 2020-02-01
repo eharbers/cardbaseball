@@ -58,9 +58,9 @@ for (i=0; i<=3; i++) {
 renderRunners();
 
 var vRun = [];
-vRun.push(0) // nulde element moet gevuld worden. verder innings-gewijs updaten
+vRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
 var hRun = [];
-hRun.push(0) // nulde element moet gevuld worden. verder innings-gewijs updaten
+hRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
 
 var endOfGame = false;
 
@@ -88,7 +88,7 @@ window.requestAnimationFrame(playBall);
 
 function playBall() {
 	//slagbeurt 
-	console.log('playBall atBatStatus: ', atBatStatus);
+	// console.log('playBall atBatStatus: ', atBatStatus);
 	playCard();	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
 	if (endOfGame === true) { // dit stukje zorgt voor de herhaling, todat endOfGame 'waar' is
 		gameOver();
@@ -107,19 +107,19 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 		for (i=0 ; i < objHand.length; i++) {
 			if ( card === objHand[i]) {
 				playable = true;
-				console.log('playable:', playable);
+				// console.log('playable:', playable);
 			};
 		} // end for
 		if (playable === true) { //valid card/player 	
-			console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
+			// console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
 			objPlay.addCard(card);
 			objPlay.render();
 			objHand.render();
 			deck.render();
 			playValidate();
 		} else {
-			console.log('playable:', playable);
-			console.log('Op beurt wachten');
+			// console.log('playable:', playable);
+			// console.log('Op beurt wachten');
 			var msgBeurt = "WACHTEN !";
 			if (turnHome) {
 				$("#visitor").val(msgBeurt);
@@ -128,13 +128,13 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			}
 		}
 	}); // end click objHand
-	//checkDeck();
+	checkDeck();
 }
 
 function checkAtBat() {
-	console.log('Inside checkAtBat');
+	// console.log('Inside checkAtBat');
 	if (numStrikes === 3) {
-		console.log('strik-out');
+		// console.log('strik-out');
 		sendMessage('STRIKE-OUT');
 		numStrikes=0;
 		numBalls=0;
@@ -142,7 +142,7 @@ function checkAtBat() {
 	}
 
 	if (numBalls === 4) {
-		console.log('walk');
+		// console.log('walk');
 		sendMessage('WALK');
 		moveRunners();
 		numStrikes=0;
@@ -151,9 +151,9 @@ function checkAtBat() {
 }
 
 function checkInning() {
-	console.log('Inside checkInning');
+	// console.log('Inside checkInning');
 	if (numOuts === 3 ) {
-		console.log('end of half inning')
+		// console.log('end of half inning')
 		sendMessage('3-OUTS Change fields')
 		if (vAtBat) {
 			vAtBat = false;
@@ -167,10 +167,22 @@ function checkInning() {
 		changePlayer();
 		atBatStatus = 'pitch';
 	}	
-	if (halfInning  < 3 ) {
+	/* if (halfInning  < 3 ) {
 		inning = 1;
 	} else {
 		inning = Math.floor(halfInning /2)
+	} */
+
+	/* if (halfInning == 2) {
+		hRun[1] = 0
+	} */
+	
+	if (halfInning %2 == 0) {
+		inning = Math.floor(halfInning /2)
+		hRun[inning] = 0;
+	} else {
+		inning = Math.floor(halfInning /2) + 1
+		vRun[inning] = 0;
 	}
 }
 
@@ -183,14 +195,14 @@ function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
 }
 
 async function playValidate() {
-	console.log('inside playValidate');
+	// console.log('inside playValidate');
 	// feitelijke controle op de kaart die als laatste aan homePlay of visitorPlay is toegevoegd
 	// dit gaat dan met topCard() gebeuren
 	// refillHand(objHand); // speelhand aanvullen....maar te vaak als ie hier staat
-	checkDeck();
+	//checkDeck(); gaat fout moglijk in die async
 	switch (atBatStatus) {
 		case 'pitch':
-			console.log('atBatStatus: ', 'pitch');
+			// console.log('atBatStatus: ', 'pitch');
 			refillHand(objHand); // speelhand aanvullen
 			if (objPlay.topCard().rank >= 11) { // een plaatje => ball
 				numBalls += 1;
@@ -203,10 +215,10 @@ async function playValidate() {
 				atBatStatus = 'swing'; // kaarten laten liggen
 				changePlayer(); // dan pas van speler wisselen
 			}
-			console.log('atBatStatus is now: ', atBatStatus);
+			// console.log('atBatStatus is now: ', atBatStatus);
 			break;
 		case 'swing':
-			console.log('atBatStatus: ', 'swing');
+			// console.log('atBatStatus: ', 'swing');
 			refillHand(objHand);
 			if (objPlay.topCard().rank >= 11) { // plaatje => foul
 				if (numStrikes < 2) { // <2 => strike
@@ -239,7 +251,7 @@ async function playValidate() {
 				numBalls += 1;
 				sendMessage('BALL' + numBalls)
 				updateScoreboard();
-				console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
+				// console.log('Balls: ', numBalls, ' Strikes: ', numStrikes); // naar scoreboard
 				// cleanup playing hands !!
 				await sleep(2000);
 				moveCards(objPlay, discardPile);
@@ -248,7 +260,7 @@ async function playValidate() {
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
-				console.log('connecting with the ball');
+				// console.log('connecting with the ball');
 				atBatStatus = 'connect';
 				if (turnHome) {
 					$("#home").val(atBatStatus);
@@ -257,17 +269,17 @@ async function playValidate() {
 				}
 				// go-to pick card to place hit
 			}
-			console.log('atBatStatus is now: ', atBatStatus);
+			// console.log('atBatStatus is now: ', atBatStatus);
 			break;
 		case 'connect':
-			console.log('atBatStatus: ', atBatStatus);
+			// console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			// a card is picked to place hit
 			atBatStatus = 'fielding';
 			changePlayer();
 			break;
 		case 'fielding': // er zal een reactie van het veld moeten komen
-			console.log('atBatStatus: ', atBatStatus);
+			// console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			atBatStatus = 'result';
 			if (turnHome) {
@@ -278,23 +290,23 @@ async function playValidate() {
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		case 'result': // berekening van het resultaat van de connect vs fielding
-			console.log('inside RESULT');
-			console.log('atBatStatus: ', atBatStatus);
+			// console.log('inside RESULT');
+			// console.log('atBatStatus: ', atBatStatus);
 			var result = Math.abs(objPlay.topCard().rank - objOtherPlay.topCard().rank);
-			console.log('result is now:', result);
-			console.log('objPlay color: ', cardColor(objPlay.topCard()))
-			console.log('objOtherPlay color: ', cardColor(objOtherPlay.topCard()))
+			// console.log('result is now:', result);
+			// console.log('objPlay color: ', cardColor(objPlay.topCard()))
+			// console.log('objOtherPlay color: ', cardColor(objOtherPlay.topCard()))
 			if (cardColor(objPlay.topCard()) != cardColor(objOtherPlay.topCard())) { // ongelijke kleur
 				result = result * 3;
-				console.log('result * 3:', result);
+				// console.log('result * 3:', result);
 			} else if (objPlay.topCard().suit === objOtherPlay.topCard().suit) { // dezelfde suit
 				result = result * 1;
-				console.log('result * 1: ', result);
+				// console.log('result * 1: ', result);
 			} else {
 				result = result * 2; // andere suit en dezelfde kleur
-				console.log('result * 1: ', result);
+				// console.log('result * 1: ', result);
 			}
-			console.log('Eind result: ', result);
+			// console.log('Eind result: ', result);
 
 			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases
 				case (result > 9):
@@ -319,18 +331,18 @@ async function playValidate() {
 					break;
 				case (result >= 0):
 					sendMessage('OUT');
-					console.log('no runner to move (yes)');
+					// console.log('no runner to move (yes)');
 					numOuts += 1; // en daar hoort ook een check voor 3 out bij
 					updateScoreboard(); // naar game-loop ??
 					break;
 				default:
-					console.log('RESULT default');
+					// console.log('RESULT default');
 					break;
 			} // de geslagen bal is verwerkt
 			// de honklopers zijn verplaatst
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
-			console.log('start sleep(2000)');
+			// console.log('start sleep(2000)');
 			await sleep(2000);
 			moveCards(objPlay, discardPile);
 			moveCards(objOtherPlay, discardPile);		
@@ -346,7 +358,7 @@ async function playValidate() {
 			}
 			break;
 		default:
-			console.log('playValidate default');
+			// console.log('playValidate default');
 			endOfGame = true;
 			break;
 	}
@@ -386,7 +398,7 @@ function changePlayer() {
 
 // functie om de Hand aan te vullen met een kaart van deck
 function refillHand(objHand) {
-	checkDeck();
+	//checkDeck(); async probleem
 	objHand.addCard(deck.topCard());
 	objHand.render();
 	deck.render();
@@ -395,7 +407,7 @@ function refillHand(objHand) {
 // functie om een Hand met kaarten te verplaatsten
 // hierin in blijkbaar niet voorzien in card.js
 function moveCards(from, to) {
-	checkDeck();
+	//checkDeck(); async pobleem
 	//sleep(5000) // stopt ie of gaat ie wel door met andere dingen
 	for (let i = 0; i < from.length; i++) {
 	//	to.push(from[i]);
@@ -432,7 +444,7 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 }
 
 function moveRunners(bases) { // TODO walk = true bij 4-wijd...
-	console.log('inside moveRunners');
+	// console.log('inside moveRunners');
 	sendMessage(bases, ' bases');
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
@@ -539,6 +551,6 @@ async function sendMessage(message) {
 }
 
 function gameOver() {
-	console.log('GAME OVER');
+	// console.log('GAME OVER');
 }
 
