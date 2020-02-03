@@ -55,7 +55,16 @@ var baseRunners =[];
 for (i=0; i<=3; i++) {
 	baseRunners[i] = 0;
 }
+var play = '';
 renderRunners();
+
+var vFace = 0;
+var vCompanion = 0;
+var vDenomination = 0;
+
+var hFace = 0;
+var hCompanion = 0;
+var hDenomination = 0;
 
 var vRun = [];
 vRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
@@ -79,6 +88,7 @@ $('#deal').click(function () {
 		updateScoreboard();
 		baseRunners[0] = 1;
 		renderRunners();
+		countCategories();
 	});
 })
 
@@ -144,7 +154,7 @@ function checkAtBat() {
 	if (numBalls === 4) {
 		console.log('walk');
 		sendMessage('WALK');
-		moveRunners();
+		moveRunners('walk');
 		numStrikes=0;
 		numBalls=0;
 	}
@@ -164,6 +174,11 @@ function checkInning() {
 			inning++;
 			vRun[inning]=0;
 		}
+		for (i=0; i<=3; i++) {
+			baseRunners[i] = 0;
+		}
+		baseRunners[0] = 1;
+		renderRunners();
 		numOuts= 0;
 		changePlayer();
 		atBatStatus = 'pitch';
@@ -243,6 +258,20 @@ async function playValidate() {
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
+				if(objPlay.topCard().rank > 8) {
+					console.log('Hit by Pitch');
+					sendMessage('Hit by Pitch');
+					moveOnHBP();
+					await sleep(2000);
+					moveCards(objPlay, discardPile);
+					moveCards(objOtherPlay, discardPile);
+					numBalls = 0; //new batter
+					numStrikes = 0;//new batter
+					updateScoreboard();
+					atBatStatus= 'pitch'; // new batter
+					changePlayer();
+					break;
+				}
 				console.log('connecting with the ball');
 				atBatStatus = 'connect';
 				if (turnHome) {
@@ -287,30 +316,26 @@ async function playValidate() {
 				console.log('result * 1: ', result);
 			} else {
 				result = result * 2; // andere suit en dezelfde kleur
-				console.log('result * 1: ', result);
+				console.log('result * 2: ', result);
 			}
 			console.log('Eind result: ', result);
 
 			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases
 				case (result > 9):
-					sendMessage('HOME RUN')
-					numBases = 4;
-					moveRunners(numBases);
+					sendMessage('HOME RUN');
+					moveRunners('homerun');
 					break;
 				case (result > 7):
 					sendMessage('TRIPLE');
-					numBases = 3;
-					moveRunners(numBases);
+					moveRunners('triple');
 					break;
 				case (result > 5):
 					sendMessage('DOUBLE');
-					numBases = 2;
-					moveRunners(numBases);
+					moveRunners('double');
 					break;
 				case (result > 3):
 					sendMessage('SINGLE');
-					numBases = 1;
-					moveRunners(numBases);
+					moveRunners('single');
 					break;
 				case (result >= 0):
 					sendMessage('OUT');
@@ -331,9 +356,9 @@ async function playValidate() {
 			moveCards(objOtherPlay, discardPile);		
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
-			numStrikes = 0; // hoort dit bij check AtBAt??
-			numBalls = 0; // of hoort dat op deze plek???????
 			renderRunners();
+			numStrikes = 0; // hoort dit bij checkAtBAt??
+			numBalls = 0; // of hoort dat op deze plek???????
 			if (turnHome) {
 				$("#home").val(atBatStatus);
 			} else {
@@ -384,6 +409,7 @@ function refillHand(objHand) {
 	objHand.addCard(deck.topCard());
 	objHand.render();
 	deck.render();
+	countCategories();
 }
 
 // functie om een Hand met kaarten te verplaatsten
@@ -409,7 +435,7 @@ function sleep(ms) {
 }
 
 function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
-	if (kaart.suit === 'd' || kaart.suit === 'c') {
+	if (kaart.suit === 'd' || kaart.suit === 'h') {
 		var color = 'red';
 	} else {
 		var color = 'black';
@@ -417,14 +443,86 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 	return color;
 }
 
-function moveRunners(bases) { // TODO walk = true bij 4-wijd...
+function countCategories() { //TODO Denom wordt verkeerd geteld
+	// voor visitorHand
+	vFace = 0;
+	vCompanion = 0;
+	vDenomination= 0;
+	for (let i=0; i < visitorHand.length; i++) {
+		if (visitorHand[i].rank >= 11) {
+			vFace++
+		}
+		for (let j=0; j < homeHand.length; j++) {
+			if (visitorHand[i].rank === homeHand[j].rank && visitorHand[i].rank < 11) {
+				vDenomination++
+				vColor = cardColor(visitorHand[i]);
+				hColor = cardColor(homeHand[j]);
+				if (vColor === hColor) {
+					vCompanion++;
+				}
+			}			
+		}
+	}
+	// voor homeHand
+	hFace = 0;
+	hCompanion = 0;
+	hDenomination = 0;
+	for (let i=0; i < homeHand.length; i++) {
+		if (homeHand[i].rank >= 11) {
+			hFace++
+		}
+		for (let j=0; j < visitorHand.length; j++) {
+			if (homeHand[i].rank === visitorHand[j].rank && homeHand[i].rank < 11) {
+				hDenomination++
+				hColor = cardColor(homeHand[i]);
+				vColor = cardColor(visitorHand[j])
+				if (hColor === vColor) {
+					hCompanion++;
+				}
+			}			
+		}
+	}
+	console.log('visitorHand: Face: ', vFace,' Denom: ', vDenomination,' Comp: ', vCompanion);
+	console.log('   homeHand: Face: ', hFace,' Denom: ', hDenomination,' Comp: ', hCompanion);
+}
+
+function moveRunners(play) { // TODO walk = true bij 4-wijd...
 	console.log('inside moveRunners');
-	sendMessage(bases, ' bases');
+	console.log('play:', play);
+	sendMessage('play:', play);
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
 	// en alle andere ook het eerstvolgende
 	// dan pas het volgende (tweede) honk...
 	// elke run meteen scoren => updateScoreboard
+	switch (play) {
+		case 'homerun':
+			numBases = 4;
+			moveOnHit(numBases);
+			break;
+		case 'triple':
+			numBases = 3;
+			moveOnHit(numBases);
+			break;
+		case 'double':
+			numBases = 2;
+			moveOnHit(numBases);
+			break;
+		case 'single':
+			numBases = 1;
+			moveOnHit(numBases);
+			break;
+		case 'walk':
+			moveOnWalk();
+			break;
+		default:
+			console.log('moveRunners default');
+			break;
+	}	
+	renderRunners();
+}
+
+function moveOnHit(bases) {
 	for (var b=3; b>=0; b--) {
 		if (baseRunners[b] != 0) {
 			if (b + bases >= 4) {
@@ -440,7 +538,38 @@ function moveRunners(bases) { // TODO walk = true bij 4-wijd...
 			}
 		}
 	}
-	renderRunners();
+}
+
+function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
+	// EIGENLIJK DEZELFDE ALS moveOnHBP ... DUS UNIVERSEEL MAKEN
+	// verschillende situaties honken bezetting met case afwerken
+	// geeft mogelijkheid van een break en uitslag is uniek
+	// variant verzinnen op gedwongen opschuiven of door hit (of deze toch apart afhandelen)
+	if (baseRunners[1]=1) {
+		if (baseRunners[2] = 1) {
+			if (baseRunners[3]=1) {
+				baseRunners[3] = 0;
+				if (vAtBat) { //visitor scoort...
+					vRun[inning]++;
+				} else { // home scoort
+					hRun[inning]++;
+				}
+				baseRunners[2] = 0;
+				baseRunners[3] = 1;
+			} 
+			baseRunners[2] = 0;
+			baseRunners[3] = 1;
+		}
+		baseRunners[1] = 0;
+		baseRunners[2] = 1;
+	}
+	baseRunners[0] = 0;
+	baseRunners[1] = 1;
+}
+
+function moveOnHBP() {
+	console.log('Inside moveOnHBP');
+	console.log('Hetzelfde als moveOnWalk');
 }
 
 
