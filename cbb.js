@@ -220,6 +220,7 @@ async function playValidate() {
 	detEquals();
 	
 	switch (atBatStatus) {
+		// de pitch
 		case 'pitch':
 			console.log('atBatStatus: ', 'pitch');
 			refillHand(objHand); // speelhand aanvullen
@@ -236,6 +237,7 @@ async function playValidate() {
 			}
 			console.log('atBatStatus is now: ', atBatStatus);
 			break;
+		// de swing
 		case 'swing':
 			console.log('atBatStatus: ', 'swing');
 			refillHand(objHand);
@@ -305,6 +307,7 @@ async function playValidate() {
 			}
 			console.log('atBatStatus is now: ', atBatStatus);
 			break;
+		// de connect
 		case 'connect': // een kaart kiezen : hoe geslagen
 			console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
@@ -323,6 +326,7 @@ async function playValidate() {
 			}
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
+		// result
 		case 'result': // berekening van het resultaat van de connect vs fielding
 			console.log('inside RESULT');
 			console.log('atBatStatus: ', atBatStatus);
