@@ -238,27 +238,9 @@ async function playValidate() {
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				}
-			} else if (objPlay.topCard().suit != objOtherPlay.topCard().suit) { // suit ongelijk => strike
-				numStrikes += 1;
-				sendMessage('STRIKE ' + numStrikes);
-				updateScoreboard();
-				await sleep(2000);
-				moveCards(objPlay, discardPile); // cleanup playing hands !!
-				moveCards(objOtherPlay, discardPile); // en die andere ook !!
-				atBatStatus = 'pitch'; // new pitch
-				changePlayer();
-			} else if (objPlay.topCard().rank < objOtherPlay.topCard().rank) { // lager dan pitch => ball
-				numBalls += 1;
-				sendMessage('BALL' + numBalls)
-				updateScoreboard();
-				await sleep(2000);
-				moveCards(objPlay, discardPile); // cleanup playing hands !!
-				// en die andere ook
-				moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
-				atBatStatus = 'pitch'; // new pitch
-				changePlayer();
-			} else { // dezelfde suit geen plaatje en hoger dan pitch
-				if(objPlay.topCard().rank > 8) {
+			} else if (objPlay.topCard().suit != objOtherPlay.topCard().suit) { // HBP of strike
+				// de pitch >=9; de swing is gelijke rank en gelijke kleur (het is al niet meer dezelfde suit)
+				if((objOtherPlay.topCard().rank >=9) && (objPlay.topCard().rank === objOtherPlay.topCard().rank)  && (cardColor(objPlay.topCard()) === cardColor(objOtherPlay.topCard()))) {
 					console.log('Hit by Pitch');
 					sendMessage('Hit by Pitch');
 					moveOnHBP();
@@ -271,7 +253,28 @@ async function playValidate() {
 					atBatStatus= 'pitch'; // new batter
 					changePlayer();
 					break;
-				}
+				} else {
+					numStrikes += 1;
+					sendMessage('STRIKE ' + numStrikes);
+					updateScoreboard();
+					await sleep(2000);
+					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					moveCards(objOtherPlay, discardPile); // en die andere ook !!
+					atBatStatus = 'pitch'; // new pitch
+					changePlayer();
+					break;
+				}	
+			} else if (objPlay.topCard().rank < objOtherPlay.topCard().rank) { // lager dan pitch => ball
+				numBalls += 1;
+				sendMessage('BALL' + numBalls)
+				updateScoreboard();
+				await sleep(2000);
+				moveCards(objPlay, discardPile); // cleanup playing hands !!
+				// en die andere ook
+				moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
+				atBatStatus = 'pitch'; // new pitch
+				changePlayer();
+			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the ball');
 				atBatStatus = 'connect';
 				if (turnHome) {
@@ -283,14 +286,14 @@ async function playValidate() {
 			}
 			console.log('atBatStatus is now: ', atBatStatus);
 			break;
-		case 'connect':
+		case 'connect': // een kaart kiezen : hoe geslagen
 			console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			// a card is picked to place hit
 			atBatStatus = 'fielding';
 			changePlayer();
 			break;
-		case 'fielding': // er zal een reactie van het veld moeten komen
+		case 'fielding': // een kaart kiezen : hoe verwerkt
 			console.log('atBatStatus: ', atBatStatus);
 			refillHand(objHand);
 			atBatStatus = 'result';
@@ -308,6 +311,48 @@ async function playValidate() {
 			console.log('result is now:', result);
 			console.log('objPlay color: ', cardColor(objPlay.topCard()))
 			console.log('objOtherPlay color: ', cardColor(objOtherPlay.topCard()))
+			
+			// verwerking van bijzondere connect-kaart of bijzondere connect-fielding-combi
+
+			// sacrifice alleen met 1 of 2 of 1 en 2 bezet.of 1 en 3; bases loaded en alleen loper op 3 kan niet
+			// dus iets met baseRunners[i] doen en zo... 
+			if (objPlay.topCard().rank >=11) { // sacrifice
+				//TODO kan niet met bases loaded of alleen loper op 3 !! => afvangen van tevoren??
+				console.log('sacrifice attempt')
+				// plaatje van dezelfde suit
+				if ((objOtherPlay.topCard().rank >=11) && (objOtherPlay.topCard().suit === objPlay.topCard().suit)) {
+					console.log('hit into double play !!');
+					sendMessage('hit into double play');
+					// batter is out and runner out... de verste loper
+					break;
+				} else if (objOtherPlay.topCard().rank >= 11 && (objOtherPlay.topCard().suit != objPlay.topCard().suit)) {
+					console.log('sacrifice success !!');
+					sendMessage('sacrifice success !!');
+					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
+					break;
+				} else if (objOtherPlay.topCard().rank <11) {
+					console.log('sacrifice super-succes');
+					sendMessage('sacrifice super-succes');
+					// batter is safe and runner(s) advance
+					break;
+				}
+				//TODO het opruimen gaat niet lekker
+				console.log('start sleep(2000)');
+				await sleep(2000);
+				moveCards(objPlay, discardPile);
+				moveCards(objOtherPlay, discardPile);		
+				atBatStatus = 'pitch' // nieuwe slagman
+				baseRunners[0] = 1;
+				renderRunners();
+				numStrikes = 0; // hoort dit bij checkAtBAt??
+				numBalls = 0; // of hoort dat op deze plek???????
+				if (turnHome) {
+					$("#home").val(atBatStatus);
+				} else {
+					$("#visitor").val(atBatStatus);
+				}
+			} // einde sacrifice
+
 			if (cardColor(objPlay.topCard()) != cardColor(objOtherPlay.topCard())) { // ongelijke kleur
 				result = result * 3;
 				console.log('result * 3:', result);
@@ -443,7 +488,8 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 	return color;
 }
 
-function countCategories() { //TODO Denom wordt verkeerd geteld
+function countCategories() { //TODO Denom wordt verkeerd geteld, maar is volgend my niet erg...
+								// het gaat erom dat ik weet dat ze bestaan...denk ik
 	// voor visitorHand
 	vFace = 0;
 	vCompanion = 0;
@@ -489,7 +535,7 @@ function countCategories() { //TODO Denom wordt verkeerd geteld
 function moveRunners(play) { // TODO walk = true bij 4-wijd...
 	console.log('inside moveRunners');
 	console.log('play:', play);
-	sendMessage('play:', play);
+	sendMessage(play);
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
 	// en alle andere ook het eerstvolgende
