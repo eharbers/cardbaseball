@@ -39,17 +39,18 @@ var objOtherHand = visitorHand // die ander moet ook herkend worden
 var objOtherPlay = visitorPlay // en deze andere ook
 var atBatStatus = 'pitch';
 
+// voor de initiatie van de baseballgame
 var numStrikes = 0;
 var numBalls = 0;
 var numOuts = 0;
 var halfInning = 0;
 var inning = 0;
+
+// voor de bepaling van wie er aan de beurt is om een kaart te klikken
 var vAtBat = true;
-var vHits = 0; 
-var vErrors = 0;
 var hAtBat = false;
-var hHits = 0;
-var hErrors = 0;
+
+// voor de initiatie van de honklopers
 var numBases = 0; // aantal honken op geslagen bal (of walk...)
 var baseRunners =[];
 for (i=0; i<=3; i++) {
@@ -58,6 +59,13 @@ for (i=0; i<=3; i++) {
 var play = '';
 renderRunners();
 
+// voor de bepaling van de plays in playValidate
+var eqRank = false;
+var eqColor = false;
+var eqSuit = false;
+var isFace = false;
+
+// voor de telling van de categories in playValidate per Hand
 var vFace = 0;
 var vCompanion = 0;
 var vDenomination = 0;
@@ -66,10 +74,17 @@ var hFace = 0;
 var hCompanion = 0;
 var hDenomination = 0;
 
+// voor de initiatie van het scoreboard
 var vRun = [];
 vRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
 var hRun = [];
 hRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
+
+var vHits = 0; 
+var vErrors = 0;
+var hHits = 0;
+var hErrors = 0;
+
 
 var endOfGame = false;
 
@@ -200,6 +215,10 @@ async function playValidate() {
 	// dit gaat dan met topCard() gebeuren
 	// refillHand(objHand); // speelhand aanvullen....maar te vaak als ie hier staat
 	checkDeck(); //staat ie hier beter??
+
+	// bepaal de overeenkomstigheden (equals)
+	detEquals();
+	
 	switch (atBatStatus) {
 		case 'pitch':
 			console.log('atBatStatus: ', 'pitch');
@@ -238,9 +257,9 @@ async function playValidate() {
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				}
-			} else if (objPlay.topCard().suit != objOtherPlay.topCard().suit) { // HBP of strike
+			} else if (eqSuit === false) { // HBP of strike
 				// de pitch >=9; de swing is gelijke rank en gelijke kleur (het is al niet meer dezelfde suit)
-				if((objOtherPlay.topCard().rank >=9) && (objPlay.topCard().rank === objOtherPlay.topCard().rank)  && (cardColor(objPlay.topCard()) === cardColor(objOtherPlay.topCard()))) {
+				if((objOtherPlay.topCard().rank >=9) && (eqRank === true)  && (eqColor === true)) {
 					console.log('Hit by Pitch');
 					sendMessage('Hit by Pitch');
 					moveOnHBP();
@@ -320,12 +339,12 @@ async function playValidate() {
 				//TODO kan niet met bases loaded of alleen loper op 3 !! => afvangen van tevoren??
 				console.log('sacrifice attempt')
 				// plaatje van dezelfde suit
-				if ((objOtherPlay.topCard().rank >=11) && (objOtherPlay.topCard().suit === objPlay.topCard().suit)) {
+				if ((objOtherPlay.topCard().rank >=11) && (eqSuit === true)) {
 					console.log('hit into double play !!');
 					sendMessage('hit into double play');
 					// batter is out and runner out... de verste loper
 					break;
-				} else if (objOtherPlay.topCard().rank >= 11 && (objOtherPlay.topCard().suit != objPlay.topCard().suit)) {
+				} else if (objOtherPlay.topCard().rank >= 11 && (eqSuit === false)) {
 					console.log('sacrifice success !!');
 					sendMessage('sacrifice success !!');
 					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
@@ -353,10 +372,10 @@ async function playValidate() {
 				}
 			} // einde sacrifice
 
-			if (cardColor(objPlay.topCard()) != cardColor(objOtherPlay.topCard())) { // ongelijke kleur
+			if (eqColor === false) { // ongelijke kleur
 				result = result * 3;
 				console.log('result * 3:', result);
-			} else if (objPlay.topCard().suit === objOtherPlay.topCard().suit) { // dezelfde suit
+			} else if (eqSuit === true) { // dezelfde suit
 				result = result * 1;
 				console.log('result * 1: ', result);
 			} else {
@@ -486,6 +505,27 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 		var color = 'black';
 	}
 	return color;
+}
+
+function detEquals() {
+	// checks op de topCards van elke speler
+	eqRank = false;
+	eqSuit = false;
+	eqColor = false;
+	if (objOtherPlay.length >0) {
+		if (objPlay.topCard().rank === objOtherPlay.topCard().rank) {
+			eqRank = true;
+		}
+		if (objPlay.topCard().suit === objOtherPlay.topCard().suit) {
+			eqSuit = true;
+		}
+		if (cardColor(objPlay.topCard()) === cardColor(objOtherPlay.topCard())) {
+			eqColor = true;
+		}
+	}
+	console.log('eqRank: ', eqRank); 
+	console.log('eqSuit: ', eqSuit);
+	console.log('eqColor: ', eqColor);
 }
 
 function countCategories() { //TODO Denom wordt verkeerd geteld, maar is volgend my niet erg...
