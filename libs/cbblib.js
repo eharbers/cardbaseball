@@ -69,8 +69,9 @@ function detEquals() {
 	console.log('eqColor: ', eqColor);
 }
 
-function countCategories() { //TODO Denom wordt verkeerd geteld, maar is volgend my niet erg...
-								// het gaat erom dat ik weet dat ze bestaan...denk ik
+function countCategories() { 
+	//TODO Denom wordt verkeerd geteld, maar is volgens mij niet erg...
+	// het gaat erom dat ik weet dat ze bestaan...denk ik
 	// voor visitorHand
 	vFace = 0;
 	vCompanion = 0;
