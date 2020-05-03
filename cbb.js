@@ -391,6 +391,8 @@ async function playValidate() {
 				console.log('result * 2: ', result);
 			}
 			console.log('Eind result: ', result);
+		
+
 
 			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases
 				case (result > 9):
@@ -440,14 +442,14 @@ async function playValidate() {
 		default:
 			console.log('playValidate default');
 			endOfGame = true;
-			break;
+			break;	
 	}
 	// check met strikes, balls, outs & innings
 	// die staat nu in de game-loop
 	checkAtBat();
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
-}
+} // einde playExecute
 
 // beurt wisselen
 function changePlayer() {
