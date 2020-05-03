@@ -85,6 +85,7 @@ var vErrors = 0;
 var hHits = 0;
 var hErrors = 0;
 
+var checkOptionsFlag = true;
 
 var endOfGame = false;
 
@@ -127,6 +128,7 @@ function playBall() {
 function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
+	if (checkOptionsFlag == true) {checkOptions(objHand)};
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		var playable = false
 		for (i=0 ; i < objHand.length; i++) {
@@ -156,8 +158,18 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	//checkDeck();
 }
 
+// functie om het resultaat van elke kaar in hand te geven, zou deze gespeeld worden
+function checkOptions(hand) {
+	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
+	for (let i=0; i< hand.length; i++) {
+		console.log(cardColor(hand[i]), hand[i].shortName);
+	}
+}
+
 function checkAtBat() {
 	console.log('Inside checkAtBat');
+	checkOptionsFlag = true; // vlag terugzetten zodat deze volgende keer met playCard kan worden uitgevoerd
+
 	if (numStrikes === 3) {
 		console.log('strik-out');
 		sendMessage('STRIKE-OUT');
@@ -209,6 +221,7 @@ async function playValidate() {
 
 	// bepaal de overeenkomstigheden (equals)
 	detEquals();
+	
 	
 	switch (atBatStatus) {
 		// de pitch
@@ -438,6 +451,7 @@ async function playValidate() {
 
 // beurt wisselen
 function changePlayer() {
+	
 	if (turnHome) {
 		turnVisitor = true;
 		$("#visitor").css("background-color", "red");

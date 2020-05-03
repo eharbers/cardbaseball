@@ -7,8 +7,6 @@ async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels be
 	}
 }
 
-
-
 // functie om de Hand aan te vullen met een kaart van deck
 function refillHand(objHand) {
 	objHand.addCard(deck.topCard());
