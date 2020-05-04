@@ -115,7 +115,8 @@ function countCategories() {
 function moveRunners(play) { // TODO walk = true bij 4-wijd...
 	console.log('inside moveRunners');
 	console.log('play:', play);
-	sendMessage(play);
+	//sendMessage(play); // uitgezet vanwege overschrijven playValidate-result
+
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
 	// en alle andere ook het eerstvolgende
@@ -204,7 +205,6 @@ function moveOnHBP() {
 
 function playError() {
 	// Error-card in OFFENSE-HAND en toepassen ??
-	let hasComp = false;
 	for (let i=0; i<objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
 			&& cardColor(objOtherHand[i])===cardColor(objPlay.topCard())) {
@@ -213,7 +213,6 @@ function playError() {
 	}
 	console.log('hasComp= ',hasComp);
 
-	let isError = false;
 	if (hasComp == true) {
 		if (confirm('Error')) {
 			isError = true;

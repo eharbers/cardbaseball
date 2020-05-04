@@ -65,6 +65,10 @@ var eqColor = false;
 var eqSuit = false;
 var isFace = false;
 
+// voor de bepaling van Erro in playValidate
+let hasComp = false;
+let isError = false;
+
 // voor de telling van de categories in playValidate per Hand
 var vFace = 0;
 var vCompanion = 0;
@@ -333,8 +337,10 @@ async function playValidate() {
 		case 'fielding': // een kaart kiezen : hoe verwerkt
 			console.log('atBatStatus: ', atBatStatus);
 			await sleep(2000);
-			
+
 			// Error-card in OFFENSE-HAND en toepassen ??
+			hasComp = false;
+			isError = false;
 			playError();
 
 			atBatStatus = 'result';
@@ -415,22 +421,42 @@ async function playValidate() {
 					moveRunners('homerun');
 					break;
 				case (result > 7):
-					sendMessage('TRIPLE');
-					moveRunners('triple');
+					if (!isError) {
+						sendMessage('TRIPLE');
+						moveRunners('triple');
+					} else {
+						sendMessage('TRIPLE + ERROR !');
+						moveRunners('homerun');
+					}
 					break;
 				case (result > 5):
-					sendMessage('DOUBLE');
-					moveRunners('double');
+					if (!isError) {
+						sendMessage('DOUBLE');
+						moveRunners('double');
+					} else {
+						sendMessage('DOUBLE + ERROR !');
+						moveRunners('triple');
+					}
 					break;
 				case (result > 3):
-					sendMessage('SINGLE');
-					moveRunners('single');
+					if (!isError) {
+						sendMessage('SINGLE');
+						moveRunners('single');
+					} else {
+						sendMessage('SINGLE + ERROR !');
+						moveRunners('double');
+					}
 					break;
 				case (result >= 0):
-					sendMessage('OUT');
-					console.log('no runner to move (yes)');
-					numOuts += 1; // en daar hoort ook een check voor 3 out bij
-					updateScoreboard(); // naar game-loop ??
+					if (!isError) {
+						sendMessage('OUT');
+						console.log('no runner to move (yes)');
+						numOuts += 1; // en daar hoort ook een check voor 3 out bij
+						updateScoreboard(); // naar game-loop ??
+					} else {
+						sendMessage('On Base by ERROR !');
+						moveRunners('single');
+					}
 					break;
 				default:
 					console.log('RESULT default');
