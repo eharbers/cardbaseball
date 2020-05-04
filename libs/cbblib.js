@@ -141,6 +141,9 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 		case 'walk':
 			moveOnWalk();
 			break;
+		case 'hbp':
+			moveOnHBP();
+			break;
 		default:
 			console.log('moveRunners default');
 			break;
@@ -189,14 +192,16 @@ function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
 		baseRunners[1] = 0;
 		baseRunners[2] = 1;
 	}
-	baseRunners[0] = 0;
+	// baseRunners[0] = 0; laten staan ... anders is er geen AB meer
 	baseRunners[1] = 1;
 }
 
 function moveOnHBP() {
 	console.log('Inside moveOnHBP');
 	console.log('Hetzelfde als moveOnWalk');
+	moveOnWalk(); // vandaar dat we die gewoon aanroepen
 }
+ 
 
 function renderRunners() {
 	var topRow = document.getElementById("bases").rows[0].cells
