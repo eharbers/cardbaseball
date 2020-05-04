@@ -133,6 +133,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// wellicht terugkopieren?
 	if (checkOptionsFlag == true) {checkOptions(objHand)};
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
+		document.getElementById("messageboard").innerHTML = "";
 		var playable = false
 		for (i=0 ; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
 			if ( card === objHand[i]) {
@@ -219,13 +220,12 @@ async function playValidate() {
 	console.log('inside playValidate');
 	// feitelijke controle op de kaart die als laatste aan homePlay of visitorPlay is toegevoegd
 	// dit gaat dan met topCard() gebeuren
-	// refillHand(objHand); // speelhand aanvullen....maar te vaak als ie hier staat
+
 	checkDeck(); //staat ie hier beter??
 
 	// bepaal de overeenkomstigheden (equals)
 	detEquals();
-	
-	
+		
 	switch (atBatStatus) {
 		// de pitch
 		case 'pitch':
@@ -331,7 +331,7 @@ async function playValidate() {
 			changePlayer();
 			break;
 		case 'fielding': // een kaart kiezen : hoe verwerkt
-			console.log('atBatStatus: ', atBatStatus);
+			console.log('atBatStatus: ', atBatStatus)			
 			atBatStatus = 'result';
 			if (turnHome) {
 				$("#home").val(atBatStatus);
@@ -353,23 +353,23 @@ async function playValidate() {
 
 			// sacrifice alleen met 1 of 2 of 1 en 2 bezet.of 1 en 3; bases loaded en alleen loper op 3 kan niet
 			// dus iets met baseRunners[i] doen en zo... 
-			if (objPlay.topCard().rank >=11) { // sacrifice
+			if (objOtherPlay.topCard().rank >=11) { // sacrifice
 				//TODO kan niet met bases loaded of alleen loper op 3 !! => afvangen van tevoren??
 				console.log('sacrifice attempt')
 				// plaatje van dezelfde suit
-				if ((objOtherPlay.topCard().rank >=11) && (eqSuit === true)) {
-					console.log('hit into double play !!');
-					sendMessage('hit into double play');
+				if ((objPlay.topCard().rank >=11) && (eqSuit === true)) {
+					console.log('SAC: double play');
+					sendMessage('SAC: double play');
 					// batter is out and runner out... de verste loper
 					break;
-				} else if (objOtherPlay.topCard().rank >= 11 && (eqSuit === false)) {
-					console.log('sacrifice success !!');
-					sendMessage('sacrifice success !!');
+				} else if (objPlay.topCard().rank >= 11 && (eqSuit === false)) {
+					console.log('SAC: B:out R:adv');
+					sendMessage('SAC: B:out R:adv');
 					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
 					break;
-				} else if (objOtherPlay.topCard().rank <11) {
-					console.log('sacrifice super-succes');
-					sendMessage('sacrifice super-succes');
+				} else if (objPlay.topCard().rank <11) {
+					console.log('SAC: B:safe R:adv');
+					sendMessage('SAC: B:safe R:adv');
 					// batter is safe and runner(s) advance
 					break;
 				}

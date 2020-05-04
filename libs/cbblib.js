@@ -282,8 +282,8 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 
 async function sendMessage(message) {
 	document.getElementById("messageboard").innerHTML = message;
-	await sleep(2000);
-	document.getElementById("messageboard").innerHTML = "";
+	//await sleep(2000);
+	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
 }
 
 function gameOver() {
