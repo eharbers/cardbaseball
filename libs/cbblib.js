@@ -171,9 +171,9 @@ function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
 	// verschillende situaties honken bezetting met case afwerken
 	// geeft mogelijkheid van een break en uitslag is uniek
 	// variant verzinnen op gedwongen opschuiven of door hit (of deze toch apart afhandelen)
-	if (baseRunners[1]=1) {
-		if (baseRunners[2] = 1) {
-			if (baseRunners[3]=1) {
+	if (baseRunners[1] == 1) {
+		if (baseRunners[2] == 1) {
+			if (baseRunners[3] == 1) {
 				baseRunners[3] = 0;
 				if (vAtBat) { //visitor scoort...
 					vRun[inning]++;
