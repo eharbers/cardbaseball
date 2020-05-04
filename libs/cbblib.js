@@ -201,6 +201,28 @@ function moveOnHBP() {
 	console.log('Hetzelfde als moveOnWalk');
 	moveOnWalk(); // vandaar dat we die gewoon aanroepen
 }
+
+function playError() {
+	// Error-card in OFFENSE-HAND en toepassen ??
+	let hasComp = false;
+	for (let i=0; i<objOtherHand.length; i++) {
+		if (objOtherHand[i].rank === objPlay.topCard().rank
+			&& cardColor(objOtherHand[i])===cardColor(objPlay.topCard())) {
+			hasComp = true;
+		}				
+	}
+	console.log('hasComp= ',hasComp);
+
+	let isError = false;
+	if (hasComp == true) {
+		if (confirm('Error')) {
+			isError = true;
+		} else {
+			isError = false;
+		}
+	}
+	console.log('isError= ',isError);
+}
  
 
 function renderRunners() {

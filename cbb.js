@@ -301,7 +301,7 @@ async function playValidate() {
 				}	
 			} else if (objPlay.topCard().rank < objOtherPlay.topCard().rank) { // lager dan pitch => ball
 				numBalls += 1;
-				sendMessage('BALL' + numBalls)
+				sendMessage('BALL ' + numBalls)
 				updateScoreboard();
 				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
@@ -331,7 +331,12 @@ async function playValidate() {
 			changePlayer();
 			break;
 		case 'fielding': // een kaart kiezen : hoe verwerkt
-			console.log('atBatStatus: ', atBatStatus)			
+			console.log('atBatStatus: ', atBatStatus);
+			await sleep(2000);
+			
+			// Error-card in OFFENSE-HAND en toepassen ??
+			playError();
+
 			atBatStatus = 'result';
 			if (turnHome) {
 				$("#home").val(atBatStatus);
