@@ -65,9 +65,10 @@ var eqColor = false;
 var eqSuit = false;
 var isFace = false;
 
-// voor de bepaling van Erro in playValidate
+// voor de bepaling van Error en CacthFoul in playValidate
 let hasComp = false;
 let isError = false;
+let isCatchFoul = false;
 
 // voor de telling van de categories in playValidate per Hand
 var vFace = 0;
@@ -257,6 +258,12 @@ async function playValidate() {
 					sendMessage('FOUL - STRIKE ' + numStrikes);
 					updateScoreboard();
 					await sleep(2000);
+					
+					// CatchFoul-card in DEFFENSE-HAND en toepassen ??
+					hasComp = false;
+					isCatchFoul = false;
+					playCatchFoul(); // zo ja,  dan ben je OUT !!
+
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
@@ -471,8 +478,14 @@ async function playValidate() {
 			moveCards(objOtherPlay, discardPile);
 			refillHand(objOtherHand);
 			refillHand(objOtherHand);
+			if(isError) {
+				refillHand(objOtherHand);
+			}
 			refillHand(objHand);
-			refillHand(objHand);		
+			refillHand(objHand);
+			if(isCatchFoul) {
+				refillHand(objHand);
+			}		
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
 			renderRunners();

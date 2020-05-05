@@ -209,6 +209,7 @@ function playError() {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
 			&& cardColor(objOtherHand[i])===cardColor(objPlay.topCard())) {
 			hasComp = true;
+			compCard = i;
 		}				
 	}
 	console.log('hasComp= ',hasComp);
@@ -216,11 +217,55 @@ function playError() {
 	if (hasComp == true) {
 		if (confirm('Error')) {
 			isError = true;
+			objOtherPlay.addCard(objOtherHand[compCard]);
+			objOtherHand.render();
+			objOtherPlay.render();
 		} else {
 			isError = false;
 		}
 	}
 	console.log('isError= ',isError);
+}
+
+function playCatchFoul() {
+	// CacthFoul-card in DEFFENSE-HAND en toepassen ??
+	for (let i=0; i<objOtherHand.length; i++) {
+		if (objOtherHand[i].rank === objPlay.topCard().rank
+			&& cardColor(objOtherHand[i])===cardColor(objPlay.topCard())) {
+			hasComp = true;
+			compCard = i;
+		}				
+	}
+	console.log('hasComp= ',hasComp);
+
+	if (hasComp == true) {
+		if (confirm('Catch Foul')) {
+			isCatchFoul = true;
+			objOtherPlay.addCard(objOtherHand[compCard]);
+			objOtherHand.render();
+			objOtherPlay.render();
+
+			moveCards(objPlay, discardPile); // cleanup playing hands !!
+			moveCards(objOtherPlay, discardPile); // en die andere ook
+			//refillHand(objOtherHand);
+			//refillHand(objHand);
+			
+			// BATTER = OUT!
+			console.log('FOUL caught - OUT');
+			sendMessage('FOUL caught - OUT');
+			numStrikes=0;
+			numBalls=0;
+			numOuts++
+
+			// checkInning toepassen
+			checkInning();
+			atBatStatus = 'pitch'; // new pitch
+			changePlayer();	
+		} else {
+			isCatchFoul = false;
+		}
+	}
+	console.log('isCatchFoul= ',isCatchFoul);
 }
  
 
