@@ -170,6 +170,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 // functie om het resultaat van elke kaart in hand te geven, zou deze gespeeld worden
 function checkOptions(hand) {
 	let outcome ='';
+	let option ='';
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
 								// maar die zal ook weer ergens aangezet moeten worden...
 
@@ -246,13 +247,13 @@ function checkOptions(hand) {
 					outcome = ' :' + outcome + optionResult;
 					if (eqSuit) { // dezelfde suit
 						optionResult = optionResult * 1;
-						outcome = outcome + ' * 1 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
+						outcome = outcome + ' * 1 = ' + optionResult + ' <=> eqSuit';
 					} else if (eqColor) { // dezelfde kleur
 						optionResult = optionResult * 2;
-						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqSuit';
+						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqColor';
 					} else {
 						optionResult = optionResult * 3; // andere kleur
-						outcome = outcome + ' * 3 = ' + optionResult + ' <=> eqColor';
+						outcome = outcome + ' * 3 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
 					}
 
 					switch (true) { 
@@ -282,6 +283,8 @@ function checkOptions(hand) {
 				break;
 		} // end switch atBatStatus
 		console.log(cardColor(hand[i]), hand[i].shortName,' => ', outcome);
+		option = option + ' ' + hand[i].shortName + ' => ' + outcome + '&#013';
+		sendOption(option);
 	}
 } // end checkOptions
 

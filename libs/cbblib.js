@@ -371,6 +371,12 @@ async function sendMessage(message) {
 	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
 }
 
+async function sendOption(option) {
+	document.getElementById("option").innerHTML = option;
+	//await sleep(2000);
+	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
+}
+
 function gameOver() {
 	console.log('GAME OVER');
 }
