@@ -194,8 +194,10 @@ function checkOptions(hand) {
 				if (hand[i].rank >= 11) {
 					if (numStrikes <2 ) {
 						outcome = 'FOUL - STRIKE';
+						break;
 					} else {
 						outcome = '2-strike FOUL';
+						break;
 					}
 				} else if (!eqSuit) {
 					if ((objOtherPlay.topCard().rank >=9) && (eqRank === true) && (eqColor === true)) {
@@ -222,8 +224,8 @@ function checkOptions(hand) {
 				}
 			case 'fielding':
 				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
-				if (hand[i].rank >=11) {
-					if (objOtherPlay.topCard().rank >=11) { // swing = SAC
+				if (objOtherPlay.topCard().rank >=11) { // connect = SAC
+					if (hand[i].rank >=11) {
 						if (eqSuit) {
 							outcome = 'SAC DOUBLE PLAY';
 							break;
@@ -234,37 +236,38 @@ function checkOptions(hand) {
 					} else {
 						outcome = 'SAC B:safe R:adv';
 						break;
-					} // einde swing = SAC
-
-					// connect is #1-10
+					}
+				} else if (hand[i].rank >=11) { // connect is #1-10						
 					outcome = 'HOMERUN';
 					break;
-
-				} else { // berekening van eindresultaat obv biede #1-10 kaarten
-
+				} else {
+					// berekening van eindresultaat obv biede #1-10 kaarten
 					if (eqColor === false) { // ongelijke kleur
 						optionResult = optionResult * 3;
+						outcome = ' <=> NOT eqSuit or eqColor * 3';
 					} else if (eqSuit === true) { // dezelfde suit
 						optionResult = optionResult * 1;
+						outcome = ' <=> eqSuit * 1';
 					} else {
 						optionResult = optionResult * 2; // andere suit en dezelfde kleur
+						outcome = ' <=> eqColor * 2'
 					}
 
 					switch (true) { 
 						case (optionResult > 9):
-							outcome = 'HOMERUN';
+							outcome = 'HOMERUN' + outcome;
 							break;
 						case (optionResult > 7):
-							outcome = 'TRIPLE';
+							outcome = 'TRIPLE' + outcome;
 							break;
 						case (optionResult > 5):
-							outcome = 'DOUBLE';
+							outcome = 'DOUBLE' + outcome;
 							break;
 						case (optionResult > 3):
-							outcome = 'SINGLE';
+							outcome = 'SINGLE' + outcome;
 							break;
 						case (optionResult >= 0):
-							outcome = 'OUT';
+							outcome = 'OUT' + outcome;
 							break;
 						default:
 							outcome ='#NA#';
