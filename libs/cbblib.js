@@ -67,6 +67,25 @@ function detEquals() {
 	console.log('eqColor: ', eqColor);
 }
 
+function detOptionEquals(hand) {
+	// checks op de topCards van elke speler
+	eqRank = false;
+	eqSuit = false;
+	eqColor = false;
+	if (objOtherPlay.length >0) {
+		if (hand.rank === objOtherPlay.topCard().rank) {
+			eqRank = true;
+		}
+		if (hand.suit === objOtherPlay.topCard().suit) {
+			eqSuit = true;
+		}
+		if (cardColor(hand) === cardColor(objOtherPlay.topCard())) {
+			eqColor = true;
+		}
+	}
+}
+
+
 function countCategories() { 
 	//TODO Denom wordt verkeerd geteld, maar is volgens mij niet erg...
 	// het gaat erom dat ik weet dat ze bestaan...denk ik

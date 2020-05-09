@@ -167,13 +167,118 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	//checkDeck();
 } // end playCard
 
-// functie om het resultaat van elke kaar in hand te geven, zou deze gespeeld worden
+// functie om het resultaat van elke kaart in hand te geven, zou deze gespeeld worden
 function checkOptions(hand) {
+	let outcome ='';
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
+								// maar die zal ook weer ergens aangezet moeten worden...
+
+	// voor de huidige status en speler de kaarten langslopen
+	// dezelfde controles uitvoeren op de kaart
+	// en het resultaat bepalen
+
+	
+
+	console.log('checkOptions voor status = ', atBatStatus);
 	for (let i=0; i< hand.length; i++) {
-		console.log(cardColor(hand[i]), hand[i].shortName);
+		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
+		switch (atBatStatus) {
+			case 'pitch':
+				if (hand[i].rank >= 11) {
+					outcome = 'BALL';
+				} else {
+					outcome = '?swing?';
+				}
+				break;
+			case 'swing':
+				if (hand[i].rank >= 11) {
+					if (numStrikes <2 ) {
+						outcome = 'FOUL - STRIKE';
+					} else {
+						outcome = '2-strike FOUL';
+					}
+				} else if (!eqSuit) {
+					if ((objOtherPlay.topCard().rank >=9) && (eqRank === true) && (eqColor === true)) {
+						outcome = 'HBP';
+						break;
+					} else {
+						outcome = 'STRIKE';
+						break;
+					}
+				} else if (hand[i].rank < objOtherPlay.topCard().rank) {
+					outcome = 'BALL';
+					break;
+				} else {
+					outcome = '?connect?';
+					break;
+				}
+			case 'connect':
+				if (hand[i].rank >=11) {
+					outcome = 'SAC';
+					break;
+				} else {
+					outcome = '?fielding?';
+					break;
+				}
+			case 'fielding':
+				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
+				if (hand[i].rank >=11) {
+					if (objOtherPlay.topCard().rank >=11) { // swing = SAC
+						if (eqSuit) {
+							outcome = 'SAC DOUBLE PLAY';
+							break;
+						} else {
+							outcome = 'SAC B:out R:adv';
+							break;
+						} 
+					} else {
+						outcome = 'SAC B:safe R:adv';
+						break;
+					} // einde swing = SAC
+
+					// connect is #1-10
+					outcome = 'HOMERUN';
+					break;
+
+				} else { // berekening van eindresultaat obv biede #1-10 kaarten
+
+					if (eqColor === false) { // ongelijke kleur
+						optionResult = optionResult * 3;
+					} else if (eqSuit === true) { // dezelfde suit
+						optionResult = optionResult * 1;
+					} else {
+						optionResult = optionResult * 2; // andere suit en dezelfde kleur
+					}
+
+					switch (true) { 
+						case (optionResult > 9):
+							outcome = 'HOMERUN';
+							break;
+						case (optionResult > 7):
+							outcome = 'TRIPLE';
+							break;
+						case (optionResult > 5):
+							outcome = 'DOUBLE';
+							break;
+						case (optionResult > 3):
+							outcome = 'SINGLE';
+							break;
+						case (optionResult >= 0):
+							outcome = 'OUT';
+							break;
+						default:
+							outcome ='#NA#';
+							break;
+					}
+				}
+				break;
+			default:
+				outcome = '#NA#';
+				break;
+		} // end switch atBatStatus
+		console.log(cardColor(hand[i]), hand[i].shortName,' => ', outcome);
 	}
-}
+} // end checkOptions
 
 function checkAtBat() {
 	console.log('Inside checkAtBat');
@@ -507,7 +612,7 @@ async function playValidate() {
 	checkAtBat();
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
-} // einde playExecute
+} // einde playValidate
 
 // beurt wisselen
 function changePlayer() {
