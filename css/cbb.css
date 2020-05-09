@@ -57,6 +57,20 @@ a:visited {color:blue;}
 	left:310px;
 	top:170px;
 }
+
+#vNB {
+	position: absolute;
+	border-radius: 50%;
+	left: 200px;
+	top: 50px;
+}
+
+#hNB {
+	position: absolute;
+	left: 200px;
+	top: 500px;
+}
+
 #messageboard {
 	position: absolute;
 	border-radius: 5px;
@@ -82,7 +96,7 @@ a:visited {color:blue;}
 	top: 375px;
 	height: 100px;
 	width:220px;
-	font-size: 12px;
+	font-size: 10px;
 	color: yellow;
 	text-align: left;
 }

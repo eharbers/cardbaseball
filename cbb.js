@@ -37,7 +37,7 @@ var objHand = homeHand; // het zetten van de eerste speler,
 var objPlay = homePlay; // omdat er nog geen functie voor de ad random selectie is
 var objOtherHand = visitorHand // die ander moet ook herkend worden
 var objOtherPlay = visitorPlay // en deze andere ook
-var atBatStatus = 'pitch';
+var atBatStatus = '';
 
 // voor de initiatie van de baseballgame
 var numStrikes = 0;
@@ -91,6 +91,7 @@ var hHits = 0;
 var hErrors = 0;
 
 var checkOptionsFlag = true;
+var checkFaceCardsFlag = true;
 
 var endOfGame = false;
 
@@ -102,6 +103,7 @@ $('#deal').click(function () {
 		//This is a callback function, called when the dealing
 		//is done.
 		sendMessage("PLAY BALL !!")
+		atBatStatus = 'pitch';
 		//halfInning = 1;
 		//inning = Math.floor(halfInning / 2);
 		inning = 1;
@@ -110,7 +112,13 @@ $('#deal').click(function () {
 		baseRunners[0] = 1;
 		renderRunners();
 		countCategories();
+		checkOptionsFlag = true;
 	});
+})
+
+$('#hNB').click(function() {
+	console.log('hNB-clicked');
+	confirm('NB');
 })
 
 // dit stukje code zorgt voor de game-loop
@@ -122,7 +130,7 @@ window.requestAnimationFrame(playBall);
 
 function playBall() {
 	//slagbeurt 
-	console.log('playBall atBatStatus: ', atBatStatus);
+	//console.log('playBall atBatStatus: ', atBatStatus);
 	playCard();	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
 	if (endOfGame === true) { // dit stukje zorgt voor de herhaling, todat endOfGame 'waar' is
 		gameOver();
@@ -137,6 +145,8 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
 	if (checkOptionsFlag == true) {checkOptions(objHand)};
+	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) {checkNumFaceCards(objHand)};
+
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
 		var playable = false
@@ -167,131 +177,15 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	//checkDeck();
 } // end playCard
 
-// functie om het resultaat van elke kaart in hand te geven, zou deze gespeeld worden
-function checkOptions(hand) {
-	let outcome ='';
-	let option ='';
-	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
-								// maar die zal ook weer ergens aangezet moeten worden...
 
-	// voor de huidige status en speler de kaarten langslopen
-	// dezelfde controles uitvoeren op de kaart
-	// en het resultaat bepalen
 
-	
-
-	console.log('checkOptions voor status = ', atBatStatus);
-	for (let i=0; i< hand.length; i++) {
-		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
-		switch (atBatStatus) {
-			case 'pitch':
-				if (hand[i].rank >= 11) {
-					outcome = 'BALL';
-				} else {
-					outcome = '?swing?';
-				}
-				break;
-			case 'swing':
-				if (hand[i].rank >= 11) {
-					if (numStrikes <2 ) {
-						outcome = 'FOUL - STRIKE';
-						break;
-					} else {
-						outcome = '2-strike FOUL';
-						break;
-					}
-				} else if (!eqSuit) {
-					if ((objOtherPlay.topCard().rank >=9) && (eqRank === true) && (eqColor === true)) {
-						outcome = 'HBP';
-						break;
-					} else {
-						outcome = 'STRIKE';
-						break;
-					}
-				} else if (hand[i].rank < objOtherPlay.topCard().rank) {
-					outcome = 'BALL';
-					break;
-				} else {
-					outcome = '?connect?';
-					break;
-				}
-			case 'connect':
-				if (hand[i].rank >=11) {
-					outcome = 'SAC';
-					break;
-				} else {
-					outcome = '?fielding?';
-					break;
-				}
-			case 'fielding':
-				outcome ='';
-				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
-				if (objOtherPlay.topCard().rank >=11) { // connect = SAC
-					if (hand[i].rank >=11) {
-						if (eqSuit) {
-							outcome = 'SAC DOUBLE PLAY';
-							break;
-						} else {
-							outcome = 'SAC B:out R:adv';
-							break;
-						} 
-					} else {
-						outcome = 'SAC B:safe R:adv';
-						break;
-					}
-				} else if (hand[i].rank >=11) { // connect is #1-10						
-					outcome = 'HOMERUN';
-					break;
-				} else {
-					// berekening van eindresultaat obv biede #1-10 kaarten
-					outcome = ' :' + outcome + optionResult;
-					if (eqSuit) { // dezelfde suit
-						optionResult = optionResult * 1;
-						outcome = outcome + ' * 1 = ' + optionResult + ' <=> eqSuit';
-					} else if (eqColor) { // dezelfde kleur
-						optionResult = optionResult * 2;
-						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqColor';
-					} else {
-						optionResult = optionResult * 3; // andere kleur
-						outcome = outcome + ' * 3 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
-					}
-
-					switch (true) { 
-						case (optionResult > 9):
-							outcome = 'HOMERUN' + outcome;
-							break;
-						case (optionResult > 7):
-							outcome = 'TRIPLE' + outcome;
-							break;
-						case (optionResult > 5):
-							outcome = 'DOUBLE' + outcome;
-							break;
-						case (optionResult > 3):
-							outcome = 'SINGLE' + outcome;
-							break;
-						case (optionResult >= 0):
-							outcome = 'OUT' + outcome;
-							break;
-						default:
-							outcome ='#NA#';
-							break;
-					}
-				}
-				break;
-			default:
-				outcome = '#NA#';
-				break;
-		} // end switch atBatStatus
-		console.log(cardColor(hand[i]), hand[i].shortName,' => ', outcome);
-		option = option + ' ' + hand[i].shortName + ' => ' + outcome + '&#013';
-		sendOption(option);
-	}
-} // end checkOptions
-
+/**
+ * controleren van de slagbeurt
+ */
 function checkAtBat() {
 	console.log('Inside checkAtBat');
 	checkOptionsFlag = true; // vlag terugzetten zodat deze volgende keer met playCard kan worden uitgevoerd
-
+	checkFaceCardsFlag = true // vlag terugzetten
 	if (numStrikes === 3) {
 		console.log('strik-out');
 		sendMessage('STRIKE-OUT');

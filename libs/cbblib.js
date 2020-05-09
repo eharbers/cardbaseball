@@ -318,7 +318,9 @@ function renderRunners() {
 }
 
 
-
+/**
+ * verversen van de gegevens op het scoreboard
+ */
 function updateScoreboard() { // een-op-een van solitaire overgenomen
 	// update inning in cell rij 3 kolom 2
 	var inn = document.getElementById("scoreboard").rows[3].cells;
@@ -371,6 +373,161 @@ async function sendMessage(message) {
 	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
 }
 
+/**
+ * functie om het resultaat van elke kaart in hand te geven, zou deze gespeeld worden
+ * @param {*} hand 
+ */
+function checkOptions(hand) {
+	let outcome ='';
+	let option ='';
+	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
+								// maar die zal ook weer ergens aangezet moeten worden...
+
+	// voor de huidige status en speler de kaarten langslopen
+	// dezelfde controles uitvoeren op de kaart
+	// en het resultaat bepalen
+
+	
+
+	console.log('checkOptions voor status = ', atBatStatus);
+	for (let i=0; i< hand.length; i++) {
+		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
+		switch (atBatStatus) {
+			case 'pitch':
+				if (hand[i].rank >= 11) {
+					outcome = 'BALL';
+				} else {
+					outcome = '?swing?';
+				}
+				break;
+			case 'swing':
+				if (hand[i].rank >= 11) {
+					if (numStrikes <2 ) {
+						outcome = 'FOUL - STRIKE';
+						break;
+					} else {
+						outcome = '2-strike FOUL';
+						break;
+					}
+				} else if (!eqSuit) {
+					if ((objOtherPlay.topCard().rank >=9) && (eqRank === true) && (eqColor === true)) {
+						outcome = 'HBP';
+						break;
+					} else {
+						outcome = 'STRIKE';
+						break;
+					}
+				} else if (hand[i].rank < objOtherPlay.topCard().rank) {
+					outcome = 'BALL';
+					break;
+				} else {
+					outcome = '?connect?';
+					break;
+				}
+			case 'connect':
+				if (hand[i].rank >=11) {
+					outcome = 'SAC';
+					break;
+				} else {
+					outcome = '?fielding?';
+					break;
+				}
+			case 'fielding':
+				outcome ='';
+				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
+				if (objOtherPlay.topCard().rank >=11) { // connect = SAC
+					if (hand[i].rank >=11) {
+						if (eqSuit) {
+							outcome = 'SAC DOUBLE PLAY';
+							break;
+						} else {
+							outcome = 'SAC B:out R:adv';
+							break;
+						} 
+					} else {
+						outcome = 'SAC B:safe R:adv';
+						break;
+					}
+				} else if (hand[i].rank >=11) { // connect is #1-10						
+					outcome = 'HOMERUN';
+					break;
+				} else {
+					// berekening van eindresultaat obv biede #1-10 kaarten
+					outcome = ' :' + outcome + optionResult;
+					if (eqSuit) { // dezelfde suit
+						optionResult = optionResult * 1;
+						outcome = outcome + ' * 1 = ' + optionResult + ' <=> eqSuit';
+					} else if (eqColor) { // dezelfde kleur
+						optionResult = optionResult * 2;
+						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqColor';
+					} else {
+						optionResult = optionResult * 3; // andere kleur
+						outcome = outcome + ' * 3 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
+					}
+
+					switch (true) { 
+						case (optionResult > 9):
+							outcome = 'HOMERUN' + outcome;
+							break;
+						case (optionResult > 7):
+							outcome = 'TRIPLE' + outcome;
+							break;
+						case (optionResult > 5):
+							outcome = 'DOUBLE' + outcome;
+							break;
+						case (optionResult > 3):
+							outcome = 'SINGLE' + outcome;
+							break;
+						case (optionResult >= 0):
+							outcome = 'OUT' + outcome;
+							break;
+						default:
+							outcome ='#NA#';
+							break;
+					}
+				}
+				break;
+			default:
+				outcome = '#NA#';
+				break;
+		} // end switch atBatStatus
+		console.log(cardColor(hand[i]), hand[i].shortName,' => ', outcome);
+		option = option + ' ' + hand[i].shortName + ' => ' + outcome + '&#013';
+		sendOption(option);
+	}
+} // end checkOptions
+
+/**
+ * Testen aantal FaceCards tbv NB
+ * 
+ * @param {*} hand 
+ */
+function checkNumFaceCards(hand) {
+	checkFaceCardsFlag = false;
+	console.log('check op #FaceCards');
+	
+	let numFaceCards = 0
+	for (let i=0; i < hand.length; i++) {
+		if (hand[i].rank >=11) {
+			numFaceCards++
+		}
+	}
+
+	if  (numFaceCards >= 2) {
+		console.log('numFaceCards = ', numFaceCards);
+		// confirm('numFaceCards = ', numFaceCards);
+		$('#hNB').show();
+	} else {
+		$('#hNB').hide();
+	}
+} // end checkNumFaceCards
+
+
+
+/**
+ * uitkomst checkOption op scherm tonen
+ * @param {*} option 
+ */
 async function sendOption(option) {
 	document.getElementById("option").innerHTML = option;
 	//await sleep(2000);
