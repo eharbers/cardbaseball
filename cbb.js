@@ -244,15 +244,15 @@ function checkOptions(hand) {
 				} else {
 					// berekening van eindresultaat obv biede #1-10 kaarten
 					outcome = ' :' + outcome + optionResult;
-					if (eqColor === false) { // ongelijke kleur
-						optionResult = optionResult * 3;
-						outcome = outcome + ' * 3 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
-					} else if (eqSuit === true) { // dezelfde suit
+					if (eqSuit) { // dezelfde suit
 						optionResult = optionResult * 1;
-						outcome = outcome + ' * 1 = ' + optionResult + ' <=> eqSuit';
+						outcome = outcome + ' * 1 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
+					} else if (eqColor) { // dezelfde kleur
+						optionResult = optionResult * 2;
+						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqSuit';
 					} else {
-						optionResult = optionResult * 2; // andere suit en dezelfde kleur
-						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqColor';
+						optionResult = optionResult * 3; // andere kleur
+						outcome = outcome + ' * 3 = ' + optionResult + ' <=> eqColor';
 					}
 
 					switch (true) { 
@@ -518,15 +518,15 @@ async function playValidate() {
 				}
 			} // einde sacrifice
 
-			if (eqColor === false) { // ongelijke kleur
-				result = result * 3;
-				console.log('result * 3:', result);
-			} else if (eqSuit === true) { // dezelfde suit
+			if (eqSuit) { // dezelfde suit
 				result = result * 1;
-				console.log('result * 1: ', result);
-			} else {
-				result = result * 2; // andere suit en dezelfde kleur
+				console.log('result * 1:', result);
+			} else if (eqColor) { // dezelfde kleur
+				result = result * 2;
 				console.log('result * 2: ', result);
+			} else {
+				result = result * 3; // andere kleur
+				console.log('result * 3: ', result);
 			}
 			console.log('Eind result: ', result);
 		
