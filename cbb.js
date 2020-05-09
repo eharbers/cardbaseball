@@ -223,6 +223,7 @@ function checkOptions(hand) {
 					break;
 				}
 			case 'fielding':
+				outcome ='';
 				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
 				if (objOtherPlay.topCard().rank >=11) { // connect = SAC
 					if (hand[i].rank >=11) {
@@ -242,15 +243,16 @@ function checkOptions(hand) {
 					break;
 				} else {
 					// berekening van eindresultaat obv biede #1-10 kaarten
+					outcome = ' :' + outcome + optionResult;
 					if (eqColor === false) { // ongelijke kleur
 						optionResult = optionResult * 3;
-						outcome = ' <=> NOT eqSuit or eqColor * 3';
+						outcome = outcome + ' * 3 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
 					} else if (eqSuit === true) { // dezelfde suit
 						optionResult = optionResult * 1;
-						outcome = ' <=> eqSuit * 1';
+						outcome = outcome + ' * 1 = ' + optionResult + ' <=> eqSuit';
 					} else {
 						optionResult = optionResult * 2; // andere suit en dezelfde kleur
-						outcome = ' <=> eqColor * 2'
+						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqColor';
 					}
 
 					switch (true) { 
