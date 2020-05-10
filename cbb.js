@@ -93,6 +93,15 @@ var hErrors = 0;
 var checkOptionsFlag = true;
 var checkFaceCardsFlag = true;
 
+// NB knop
+let newBallFlag = false;
+$('#hNB').hide();
+$('#vNB').hide();
+
+hNewBall = new cards.Hand({faceUp: true, x:393, y:150 }); //ter hoogte van hHand
+vNewBall = new cards.Hand({faceup: true, x:13, y:150}); // ter hoogte van vHand
+
+
 var endOfGame = false;
 
 // activeren van het spel met de DEAL button (of Play Ball)
@@ -116,9 +125,22 @@ $('#deal').click(function () {
 	});
 })
 
+// afhandelen van het klikken op home NB-button voor new balls
 $('#hNB').click(function() {
 	console.log('hNB-clicked');
-	confirm('NB');
+	newBallFlag = true;
+	console.log('newBallFlag = true');
+	atBatStatus ='newball';
+	turnHome ? $("#home").val(atBatStatus): $("#visitor").val(atBatStatus);
+})
+
+// afhandelen van het klikken op visitor NB-button voor new balls
+$('#vNB').click(function() {
+	console.log('vNB-clicked');
+	newBallFlag = true;
+	console.log('newBallFlag = true');
+	atBatStatus ='newball';
+	turnHome ? $("#home").val(atBatStatus): $("#visitor").val(atBatStatus);
 })
 
 // dit stukje code zorgt voor de game-loop
@@ -158,7 +180,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 				console.log('playable:', playable);
 			};
 		} // end test voor playable
-		if (playable === true) { //valid card/player 	
+		if (playable === true) { //valid card/player 
 			console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
 			objPlay.addCard(card);
 			objPlay.render();
@@ -247,6 +269,11 @@ async function playValidate() {
 	detEquals();
 		
 	switch (atBatStatus) {
+		case 'newball':
+			
+			console.log('atBatStatus: newball');
+			atBatStatus = 'pitch'; // new pitch
+			break;
 		// de pitch
 		case 'pitch':
 			console.log('atBatStatus: ', 'pitch');
@@ -530,6 +557,15 @@ async function playValidate() {
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
 } // einde playValidate
+
+/**
+ * New Balls voor pitcher tegen inlevering van 2 faceCards
+ */
+function newBall() {
+	console.log('inside newBall');
+		
+	} //einde click functie
+
 
 /**
  * van speelbeurt wisselen

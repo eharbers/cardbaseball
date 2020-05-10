@@ -334,7 +334,6 @@ function playCatchFoul() {
 			// checkInning toepassen
 			checkInning();
 			atBatStatus = 'pitch'; // new pitch
-			changePlayer();	
 		} else {
 			isCatchFoul = false;
 		}
@@ -599,7 +598,7 @@ function fillToolTip(tipCard, tip) {
  * 
  * @param {*} hand 
  */
-function checkNumFaceCards(hand) {
+function checkNumFaceCards(hand) { // miischien moet dit toon NB-knop worden
 	checkFaceCardsFlag = false;
 	console.log('check op #FaceCards');
 	
@@ -612,10 +611,9 @@ function checkNumFaceCards(hand) {
 
 	if  (numFaceCards >= 2) {
 		console.log('numFaceCards = ', numFaceCards);
-		// confirm('numFaceCards = ', numFaceCards);
-		$('#hNB').show();
+		vAtBat ? $('#hNB').show(): $('#vNB').show();
 	} else {
-		$('#hNB').hide();
+		vAtBat ? $('#hNB').hide(): $('#vNB').hide();
 	}
 } // end checkNumFaceCards
 
