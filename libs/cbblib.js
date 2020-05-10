@@ -556,7 +556,7 @@ function checkOptions(hand) {
 		sendOption(option);
 		let tipCard = hand[i];
 		let tip = outcome;
-		fillToolTip(tipCard, tip);
+		//fillToolTip(tipCard, tip);
 	}
 } // end checkOptions
 

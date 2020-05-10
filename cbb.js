@@ -440,32 +440,39 @@ async function playValidate() {
 			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases
 				case (result > 9):
 					sendMessage('HOME RUN');
+					vAtBat ? vHits++ : hHits++;
 					moveRunners('homerun');
 					break;
 				case (result > 7):
 					if (!isError) {
 						sendMessage('TRIPLE');
+						vAtBat ? vHits++ : hHits++;
 						moveRunners('triple');
 					} else {
 						sendMessage('TRIPLE + ERROR !');
+						vABat ? vHits++ : hHits++;
 						moveRunners('homerun');
 					}
 					break;
 				case (result > 5):
 					if (!isError) {
 						sendMessage('DOUBLE');
+						vAtBat ? vHits++ : hHits++;
 						moveRunners('double');
 					} else {
 						sendMessage('DOUBLE + ERROR !');
+						vAtBat ? vHits++ : hHits++;
 						moveRunners('triple');
 					}
 					break;
 				case (result > 3):
 					if (!isError) {
 						sendMessage('SINGLE');
+						vAtBat ? vHits++ : hHits++;
 						moveRunners('single');
 					} else {
 						sendMessage('SINGLE + ERROR !');
+						vAtBat ? vHits++ : hHits++;
 						moveRunners('double');
 					}
 					break;
