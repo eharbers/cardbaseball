@@ -554,8 +554,40 @@ function checkOptions(hand) {
 		console.log(cardColor(hand[i]), hand[i].shortName,' => ', outcome);
 		option = option + ' ' + hand[i].shortName + ' => ' + outcome + '&#013';
 		sendOption(option);
+		let tipCard = hand[i];
+		let tip = outcome;
+		fillToolTip(tipCard, tip);
 	}
 } // end checkOptions
+
+
+/**
+ * Vullen van tooltip obv kaart in hand
+ * @param {*} tipCard 
+ * @param {*} tip 
+ */
+function fillToolTip(tipCard, tip) {
+	console.log('Inside fillToolTip');
+	
+	switch (tipCard.suit) {
+		case 'c':
+			console.log('clover');
+			break;
+		case 'h':
+			console.log('heart');
+			break;
+		case 'd':
+			console.log('diamond');
+			break;
+		case 's':
+			console.log('spade');
+			break;
+		default:
+			console.log('#NA#');
+			break;
+	}
+}
+
 
 /**
  * Testen aantal FaceCards tbv NewBall
