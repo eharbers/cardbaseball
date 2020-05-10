@@ -347,7 +347,7 @@ function playCatchFoul() {
  */
 function renderRunners() {
 	var topRow = document.getElementById("bases").rows[0].cells
-	var bottomRow = document.getElementById("bases").rows[2].cells
+	var bottomRow = document.getElementById("bases").rows[4].cells
 
 	if (baseRunners[3] != 0) {
 		bottomRow[0].innerHTML = "3B";
@@ -362,15 +362,15 @@ function renderRunners() {
 	}
 
 	if (baseRunners[1] != 0) {
-		topRow[2].innerHTML = "1B";
+		topRow[4].innerHTML = "1B";
 	} else {
-		topRow[2].innerHTML = "O";
+		topRow[4].innerHTML = "O";
 	}
 
 	if (baseRunners[0] != 0) {
-		bottomRow[2].innerHTML ="AB";
+		bottomRow[4].innerHTML ="AB";
 	} else {
-		bottomRow[2].innerHTML = "O";
+		bottomRow[4].innerHTML = "O";
 	}
 }
 
@@ -516,13 +516,13 @@ function checkOptions(hand) {
 					outcome = ' :' + outcome + optionResult;
 					if (eqSuit) { // dezelfde suit
 						optionResult = optionResult * 1;
-						outcome = outcome + ' * 1 = ' + optionResult + ' <=> eqSuit';
+						outcome = outcome + ' * 1 = ' + optionResult // + ' <=> eqSuit';
 					} else if (eqColor) { // dezelfde kleur
 						optionResult = optionResult * 2;
-						outcome = outcome + ' * 2 = ' + optionResult + ' <=> eqColor';
+						outcome = outcome + ' * 2 = ' + optionResult // + ' <=> eqColor';
 					} else {
 						optionResult = optionResult * 3; // andere kleur
-						outcome = outcome + ' * 3 = ' + optionResult + ' <=> NOT eqSuit or eqColor';
+						outcome = outcome + ' * 3 = ' + optionResult  //+ ' <=> NOT eqSuit or eqColor';
 					}
 
 					switch (true) { 
@@ -567,6 +567,11 @@ function checkOptions(hand) {
  * @param {*} tip 
  */
 function fillToolTip(tipCard, tip) {
+	// het idee is om obv hover the outcome te tonen
+	// het vinden van de kaart in de html is het probleem
+	// met css-property background-position zou dat mogeljk kunnen
+	// te berekenen obv rij en kolom en afm card 69x94
+
 	console.log('Inside fillToolTip');
 	
 	switch (tipCard.suit) {
