@@ -1,3 +1,6 @@
+/**
+ * Deck controleren op het aantal kaarten
+ */
 async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
 	console.log('Inside checkDeck: ',deck.length);
 	if (deck.length < 7) {
@@ -7,7 +10,10 @@ async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels be
 	}
 }
 
-// functie om de Hand aan te vullen met een kaart van deck
+/**
+ * functie om de Hand aan te vullen met een kaart van deck
+ * @param {*} objHand 
+ */
 function refillHand(objHand) {
 	objHand.addCard(deck.topCard());
 	objHand.render();
@@ -15,8 +21,12 @@ function refillHand(objHand) {
 	countCategories();
 }
 
-// functie om een Hand met kaarten te verplaatsten
-// hierin in blijkbaar niet voorzien in card.js
+/**
+ * functie om een Hand met kaarten te verplaatsten.
+ * hierin in blijkbaar niet voorzien in card.js
+ * @param {*} from 
+ * @param {*} to 
+ */
 function moveCards(from, to) {
 	for (let i = 0; i < from.length; i++) {
 		to.addCard(from[i]);
@@ -33,10 +43,18 @@ function moveCards(from, to) {
 // zoals de playValidate-function
 // in de functie wordt het slaapmoment aangeroepen met await sleep(ms)
 // zie de movecards aanroepen
+/**
+ * Sleep-functie voorafgegaan door async-functie
+ * @param {*} ms 
+ */
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+/**
+ * kleur van de kaart bepalen
+ * @param {*} kaart 
+ */
 function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 	if (kaart.suit === 'd' || kaart.suit === 'h') {
 		var color = 'red';
@@ -46,8 +64,11 @@ function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
 	return color;
 }
 
+/**
+ * checks op de topCards van elke speler
+ * voor beslisboom
+ */
 function detEquals() {
-	// checks op de topCards van elke speler
 	eqRank = false;
 	eqSuit = false;
 	eqColor = false;
@@ -67,6 +88,11 @@ function detEquals() {
 	console.log('eqColor: ', eqColor);
 }
 
+/**
+ * checks op de topCards van elke speler
+ * voor beslisboom van checkOptions
+ * @param {*} hand 
+ */
 function detOptionEquals(hand) {
 	// checks op de topCards van elke speler
 	eqRank = false;
@@ -85,7 +111,10 @@ function detOptionEquals(hand) {
 	}
 }
 
-
+/**
+ * Tellen van categorien
+ * Face, COmpanion en Denomination
+ */
 function countCategories() { 
 	//TODO Denom wordt verkeerd geteld, maar is volgens mij niet erg...
 	// het gaat erom dat ik weet dat ze bestaan...denk ik
@@ -131,6 +160,11 @@ function countCategories() {
 	console.log('   homeHand: Face: ', hFace,' Denom: ', hDenomination,' Comp: ', hCompanion);
 }
 
+/**
+ * Bepalen van type resultaat en hoeveelheid honken
+ * obv resultaat play
+ * @param {*} play 
+ */
 function moveRunners(play) { // TODO walk = true bij 4-wijd...
 	console.log('inside moveRunners');
 	console.log('play:', play);
@@ -171,6 +205,11 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 	renderRunners();
 }
 
+/**
+ * Verplaatsen honklopers
+ * obv aantal honken uit honkslag
+ * @param {*} bases 
+ */
 function moveOnHit(bases) {
 	for (var b=3; b>=0; b--) {
 		if (baseRunners[b] != 0) {
@@ -189,6 +228,10 @@ function moveOnHit(bases) {
 	}
 }
 
+/**
+ * Verplaatsen honklopes
+ * obv WALK
+ */
 function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
 	// EIGENLIJK DEZELFDE ALS moveOnHBP ... DUS UNIVERSEEL MAKEN
 	// verschillende situaties honken bezetting met case afwerken
@@ -216,12 +259,20 @@ function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
 	baseRunners[1] = 1;
 }
 
+/**
+ * verplaatsen honklopers
+ * obv HBP (als WALK)
+ */
 function moveOnHBP() {
 	console.log('Inside moveOnHBP');
 	console.log('Hetzelfde als moveOnWalk');
 	moveOnWalk(); // vandaar dat we die gewoon aanroepen
 }
 
+/**
+ * Bepalen obv OFFENSE-hand of ERROR gespeeld kan worden
+ * en uitvoering
+ */
 function playError() {
 	// Error-card in OFFENSE-HAND en toepassen ??
 	for (let i=0; i<objOtherHand.length; i++) {
@@ -246,6 +297,10 @@ function playError() {
 	console.log('isError= ',isError);
 }
 
+/**
+ * Bepalen obv DEFENSE-hand of FOUL-catch kan worden toegepast
+ * en uitvoering
+ */
 function playCatchFoul() {
 	// CacthFoul-card in DEFFENSE-HAND en toepassen ??
 	for (let i=0; i<objOtherHand.length; i++) {
@@ -287,7 +342,9 @@ function playCatchFoul() {
 	console.log('isCatchFoul= ',isCatchFoul);
 }
  
-
+/**
+ * Renederen van de honklopers
+ */
 function renderRunners() {
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[2].cells
@@ -366,7 +423,10 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 	hError[13].innerHTML = hErrors;
 }
 
-
+/**
+ * Plaatsen van een message op het messagebord
+ * @param {*} message 
+ */
 async function sendMessage(message) {
 	document.getElementById("messageboard").innerHTML = message;
 	//await sleep(2000);
@@ -498,7 +558,7 @@ function checkOptions(hand) {
 } // end checkOptions
 
 /**
- * Testen aantal FaceCards tbv NB
+ * Testen aantal FaceCards tbv NewBall
  * 
  * @param {*} hand 
  */
@@ -534,6 +594,9 @@ async function sendOption(option) {
 	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
 }
 
+/**
+ * EINDE WEDSTRIJD
+ */
 function gameOver() {
 	console.log('GAME OVER');
 }

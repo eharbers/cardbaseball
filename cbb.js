@@ -140,7 +140,9 @@ function playBall() {
 }
 // einde playBall
 
-// functie om kaart te klikken uit de hand die aan de beurt is.
+/**
+ * functie om kaart te klikken uit de hand die aan de beurt is.
+ */
 function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
@@ -203,6 +205,9 @@ function checkAtBat() {
 	}
 }
 
+/**
+ * controlen van de  inning
+ */
 function checkInning() {
 	console.log('Inside checkInning');
 	if (numOuts === 3 ) {
@@ -228,6 +233,9 @@ function checkInning() {
 	}
 }
 
+/**
+ * obv atBatStatus de uit te voeren play bepalen
+ */
 async function playValidate() {
 	console.log('inside playValidate');
 	// feitelijke controle op de kaart die als laatste aan homePlay of visitorPlay is toegevoegd
@@ -516,7 +524,11 @@ async function playValidate() {
 	updateScoreboard(); // naar game-loop ??
 } // einde playValidate
 
-// beurt wisselen
+/**
+ * van speelbeurt wisselen
+ * en aansturing indicator
+ * met atBatStatus
+ */
 function changePlayer() {
 	
 	if (turnHome) {
