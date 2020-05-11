@@ -96,14 +96,13 @@ var vReliever = false; // max 1 per game
 
 var checkOptionsFlag = true;
 var checkFaceCardsFlag = true;
-var checkRelieverFlag = true;
+var checkRelieverFlag = true; // mag er gecheckt worden
 
 // NB knop
 let newBallFlag = false;
 $('#hNB').hide();
 $('#vNB').hide();
 // RP knop
-let relieverFlag = false;
 $('#hRP').hide();
 $('#vRP').hide();
 
@@ -156,7 +155,6 @@ $('#vNB').click(function () {
 $('#hRP').click(function () {
 	console.log('hRP-clicked');	
 	sendMessage('Relief Pitcher');
-	relieverFlag = true;
 	hReliever = true; // de reliever is ingezet
 	refillHand(objHand);
 	refillHand(objHand);
@@ -189,7 +187,15 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// wellicht terugkopieren?
 	if (checkOptionsFlag == true) { checkOptions(objHand) };
 	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
-	if ((checkRelieverFlag == true) && hitsInning > 2) {checkReliever()};
+//	if ((checkRelieverFlag == true) && hitsInning >= 2) {checkReliever()};
+	if ((checkRelieverFlag == true) && hitsInning >= 2) {
+		if (vAtBat === true && hReliever == false ) {
+			checkReliever();
+		} else if ( hAtBat === true && vReliever === false) {
+			checkReliever();
+		}		
+	}
+
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
@@ -273,6 +279,11 @@ function checkInning() {
 		renderRunners();
 		numOuts = 0;
 		changePlayer();
+		if (objHand.length >6 || objOtherHand.length) {
+			atBatStatus = 'decrease'
+			sendMessage('decrease to 6 cards');
+			turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+		}
 		atBatStatus = 'pitch';
 	}
 }
@@ -322,6 +333,21 @@ async function playValidate() {
 					moveCards(objPlay, objHand);
 				}					
 			} 
+			break;
+		case 'decrease':
+			console.log('decrease cards');
+			sendMessage('decrease to 6 cards');
+			let handLength = objOtherHand.length;
+			switch (true) {
+				case (handLength > 6):
+					moveCards(objOtherHand, discardPile);
+					break;
+				case (handLength = 6):
+					atBatStatus = 'pitch';
+					sendMessage('Play Ball!');
+					turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+					break;
+			}
 			break;
 		// de pitch
 		case 'pitch':
