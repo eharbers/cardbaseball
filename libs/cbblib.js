@@ -555,7 +555,7 @@ function checkOptions(hand) {
 		if (objOtherPlay.length > 0) {
 			if ((hand[i].rank == objOtherPlay.topCard().rank) 
 				&& (hand[i].suit != objOtherPlay.topCard().suit)
-				&& (cardColor(hand[i]) == cardColor(objOtherPlay)) ) {
+				&& (cardColor(hand[i]) == cardColor(objOtherPlay.topCard())) ) {
 					indComp = '[comp]';
 				}
 			}
