@@ -1,140 +1,143 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Card Baseball</title>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" href="css/cbb.css"/>
-		<script src="libs/jquery-1.7.min.js"></script>
-	</head>
-	<body>
-		<h1>Card Baseball</h1>
-	
-		<img class="preload" src="img/cards.png"/>
 
-		<div id="card-table">
-			<button id="deal">Play Ball !</button>
-			<button id="vNB">NB</button>
-			<button id="hNB">NB</button>
-			<table id="bases">
-				<tr>
-					<td>2B</td>
-					<td>=</td>
-					<td>=</td>
-					<td>=</td>
-					<td>1B</td>
-				</tr>
-				<tr>
-					<td>||</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>||</td>
-				</tr>
-				<tr>
-					<td>||</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>||</td>
-				</tr>
-				<tr>
-					<td>||</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>||</td>
-				</tr>
-				<tr>
-					<td>3B</td>
-					<td>=</td>
-					<td>=</td>
-					<td>=</td>
-					<td>AB</td>
-				</tr>
-			</table>
+<head>
+	<title>Card Baseball</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/cbb.css" />
+	<script src="libs/jquery-1.7.min.js"></script>
+</head>
 
-			<table id="scoreboard">
-				<tr>
-					<th></th>
-					<th>1</th>
-					<th>2</th>
-					<th>3</th>
-					<th>4</th>
-					<th>5</th>
-					<th>6</th>
-					<th>7</th>
-					<th>8</th>
-					<th>9</th>
-					<th>X</th>
-					<th>R</th>
-					<th>H</th>
-					<th>E</th>
-				  </tr>
-				  <tr>
-					<td>V</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-				  </tr>
-				  <tr>
-					<td>H</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-					<td>--</td>
-				  </tr>
-				  <tr>
-					<td></td>
-					<td>I:</td>
-					<td>--</td>
-					<td></td>
-					<td>B:</td>
-					<td>--</td>
-					<td></td>
-					<td>S:</td>
-					<td>--</td>
-					<td></td>
-					<td>O:</td>
-					<td>--</td>
-					<td></td>
-					<td></td>
-				  </tr>
-			</table>
-			<textarea id="messageboard" readonly rows="1" cols="1"></textarea>
-			<textarea id="visitor" readonly rows="1" cols="1"></textarea>
-			<textarea id="home" readonly rows="1" cols="1"></textarea>
-			<textarea id="option" readonly rows="10" cols="1"></textarea>
-		</div>
-		<footer>
-			&copy; 2020 Card Baseball was created by Erik Harbers.
+<body>
+	<h1>Card Baseball</h1>
+
+	<img class="preload" src="img/cards.png" />
+
+	<div id="card-table">
+		<button id="deal">Play Ball !</button>
+		<button id="vNB">NB</button>
+		<button id="hNB">NB</button>
+		<table id="bases">
+			<tr>
+				<td>2B</td>
+				<td>=</td>
+				<td>=</td>
+				<td>=</td>
+				<td>1B</td>
+			</tr>
+			<tr>
+				<td>||</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>||</td>
+			</tr>
+			<tr>
+				<td>||</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>||</td>
+			</tr>
+			<tr>
+				<td>||</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>||</td>
+			</tr>
+			<tr>
+				<td>3B</td>
+				<td>=</td>
+				<td>=</td>
+				<td>=</td>
+				<td>AB</td>
+			</tr>
+		</table>
+
+		<table id="scoreboard">
+			<tr>
+				<th></th>
+				<th>1</th>
+				<th>2</th>
+				<th>3</th>
+				<th>4</th>
+				<th>5</th>
+				<th>6</th>
+				<th>7</th>
+				<th>8</th>
+				<th>9</th>
+				<th>X</th>
+				<th>R</th>
+				<th>H</th>
+				<th>E</th>
+			</tr>
+			<tr>
+				<td>V</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+			</tr>
+			<tr>
+				<td>H</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+				<td>--</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>I:</td>
+				<td>--</td>
+				<td></td>
+				<td>B:</td>
+				<td>--</td>
+				<td></td>
+				<td>S:</td>
+				<td>--</td>
+				<td></td>
+				<td>O:</td>
+				<td>--</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+		<textarea id="messageboard" readonly rows="1" cols="1"></textarea>
+		<textarea id="visitor" readonly rows="1" cols="1"></textarea>
+		<textarea id="home" readonly rows="1" cols="1"></textarea>
+		<textarea id="option" readonly rows="10" cols="1"></textarea>
+	</div>
+	<footer>
+		&copy; 2020 Card Baseball was created by Erik Harbers.
 		Adapted from "A Gamut of Games" by Sid Sackson</a>.
 		cards.js was created by <a href="http://einaregilsson.com">Einar Egilsson</a> and is licensed
 		under the MIT license.
 		The card images were created by <a href="http://nicubunu.ro">Nicu Buculei</a> and are
-		in the public domain. 
-		</footer>
-		<!-- load this at the bottom so the #card-table element exists -->
-		<script src="libs/cards.js"></script>
-		<script src="libs/cbblib.js"></script>
-		<script src="cbb.js"></script>
-	</body>
+		in the public domain.
+	</footer>
+	<!-- load this at the bottom so the #card-table element exists -->
+	<script src="libs/cards.js"></script>
+	<script src="libs/cbblib.js"></script>
+	<script src="cbb.js"></script>
+</body>
+
 </html>

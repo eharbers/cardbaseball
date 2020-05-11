@@ -52,8 +52,8 @@ var hAtBat = false;
 
 // voor de initiatie van de honklopers
 var numBases = 0; // aantal honken op geslagen bal (of walk...)
-var baseRunners =[];
-for (i=0; i<=3; i++) {
+var baseRunners = [];
+for (i = 0; i <= 3; i++) {
 	baseRunners[i] = 0;
 }
 var play = '';
@@ -85,7 +85,7 @@ vRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs up
 var hRun = [];
 hRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
 
-var vHits = 0; 
+var vHits = 0;
 var vErrors = 0;
 var hHits = 0;
 var hErrors = 0;
@@ -98,10 +98,7 @@ let newBallFlag = false;
 $('#hNB').hide();
 $('#vNB').hide();
 
-hNewBall = new cards.Hand({faceUp: true, x:393, y:150 }); //ter hoogte van hHand
-vNewBall = new cards.Hand({faceup: true, x:13, y:150}); // ter hoogte van vHand
-
-
+// endOfGame indicator
 var endOfGame = false;
 
 // activeren van het spel met de DEAL button (of Play Ball)
@@ -126,21 +123,21 @@ $('#deal').click(function () {
 })
 
 // afhandelen van het klikken op home NB-button voor new balls
-$('#hNB').click(function() {
+$('#hNB').click(function () {
 	console.log('hNB-clicked');
 	newBallFlag = true;
 	console.log('newBallFlag = true');
-	atBatStatus ='newball';
-	turnHome ? $("#home").val(atBatStatus): $("#visitor").val(atBatStatus);
+	atBatStatus = 'newball';
+	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
 })
 
 // afhandelen van het klikken op visitor NB-button voor new balls
-$('#vNB').click(function() {
+$('#vNB').click(function () {
 	console.log('vNB-clicked');
 	newBallFlag = true;
 	console.log('newBallFlag = true');
-	atBatStatus ='newball';
-	turnHome ? $("#home").val(atBatStatus): $("#visitor").val(atBatStatus);
+	atBatStatus = 'newball';
+	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
 })
 
 // dit stukje code zorgt voor de game-loop
@@ -168,14 +165,14 @@ function playBall() {
 function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
-	if (checkOptionsFlag == true) {checkOptions(objHand)};
-	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) {checkNumFaceCards(objHand)};
+	if (checkOptionsFlag == true) { checkOptions(objHand) };
+	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
 		var playable = false
-		for (i=0 ; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
-			if ( card === objHand[i]) {
+		for (i = 0; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
+			if (card === objHand[i]) {
 				playable = true;
 				console.log('playable:', playable);
 			};
@@ -213,8 +210,8 @@ function checkAtBat() {
 	if (numStrikes === 3) {
 		console.log('strik-out');
 		sendMessage('STRIKE-OUT');
-		numStrikes=0;
-		numBalls=0;
+		numStrikes = 0;
+		numBalls = 0;
 		numOuts++
 	}
 
@@ -222,8 +219,8 @@ function checkAtBat() {
 		console.log('walk');
 		sendMessage('WALK');
 		moveRunners('walk');
-		numStrikes=0;
-		numBalls=0;
+		numStrikes = 0;
+		numBalls = 0;
 	}
 }
 
@@ -232,24 +229,24 @@ function checkAtBat() {
  */
 function checkInning() {
 	console.log('Inside checkInning');
-	if (numOuts === 3 ) {
+	if (numOuts === 3) {
 		sendMessage('3-OUTS Change fields')
 		if (vAtBat) {
 			vAtBat = false;
 			hAtBat = true;
-			hRun[inning]=0;
+			hRun[inning] = 0;
 		} else {
 			hAtBat = false;
 			vAtBat = true;
 			inning++;
-			vRun[inning]=0;
+			vRun[inning] = 0;
 		}
-		for (i=0; i<=3; i++) {
+		for (i = 0; i <= 3; i++) {
 			baseRunners[i] = 0;
 		}
 		baseRunners[0] = 1;
 		renderRunners();
-		numOuts= 0;
+		numOuts = 0;
 		changePlayer();
 		atBatStatus = 'pitch';
 	}
@@ -267,10 +264,10 @@ async function playValidate() {
 
 	// bepaal de overeenkomstigheden (equals)
 	detEquals();
-		
+
 	switch (atBatStatus) {
 		case 'newball':
-			
+
 			console.log('atBatStatus: newball');
 			atBatStatus = 'pitch'; // new pitch
 			break;
@@ -300,7 +297,7 @@ async function playValidate() {
 					sendMessage('FOUL - STRIKE ' + numStrikes);
 					updateScoreboard();
 					await sleep(2000);
-					
+
 					// CatchFoul-card in DEFFENSE-HAND en toepassen ??
 					hasComp = false;
 					isCatchFoul = false;
@@ -311,7 +308,7 @@ async function playValidate() {
 					refillHand(objOtherHand);
 					refillHand(objHand);
 					atBatStatus = 'pitch'; // new pitch
-					changePlayer();					
+					changePlayer();
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
 					await sleep(2000);
@@ -324,7 +321,7 @@ async function playValidate() {
 				}
 			} else if (eqSuit === false) { // HBP of strike
 				// de pitch >=9; de swing is gelijke rank en gelijke kleur (het is al niet meer dezelfde suit)
-				if((objOtherPlay.topCard().rank >=9) && (eqRank === true)  && (eqColor === true)) {
+				if ((objOtherPlay.topCard().rank >= 9) && (eqRank === true) && (eqColor === true)) {
 					console.log('Hit by Pitch');
 					sendMessage('Hit by Pitch');
 					moveRunners('hbp');
@@ -336,7 +333,7 @@ async function playValidate() {
 					numBalls = 0; //new batter
 					numStrikes = 0;//new batter
 					updateScoreboard();
-					atBatStatus= 'pitch'; // new batter
+					atBatStatus = 'pitch'; // new batter
 					changePlayer();
 					break;
 				} else {
@@ -351,7 +348,7 @@ async function playValidate() {
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 					break;
-				}	
+				}
 			} else if (objPlay.topCard().rank < objOtherPlay.topCard().rank) { // lager dan pitch => ball
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls)
@@ -408,16 +405,16 @@ async function playValidate() {
 			console.log('result is now:', result);
 			console.log('objPlay color: ', cardColor(objPlay.topCard()))
 			console.log('objOtherPlay color: ', cardColor(objOtherPlay.topCard()))
-			
+
 			// verwerking van bijzondere connect-kaart of bijzondere connect-fielding-combi
 
 			// sacrifice alleen met 1 of 2 of 1 en 2 bezet.of 1 en 3; bases loaded en alleen loper op 3 kan niet
 			// dus iets met baseRunners[i] doen en zo... 
-			if (objOtherPlay.topCard().rank >=11) { // sacrifice
+			if (objOtherPlay.topCard().rank >= 11) { // sacrifice
 				//TODO kan niet met bases loaded of alleen loper op 3 !! => afvangen van tevoren??
 				console.log('sacrifice attempt')
 				// plaatje van dezelfde suit
-				if ((objPlay.topCard().rank >=11) && (eqSuit === true)) {
+				if ((objPlay.topCard().rank >= 11) && (eqSuit === true)) {
 					console.log('SAC: double play');
 					sendMessage('SAC: double play');
 					// batter is out and runner out... de verste loper
@@ -427,7 +424,7 @@ async function playValidate() {
 					sendMessage('SAC: B:out R:adv');
 					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
 					break;
-				} else if (objPlay.topCard().rank <11) {
+				} else if (objPlay.topCard().rank < 11) {
 					console.log('SAC: B:safe R:adv');
 					sendMessage('SAC: B:safe R:adv');
 					// batter is safe and runner(s) advance
@@ -437,7 +434,7 @@ async function playValidate() {
 				console.log('start sleep(2000)');
 				await sleep(2000);
 				moveCards(objPlay, discardPile);
-				moveCards(objOtherPlay, discardPile);		
+				moveCards(objOtherPlay, discardPile);
 				atBatStatus = 'pitch' // nieuwe slagman
 				baseRunners[0] = 1;
 				renderRunners();
@@ -461,7 +458,7 @@ async function playValidate() {
 				console.log('result * 3: ', result);
 			}
 			console.log('Eind result: ', result);
-		
+
 
 
 			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases
@@ -527,14 +524,14 @@ async function playValidate() {
 			moveCards(objOtherPlay, discardPile);
 			refillHand(objOtherHand);
 			refillHand(objOtherHand);
-			if(isError) {
+			if (isError) {
 				refillHand(objOtherHand);
 			}
 			refillHand(objHand);
 			refillHand(objHand);
-			if(isCatchFoul) {
+			if (isCatchFoul) {
 				refillHand(objHand);
-			}		
+			}
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
 			renderRunners();
@@ -549,7 +546,7 @@ async function playValidate() {
 		default:
 			console.log('playValidate default');
 			endOfGame = true;
-			break;	
+			break;
 	}
 	// check met strikes, balls, outs & innings
 	// die staat nu in de game-loop
@@ -563,8 +560,8 @@ async function playValidate() {
  */
 function newBall() {
 	console.log('inside newBall');
-		
-	} //einde click functie
+
+} //einde click functie
 
 
 /**
@@ -573,7 +570,7 @@ function newBall() {
  * met atBatStatus
  */
 function changePlayer() {
-	
+
 	if (turnHome) {
 		turnVisitor = true;
 		$("#visitor").css("background-color", "red");

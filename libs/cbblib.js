@@ -2,7 +2,7 @@
  * Deck controleren op het aantal kaarten
  */
 async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
-	console.log('Inside checkDeck: ',deck.length);
+	console.log('Inside checkDeck: ', deck.length);
 	if (deck.length < 7) {
 		console.log('Het worden er te weinig')
 		moveCards(discardPile, deck)
@@ -72,7 +72,7 @@ function detEquals() {
 	eqRank = false;
 	eqSuit = false;
 	eqColor = false;
-	if (objOtherPlay.length >0) {
+	if (objOtherPlay.length > 0) {
 		if (objPlay.topCard().rank === objOtherPlay.topCard().rank) {
 			eqRank = true;
 		}
@@ -83,7 +83,7 @@ function detEquals() {
 			eqColor = true;
 		}
 	}
-	console.log('eqRank: ', eqRank); 
+	console.log('eqRank: ', eqRank);
 	console.log('eqSuit: ', eqSuit);
 	console.log('eqColor: ', eqColor);
 }
@@ -98,7 +98,7 @@ function detOptionEquals(hand) {
 	eqRank = false;
 	eqSuit = false;
 	eqColor = false;
-	if (objOtherPlay.length >0) {
+	if (objOtherPlay.length > 0) {
 		if (hand.rank === objOtherPlay.topCard().rank) {
 			eqRank = true;
 		}
@@ -115,18 +115,18 @@ function detOptionEquals(hand) {
  * Tellen van categorien
  * Face, COmpanion en Denomination
  */
-function countCategories() { 
+function countCategories() {
 	//TODO Denom wordt verkeerd geteld, maar is volgens mij niet erg...
 	// het gaat erom dat ik weet dat ze bestaan...denk ik
 	// voor visitorHand
 	vFace = 0;
 	vCompanion = 0;
-	vDenomination= 0;
-	for (let i=0; i < visitorHand.length; i++) {
+	vDenomination = 0;
+	for (let i = 0; i < visitorHand.length; i++) {
 		if (visitorHand[i].rank >= 11) {
 			vFace++
 		}
-		for (let j=0; j < homeHand.length; j++) {
+		for (let j = 0; j < homeHand.length; j++) {
 			if (visitorHand[i].rank === homeHand[j].rank && visitorHand[i].rank < 11) {
 				vDenomination++
 				vColor = cardColor(visitorHand[i]);
@@ -134,18 +134,18 @@ function countCategories() {
 				if (vColor === hColor) {
 					vCompanion++;
 				}
-			}			
+			}
 		}
 	}
 	// voor homeHand
 	hFace = 0;
 	hCompanion = 0;
 	hDenomination = 0;
-	for (let i=0; i < homeHand.length; i++) {
+	for (let i = 0; i < homeHand.length; i++) {
 		if (homeHand[i].rank >= 11) {
 			hFace++
 		}
-		for (let j=0; j < visitorHand.length; j++) {
+		for (let j = 0; j < visitorHand.length; j++) {
 			if (homeHand[i].rank === visitorHand[j].rank && homeHand[i].rank < 11) {
 				hDenomination++
 				hColor = cardColor(homeHand[i]);
@@ -153,11 +153,11 @@ function countCategories() {
 				if (hColor === vColor) {
 					hCompanion++;
 				}
-			}			
+			}
 		}
 	}
-	console.log('visitorHand: Face: ', vFace,' Denom: ', vDenomination,' Comp: ', vCompanion);
-	console.log('   homeHand: Face: ', hFace,' Denom: ', hDenomination,' Comp: ', hCompanion);
+	console.log('visitorHand: Face: ', vFace, ' Denom: ', vDenomination, ' Comp: ', vCompanion);
+	console.log('   homeHand: Face: ', hFace, ' Denom: ', hDenomination, ' Comp: ', hCompanion);
 }
 
 /**
@@ -201,7 +201,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 		default:
 			console.log('moveRunners default');
 			break;
-	}	
+	}
 	renderRunners();
 }
 
@@ -211,7 +211,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
  * @param {*} bases 
  */
 function moveOnHit(bases) {
-	for (var b=3; b>=0; b--) {
+	for (var b = 3; b >= 0; b--) {
 		if (baseRunners[b] != 0) {
 			if (b + bases >= 4) {
 				baseRunners[b] = 0;
@@ -222,7 +222,7 @@ function moveOnHit(bases) {
 				}
 			} else {
 				baseRunners[b] = 0;
-				baseRunners[b+ bases] = 1;
+				baseRunners[b + bases] = 1;
 			}
 		}
 	}
@@ -248,7 +248,7 @@ function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
 				}
 				baseRunners[2] = 0;
 				baseRunners[3] = 1;
-			} 
+			}
 			baseRunners[2] = 0;
 			baseRunners[3] = 1;
 		}
@@ -275,18 +275,19 @@ function moveOnHBP() {
  */
 function playError() {
 	// Error-card in OFFENSE-HAND en toepassen ??
-	for (let i=0; i<objOtherHand.length; i++) {
+	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
-			&& cardColor(objOtherHand[i])===cardColor(objPlay.topCard())) {
+			&& cardColor(objOtherHand[i]) === cardColor(objPlay.topCard())) {
 			hasComp = true;
 			compCard = i;
-		}				
+		}
 	}
-	console.log('hasComp= ',hasComp);
+	console.log('hasComp= ', hasComp);
 
 	if (hasComp == true) {
 		if (confirm('Error')) {
 			isError = true;
+			vAtBat ? hErrors++ : vErrors++; // error counter op scoreboard
 			objOtherPlay.addCard(objOtherHand[compCard]);
 			objOtherHand.render();
 			objOtherPlay.render();
@@ -294,7 +295,7 @@ function playError() {
 			isError = false;
 		}
 	}
-	console.log('isError= ',isError);
+	console.log('isError= ', isError);
 }
 
 /**
@@ -303,14 +304,14 @@ function playError() {
  */
 function playCatchFoul() {
 	// CacthFoul-card in DEFFENSE-HAND en toepassen ??
-	for (let i=0; i<objOtherHand.length; i++) {
+	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
-			&& cardColor(objOtherHand[i])===cardColor(objPlay.topCard())) {
+			&& cardColor(objOtherHand[i]) === cardColor(objPlay.topCard())) {
 			hasComp = true;
 			compCard = i;
-		}				
+		}
 	}
-	console.log('hasComp= ',hasComp);
+	console.log('hasComp= ', hasComp);
 
 	if (hasComp == true) {
 		if (confirm('Catch Foul')) {
@@ -323,12 +324,12 @@ function playCatchFoul() {
 			moveCards(objOtherPlay, discardPile); // en die andere ook
 			//refillHand(objOtherHand);
 			//refillHand(objHand);
-			
+
 			// BATTER = OUT!
 			console.log('FOUL caught - OUT');
 			sendMessage('FOUL caught - OUT');
-			numStrikes=0;
-			numBalls=0;
+			numStrikes = 0;
+			numBalls = 0;
 			numOuts++
 
 			// checkInning toepassen
@@ -338,9 +339,9 @@ function playCatchFoul() {
 			isCatchFoul = false;
 		}
 	}
-	console.log('isCatchFoul= ',isCatchFoul);
+	console.log('isCatchFoul= ', isCatchFoul);
 }
- 
+
 /**
  * Renederen van de honklopers
  */
@@ -367,7 +368,7 @@ function renderRunners() {
 	}
 
 	if (baseRunners[0] != 0) {
-		bottomRow[4].innerHTML ="AB";
+		bottomRow[4].innerHTML = "AB";
 	} else {
 		bottomRow[4].innerHTML = "O";
 	}
@@ -437,19 +438,19 @@ async function sendMessage(message) {
  * @param {*} hand 
  */
 function checkOptions(hand) {
-	let outcome ='';
-	let option ='';
+	let outcome = '';
+	let option = '';
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
-								// maar die zal ook weer ergens aangezet moeten worden...
+	// maar die zal ook weer ergens aangezet moeten worden...
 
 	// voor de huidige status en speler de kaarten langslopen
 	// dezelfde controles uitvoeren op de kaart
 	// en het resultaat bepalen
 
-	
+
 
 	console.log('checkOptions voor status = ', atBatStatus);
-	for (let i=0; i< hand.length; i++) {
+	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		switch (atBatStatus) {
 			case 'pitch':
@@ -461,7 +462,7 @@ function checkOptions(hand) {
 				break;
 			case 'swing':
 				if (hand[i].rank >= 11) {
-					if (numStrikes <2 ) {
+					if (numStrikes < 2) {
 						outcome = 'FOUL - STRIKE';
 						break;
 					} else {
@@ -469,7 +470,7 @@ function checkOptions(hand) {
 						break;
 					}
 				} else if (!eqSuit) {
-					if ((objOtherPlay.topCard().rank >=9) && (eqRank === true) && (eqColor === true)) {
+					if ((objOtherPlay.topCard().rank >= 9) && (eqRank === true) && (eqColor === true)) {
 						outcome = 'HBP';
 						break;
 					} else {
@@ -484,7 +485,7 @@ function checkOptions(hand) {
 					break;
 				}
 			case 'connect':
-				if (hand[i].rank >=11) {
+				if (hand[i].rank >= 11) {
 					outcome = 'SAC';
 					break;
 				} else {
@@ -492,22 +493,22 @@ function checkOptions(hand) {
 					break;
 				}
 			case 'fielding':
-				outcome ='';
+				outcome = '';
 				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
-				if (objOtherPlay.topCard().rank >=11) { // connect = SAC
-					if (hand[i].rank >=11) {
+				if (objOtherPlay.topCard().rank >= 11) { // connect = SAC
+					if (hand[i].rank >= 11) {
 						if (eqSuit) {
 							outcome = 'SAC DOUBLE PLAY';
 							break;
 						} else {
 							outcome = 'SAC B:out R:adv';
 							break;
-						} 
+						}
 					} else {
 						outcome = 'SAC B:safe R:adv';
 						break;
 					}
-				} else if (hand[i].rank >=11) { // connect is #1-10						
+				} else if (hand[i].rank >= 11) { // connect is #1-10						
 					outcome = 'HOMERUN';
 					break;
 				} else {
@@ -524,7 +525,7 @@ function checkOptions(hand) {
 						outcome = outcome + ' * 3 = ' + optionResult  //+ ' <=> NOT eqSuit or eqColor';
 					}
 
-					switch (true) { 
+					switch (true) {
 						case (optionResult > 9):
 							outcome = 'HOMERUN' + outcome;
 							break;
@@ -541,7 +542,7 @@ function checkOptions(hand) {
 							outcome = 'OUT' + outcome;
 							break;
 						default:
-							outcome ='#NA#';
+							outcome = '#NA#';
 							break;
 					}
 				}
@@ -550,7 +551,7 @@ function checkOptions(hand) {
 				outcome = '#NA#';
 				break;
 		} // end switch atBatStatus
-		console.log(cardColor(hand[i]), hand[i].shortName,' => ', outcome);
+		console.log(cardColor(hand[i]), hand[i].shortName, ' => ', outcome);
 		option = option + ' ' + hand[i].shortName + ' => ' + outcome + '&#013';
 		sendOption(option);
 		let tipCard = hand[i];
@@ -572,7 +573,7 @@ function fillToolTip(tipCard, tip) {
 	// te berekenen obv rij en kolom en afm card 69x94
 
 	console.log('Inside fillToolTip');
-	
+
 	switch (tipCard.suit) {
 		case 'c':
 			console.log('clover');
@@ -601,19 +602,19 @@ function fillToolTip(tipCard, tip) {
 function checkNumFaceCards(hand) { // miischien moet dit toon NB-knop worden
 	checkFaceCardsFlag = false;
 	console.log('check op #FaceCards');
-	
+
 	let numFaceCards = 0
-	for (let i=0; i < hand.length; i++) {
-		if (hand[i].rank >=11) {
+	for (let i = 0; i < hand.length; i++) {
+		if (hand[i].rank >= 11) {
 			numFaceCards++
 		}
 	}
 
-	if  (numFaceCards >= 2) {
+	if (numFaceCards >= 2) {
 		console.log('numFaceCards = ', numFaceCards);
-		vAtBat ? $('#hNB').show(): $('#vNB').show();
+		vAtBat ? $('#hNB').show() : $('#vNB').show();
 	} else {
-		vAtBat ? $('#hNB').hide(): $('#vNB').hide();
+		vAtBat ? $('#hNB').hide() : $('#vNB').hide();
 	}
 } // end checkNumFaceCards
 
