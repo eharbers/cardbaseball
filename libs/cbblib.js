@@ -447,11 +447,11 @@ function checkOptions(hand) {
 	// dezelfde controles uitvoeren op de kaart
 	// en het resultaat bepalen
 
-
-
 	console.log('checkOptions voor status = ', atBatStatus);
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
+		let indComp ='';
+		
 		switch (atBatStatus) {
 			case 'pitch':
 				if (hand[i].rank >= 11) {
@@ -551,8 +551,18 @@ function checkOptions(hand) {
 				outcome = '#NA#';
 				break;
 		} // end switch atBatStatus
+
+		if (objOtherPlay.length > 0) {
+			if ((hand[i].rank == objOtherPlay.topCard().rank) 
+				&& (hand[i].suit != objOtherPlay.topCard().suit)
+				&& (cardColor(hand[i]) == cardColor(objOtherPlay)) ) {
+					indComp = '[comp]';
+				}
+			}
+		
+
 		console.log(cardColor(hand[i]), hand[i].shortName, ' => ', outcome);
-		option = option + ' ' + hand[i].shortName + ' => ' + outcome + '&#013';
+		option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
 		sendOption(option);
 		let tipCard = hand[i];
 		let tip = outcome;
