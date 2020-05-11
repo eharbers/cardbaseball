@@ -91,16 +91,22 @@ var hHits = 0;
 var hErrors = 0;
 
 var hitsInning = 0; // minimum 2 Hits in inning voor relief pithers inzet
-var hReliever = 0; // max 1 per game
-var vReliever = 0; // max 1 per game
+var hReliever = false; // max 1 per game
+var vReliever = false; // max 1 per game
 
 var checkOptionsFlag = true;
 var checkFaceCardsFlag = true;
+var checkRelieverFlag = true;
 
 // NB knop
 let newBallFlag = false;
 $('#hNB').hide();
 $('#vNB').hide();
+// RP knop
+let relieverFlag = false;
+$('#hRP').hide();
+$('#vRP').hide();
+
 
 // endOfGame indicator
 var endOfGame = false;
@@ -146,6 +152,16 @@ $('#vNB').click(function () {
 	sendMessage('New Balls request');
 })
 
+// afhandelen van het klikken op home RP-button voor Relief Pitcher
+$('#hRP').click(function () {
+	console.log('hRP-clicked');	
+	sendMessage('Relief Pitcher');
+	relieverFlag = true;
+	hReliever = true; // de reliever is ingezet
+	refillHand(objHand);
+	refillHand(objHand);
+})
+
 // dit stukje code zorgt voor de game-loop
 // vergelijk met sitepoint website of dat beter is
 
@@ -173,6 +189,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// wellicht terugkopieren?
 	if (checkOptionsFlag == true) { checkOptions(objHand) };
 	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
+	if ((checkRelieverFlag == true) && hitsInning > 2) {checkReliever()};
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
@@ -241,11 +258,13 @@ function checkInning() {
 			vAtBat = false;
 			hAtBat = true;
 			hRun[inning] = 0;
+			hitsInning = 0;
 		} else {
 			hAtBat = false;
 			vAtBat = true;
 			inning++;
 			vRun[inning] = 0;
+			hitsInning = 0;
 		}
 		for (i = 0; i <= 3; i++) {
 			baseRunners[i] = 0;
@@ -498,16 +517,19 @@ async function playValidate() {
 				case (result > 9):
 					sendMessage('HOME RUN');
 					vAtBat ? vHits++ : hHits++;
+					hitsInning++;
 					moveRunners('homerun');
 					break;
 				case (result > 7):
 					if (!isError) {
 						sendMessage('TRIPLE');
 						vAtBat ? vHits++ : hHits++;
+						hitsInning++;
 						moveRunners('triple');
 					} else {
 						sendMessage('TRIPLE + ERROR !');
 						vABat ? vHits++ : hHits++;
+						hitsInning++;
 						moveRunners('homerun');
 					}
 					break;
@@ -515,10 +537,12 @@ async function playValidate() {
 					if (!isError) {
 						sendMessage('DOUBLE');
 						vAtBat ? vHits++ : hHits++;
+						hitsInning++;
 						moveRunners('double');
 					} else {
 						sendMessage('DOUBLE + ERROR !');
 						vAtBat ? vHits++ : hHits++;
+						hitsInning++;
 						moveRunners('triple');
 					}
 					break;
@@ -526,10 +550,12 @@ async function playValidate() {
 					if (!isError) {
 						sendMessage('SINGLE');
 						vAtBat ? vHits++ : hHits++;
+						hitsInning++;
 						moveRunners('single');
 					} else {
 						sendMessage('SINGLE + ERROR !');
 						vAtBat ? vHits++ : hHits++;
+						hitsInning++;
 						moveRunners('double');
 					}
 					break;

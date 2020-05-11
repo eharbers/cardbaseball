@@ -451,7 +451,7 @@ function checkOptions(hand) {
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
-		
+
 		switch (atBatStatus) {
 			case 'pitch':
 				if (hand[i].rank >= 11) {
@@ -609,7 +609,7 @@ function fillToolTip(tipCard, tip) {
  * 
  * @param {*} hand 
  */
-function checkNumFaceCards(hand) { // miischien moet dit toon NB-knop worden
+function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 	checkFaceCardsFlag = false;
 	console.log('check op #FaceCards');
 
@@ -627,6 +627,12 @@ function checkNumFaceCards(hand) { // miischien moet dit toon NB-knop worden
 		vAtBat ? $('#hNB').hide() : $('#vNB').hide();
 	}
 } // end checkNumFaceCards
+
+function checkReliever() {
+	checkRelieverFlag = false;
+	console.log('check Reliever');
+	vAtBat ? $('#hRP').show() : $('vRP').show();
+}
 
 
 

@@ -64,10 +64,22 @@ a:visited {color:blue;}
 	top: 50px;
 }
 
+#vRP {
+	position: absolute;
+	left: 200px;
+	top: 100px;
+}
+
 #hNB {
 	position: absolute;
 	left: 200px;
 	top: 500px;
+}
+
+#hRP {
+	position: absolute;
+	left: 200px;
+	top: 550px;
 }
 
 #messageboard {
