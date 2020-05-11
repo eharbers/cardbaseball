@@ -90,6 +90,10 @@ var vErrors = 0;
 var hHits = 0;
 var hErrors = 0;
 
+var hitsInning = 0; // minimum 2 Hits in inning voor relief pithers inzet
+var hReliever = 0; // max 1 per game
+var vReliever = 0; // max 1 per game
+
 var checkOptionsFlag = true;
 var checkFaceCardsFlag = true;
 
@@ -129,6 +133,7 @@ $('#hNB').click(function () {
 	console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+	sendMessage('New Balls request');
 })
 
 // afhandelen van het klikken op visitor NB-button voor new balls
@@ -138,6 +143,7 @@ $('#vNB').click(function () {
 	console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+	sendMessage('New Balls request');
 })
 
 // dit stukje code zorgt voor de game-loop
@@ -267,9 +273,36 @@ async function playValidate() {
 
 	switch (atBatStatus) {
 		case 'newball':
+			sendMessage('New Balls request');
+			if (objPlay.length == 2) {
 
-			console.log('atBatStatus: newball');
-			atBatStatus = 'pitch'; // new pitch
+				// testen of beide kaarten faceCards zijn
+				let numNewBallFaceCards = 0;
+				for (let i=0; i < objPlay.length; i++) {
+					if (objPlay[i].rank >= 11) { 
+						numNewBallFaceCards ++
+					}
+				}
+
+				// afhankelijk van uitkomst test
+				// de faceCards naar Pile en twee nieuwe van Deck
+				// of terug naar Hand
+				if (numNewBallFaceCards == 2) {
+					console.log('atBatStatus: newball');
+					await sleep(2000);
+					moveCards(objPlay, discardPile);
+					refillHand(objHand);
+					await sleep(1000);
+					refillHand(objHand);
+					atBatStatus = 'pitch'; // new pitch
+					turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+					sendMessage('Play Ball!');
+				} else {
+					sendMessage('2 Face-cards needed for New Balls');
+					await sleep(1000)
+					moveCards(objPlay, objHand);
+				}					
+			} 
 			break;
 		// de pitch
 		case 'pitch':
@@ -560,7 +593,6 @@ async function playValidate() {
  */
 function newBall() {
 	console.log('inside newBall');
-
 } //einde click functie
 
 
