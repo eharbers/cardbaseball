@@ -325,7 +325,7 @@ async function playValidate() {
 					await sleep(1000);
 					refillHand(objHand);
 					atBatStatus = 'pitch'; // new pitch
-					turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+					displayStatus(atBatStatus);
 					sendMessage('Play Ball!');
 				} else {
 					sendMessage('2 Face-cards needed for New Balls');
@@ -345,7 +345,7 @@ async function playValidate() {
 				case (handLength = 6):
 					atBatStatus = 'pitch';
 					sendMessage('Play Ball!');
-					turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+					displayStatus(atBatStatus);
 					break;
 			}
 			break;
@@ -441,11 +441,7 @@ async function playValidate() {
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the pitch');
 				atBatStatus = 'connect';
-				if (turnHome) {
-					$("#home").val(atBatStatus);
-				} else {
-					$("#visitor").val(atBatStatus);
-				}
+				displayStatus(atBatStatus);
 				// go-to pick card to place hit
 			}
 			console.log('atBatStatus is now: ', atBatStatus);
@@ -467,11 +463,7 @@ async function playValidate() {
 			playError();
 
 			atBatStatus = 'result';
-			if (turnHome) {
-				$("#home").val(atBatStatus);
-			} else {
-				$("#visitor").val(atBatStatus);
-			}
+			displayStatus(atBatStatus);
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		// result
@@ -516,11 +508,7 @@ async function playValidate() {
 				renderRunners();
 				numStrikes = 0; // hoort dit bij checkAtBAt??
 				numBalls = 0; // of hoort dat op deze plek???????
-				if (turnHome) {
-					$("#home").val(atBatStatus);
-				} else {
-					$("#visitor").val(atBatStatus);
-				}
+				displayStatus(atBatStatus);
 			} // einde sacrifice
 
 			if (eqSuit) { // dezelfde suit
@@ -620,11 +608,7 @@ async function playValidate() {
 			renderRunners();
 			numStrikes = 0; // hoort dit bij checkAtBAt??
 			numBalls = 0; // of hoort dat op deze plek???????
-			if (turnHome) {
-				$("#home").val(atBatStatus);
-			} else {
-				$("#visitor").val(atBatStatus);
-			}
+			displayStatus(atBatStatus);
 			break;
 		default:
 			console.log('playValidate default');

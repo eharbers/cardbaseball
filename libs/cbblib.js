@@ -375,6 +375,20 @@ function renderRunners() {
 }
 
 
+
+/**
+ * Display the current atBatStatus at current player
+ * @param {*} atBatStatus 
+ */
+function displayStatus (atBatStatus) {
+	if (turnHome) {
+		$("#home").val(atBatStatus);
+	} else {
+		$("#visitor").val(atBatStatus);
+	}
+} 
+
+
 /**
  * verversen van de gegevens op het scoreboard
  */
