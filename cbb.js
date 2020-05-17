@@ -404,8 +404,8 @@ async function playValidate() {
 					sendMessage('Hit by Pitch');
 					moveRunners('hbp');
 					await sleep(2000);
-					moveCards(objPlay, discardPile);
-					moveCards(objOtherPlay, discardPile);
+					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
 					refillHand(objHand);
 					numBalls = 0; //new batter
@@ -433,9 +433,8 @@ async function playValidate() {
 				updateScoreboard();
 				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
-				// en die andere ook
-				//moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
-				//refillHand(objOtherHand); // dus overbodig?
+				moveCards(objOtherPlay, discardPile); // en die andere ook
+				refillHand(objOtherHand); 
 				refillHand(objHand);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
