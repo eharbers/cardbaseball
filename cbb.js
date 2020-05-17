@@ -93,10 +93,10 @@ var hErrors = 0;
 var hitsInning = 0; // minimum 2 Hits in inning voor relief pithers inzet
 var hReliever = false; // max 1 per game
 var vReliever = false; // max 1 per game
+var checkRelieverFlag = true; // mag er gecheckt worden
 
 var checkOptionsFlag = true;
 var checkFaceCardsFlag = true;
-var checkRelieverFlag = true; // mag er gecheckt worden
 
 // NB knop
 let newBallFlag = false;
@@ -122,7 +122,7 @@ $('#deal').click(function () {
 		//halfInning = 1;
 		//inning = Math.floor(halfInning / 2);
 		inning = 1;
-		vRun.push(0); // de bottom first wordt gevuld met 0. geeft de actieve slagbeurt aan
+		vRun.push(0); // de top first wordt gevuld met 0. geeft de actieve slagbeurt aan
 		updateScoreboard();
 		baseRunners[0] = 1;
 		renderRunners();
@@ -187,7 +187,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// wellicht terugkopieren?
 	if (checkOptionsFlag == true) { checkOptions(objHand) };
 	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
-//	if ((checkRelieverFlag == true) && hitsInning >= 2) {checkReliever()};
+
 	if ((checkRelieverFlag == true) && hitsInning >= 2) {
 		if (vAtBat === true && hReliever == false ) {
 			checkReliever();
@@ -434,13 +434,13 @@ async function playValidate() {
 				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				// en die andere ook
-				moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
-				refillHand(objOtherHand);
+				//moveCards(objOtherPlay, discardPile); // die is waarschijnlijk leeg...
+				//refillHand(objOtherHand); // dus overbodig?
 				refillHand(objHand);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
-				console.log('connecting with the ball');
+				console.log('connecting with the pitch');
 				atBatStatus = 'connect';
 				if (turnHome) {
 					$("#home").val(atBatStatus);
@@ -508,7 +508,6 @@ async function playValidate() {
 					// batter is safe and runner(s) advance
 					break;
 				}
-				//TODO het opruimen gaat niet lekker
 				console.log('start sleep(2000)');
 				await sleep(2000);
 				moveCards(objPlay, discardPile);

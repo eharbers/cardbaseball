@@ -564,9 +564,9 @@ function checkOptions(hand) {
 		console.log(cardColor(hand[i]), hand[i].shortName, ' => ', outcome);
 		option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
 		sendOption(option);
-		let tipCard = hand[i];
-		let tip = outcome;
-		//fillToolTip(tipCard, tip);
+		// let tipCard = hand[i];
+		// let tip = outcome;
+		// fillToolTip(tipCard, tip);
 	}
 } // end checkOptions
 
@@ -586,16 +586,16 @@ function fillToolTip(tipCard, tip) {
 
 	switch (tipCard.suit) {
 		case 'c':
-			console.log('clover');
+			console.log('clubs');
 			break;
 		case 'h':
-			console.log('heart');
+			console.log('hearts');
 			break;
 		case 'd':
-			console.log('diamond');
+			console.log('diamonds');
 			break;
 		case 's':
-			console.log('spade');
+			console.log('spades');
 			break;
 		default:
 			console.log('#NA#');
