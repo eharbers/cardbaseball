@@ -12,11 +12,11 @@ async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels be
 
 /**
  * functie om de Hand aan te vullen met een kaart van deck
- * @param {*} objHand 
+ * @param {*} fillHand 
  */
-function refillHand(objHand) {
-	objHand.addCard(deck.topCard());
-	objHand.render();
+function refillHand(fillHand) {
+	fillHand.addCard(deck.topCard());
+	fillHand.render();
 	deck.render();
 	countCategories();
 }
@@ -83,9 +83,9 @@ function detEquals() {
 			eqColor = true;
 		}
 	}
-	console.log('eqRank: ', eqRank);
-	console.log('eqSuit: ', eqSuit);
-	console.log('eqColor: ', eqColor);
+	//console.log('eqRank: ', eqRank);
+	//console.log('eqSuit: ', eqSuit);
+	//console.log('eqColor: ', eqColor);
 }
 
 /**
@@ -156,8 +156,8 @@ function countCategories() {
 			}
 		}
 	}
-	console.log('visitorHand: Face: ', vFace, ' Denom: ', vDenomination, ' Comp: ', vCompanion);
-	console.log('   homeHand: Face: ', hFace, ' Denom: ', hDenomination, ' Comp: ', hCompanion);
+	//console.log('visitorHand: Face: ', vFace, ' Denom: ', vDenomination, ' Comp: ', vCompanion);
+	//console.log('   homeHand: Face: ', hFace, ' Denom: ', hDenomination, ' Comp: ', hCompanion);
 }
 
 /**
@@ -468,7 +468,7 @@ function checkOptions(hand) {
 	// dezelfde controles uitvoeren op de kaart
 	// en het resultaat bepalen
 
-	console.log('checkOptions voor status = ', atBatStatus);
+	console.log('checkOptions status = ', atBatStatus);
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';

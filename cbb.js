@@ -116,7 +116,7 @@ var endOfGame = false;
 $('#aiDeal').click(function () {
 	playAI = true;
 	document.getElementById("playAI").innerHTML = 'AI';
-	console.log('AI = ' + playAI);
+	//console.log('AI = ' + playAI);
 	sendMessage('AI = ' + playAI);
 	$('#deal').click();
 })
@@ -137,10 +137,10 @@ $('#toggleCards').click(function () {
 
 // activeren van het spel met de DEAL button (of Play Ball)
 $('#deal').click(function () {
-	console.log('deal clicked');
-	sendMessage('deal clicked');
-	console.log('AI = ' + playAI);
-	sendMessage('AI = ' + playAI);
+	//console.log('deal clicked');
+	//sendMessage('deal clicked');
+	//console.log('AI = ' + playAI);
+	//sendMessage('AI = ' + playAI);
 	//Deck has a built in method to deal to hands.
 	$('#deal').hide();
 	$('#aiDeal').hide();
@@ -164,9 +164,9 @@ $('#deal').click(function () {
 
 // afhandelen van het klikken op home NB-button voor new balls
 $('#hNB').click(function () {
-	console.log('hNB-clicked');
+	//console.log('hNB-clicked');
 	newBallFlag = true;
-	console.log('newBallFlag = true');
+	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
 	sendMessage('New Balls request');
@@ -174,9 +174,9 @@ $('#hNB').click(function () {
 
 // afhandelen van het klikken op visitor NB-button voor new balls
 $('#vNB').click(function () {
-	console.log('vNB-clicked');
+	//console.log('vNB-clicked');
 	newBallFlag = true;
-	console.log('newBallFlag = true');
+	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
 	sendMessage('New Balls request');
@@ -184,7 +184,7 @@ $('#vNB').click(function () {
 
 // afhandelen van het klikken op home RP-button voor Relief Pitcher
 $('#hRP').click(function () {
-	console.log('hRP-clicked');	
+	//console.log('hRP-clicked');	
 	sendMessage('Relief Pitcher');
 	hReliever = true; // de reliever is ingezet
 	refillHand(objHand);
@@ -234,19 +234,19 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 		for (i = 0; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
 			if (card === objHand[i]) {
 				playable = true;
-				console.log('playable:', playable);
+				//console.log('playable:', playable);
 			};
 		} // end test voor playable
 		if (playable === true) { //valid card/player 
-			console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
+			//console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
 			objPlay.addCard(card);
 			objPlay.render();
 			objHand.render();
 			deck.render();
 			playValidate();
 		} else {
-			console.log('playable:', playable);
-			console.log('Op beurt wachten');
+			//console.log('playable:', playable);
+			//console.log('Op beurt wachten');
 			var msgBeurt = "WACHTEN !";
 			if (turnHome) {
 				$("#visitor").val(msgBeurt);
@@ -268,7 +268,7 @@ function checkAtBat() {
 	checkOptionsFlag = true; // vlag terugzetten zodat deze volgende keer met playCard kan worden uitgevoerd
 	checkFaceCardsFlag = true // vlag terugzetten
 	if (numStrikes === 3) {
-		console.log('strik-out');
+		//console.log('strik-out');
 		sendMessage('STRIKE-OUT');
 		numStrikes = 0;
 		numBalls = 0;
@@ -276,7 +276,7 @@ function checkAtBat() {
 	}
 
 	if (numBalls === 4) {
-		console.log('walk');
+		//console.log('walk');
 		sendMessage('WALK');
 		moveRunners('walk');
 		numStrikes = 0;
@@ -349,7 +349,7 @@ async function playValidate() {
 				// de faceCards naar Pile en twee nieuwe van Deck
 				// of terug naar Hand
 				if (numNewBallFaceCards == 2) {
-					console.log('atBatStatus: newball');
+					//console.log('atBatStatus: newball');
 					await sleep(2000);
 					moveCards(objPlay, discardPile);
 					refillHand(objHand);
@@ -366,7 +366,7 @@ async function playValidate() {
 			} 
 			break;
 		case 'decrease':
-			console.log('decrease cards');
+			//console.log('decrease cards');
 			sendMessage('decrease to 6 cards');
 			let handLength = objOtherHand.length;
 			switch (true) {
