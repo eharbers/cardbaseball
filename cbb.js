@@ -117,6 +117,7 @@ $('#deal').click(function () {
 	deck.deal(6, [visitorHand, homeHand], 50, function () {
 		//This is a callback function, called when the dealing
 		//is done.
+		// om de initiatie van het spel op te starten en uit te voeren
 		sendMessage("PLAY BALL !!")
 		atBatStatus = 'pitch';
 		//halfInning = 1;

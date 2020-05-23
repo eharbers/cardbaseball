@@ -527,7 +527,7 @@ function checkOptions(hand) {
 					break;
 				} else {
 					// berekening van eindresultaat obv biede #1-10 kaarten
-					outcome = ' :' + outcome + optionResult;
+					outcome = ': ' + outcome + optionResult;
 					if (eqSuit) { // dezelfde suit
 						optionResult = optionResult * 1;
 						outcome = outcome + ' * 1 = ' + optionResult // + ' <=> eqSuit';
@@ -574,9 +574,48 @@ function checkOptions(hand) {
 				}
 			}
 		
+		console.log(cardColor(hand[i]), hand[i].shortName, ' => ', outcome);		
+		
+		// add a symbol based on the suit
+		let symbol ='';
+		switch (hand[i].suit) {
+			case 'd' :
+				symbol = '&diams;'
+				break;
+			case 'h':
+				symbol = '&hearts;';
+				break;
+			case 's':
+				symbol = '&spades;';
+				break;
+			case 'c':
+				symbol = '&clubs;';
+				break;
+			default:
+				break;
+		}
 
-		console.log(cardColor(hand[i]), hand[i].shortName, ' => ', outcome);
-		option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
+		// replace facecards #11-13 and Ace with letter
+		let symbolRank = '';
+		switch (hand[i].rank) {
+			case 1:
+				symbolRank = symbol +'A';
+				break;
+			case 11:
+				symbolRank = symbol + 'J';
+				break;
+			case 12:
+				symbolRank = symbol + 'Q';
+				break;
+			case 13:
+				symbolRank = symbol + 'K';
+				break;
+			default:
+				symbolRank = symbol + hand[i].rank;
+				break;
+		}
+		//option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
+		option = option + ' ' + symbolRank + ' ' + indComp + ' => ' + outcome + '&#013';
 		sendOption(option);
 		// let tipCard = hand[i];
 		// let tip = outcome;

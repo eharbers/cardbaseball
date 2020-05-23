@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Card Baseball</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/cbb.css" />
+	<script src="libs/jquery-1.7.min.js"></script>
+</head>
+
+<body>
+	<h1>Card Baseball</h1>
+
+	<img class="preload" src="img/cards.png" />
+    <div id="card-table">
+
+        <textarea id="option" readonly rows="10" cols="1"></textarea>
+
+    </div>
+</body>
+
+<script>
+    //option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';    
+
+    let option = 'wat hier zoal kan staan' + '&#013';
+    option = option + <span style='color:red'>&diams;6</span>
+    sendOption(option);
+    
+
+    function sendOption(option) {
+	    document.getElementById("option").innerHTML = option;
+    }
+</script>
+
+</html>
+
