@@ -2,6 +2,7 @@
 //Tell the library which element to use for the table
 cards.init({ table: '#card-table' });
 let playAI = false;
+let showCards = true; // met toggleCards-button bedienen
 
 //Create a new deck of cards
 deck = new cards.Deck();
@@ -118,6 +119,20 @@ $('#aiDeal').click(function () {
 	console.log('AI = ' + playAI);
 	sendMessage('AI = ' + playAI);
 	$('#deal').click();
+})
+
+$('#toggleCards').click(function () {
+	if (showCards) {
+		showCards = false;
+		visitorHand.faceUp = false;
+		visitorHand.render();
+		$('#toggleCards').text("Show Cards")
+	} else {
+		showCards = true;
+		visitorHand.faceUp = true;
+		visitorHand.render();
+		$('#toggleCards').text("Hide Cards")
+	}
 })
 
 // activeren van het spel met de DEAL button (of Play Ball)

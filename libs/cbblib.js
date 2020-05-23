@@ -636,7 +636,7 @@ function checkOptions(hand) {
 				break;
 		}
 		//option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
-		option = option + ' ' + symbolRank + ' ' + rating[i] + ' ' + indComp + ' => ' + outcome + '&#013';
+		option = option + ' ' + symbolRank + ' ' + indComp + ' ' + rating[i] + ' => ' + outcome + '&#013';
 		sendOption(option);
 		// let tipCard = hand[i];
 		// let tip = outcome;
@@ -662,7 +662,7 @@ function checkOptions(hand) {
 
 async function playerAI(aiCard){
 	let thinking = 0;
-	thinking = Math.random() * 3000
+	thinking = 1000 + Math.random() * 2000
 	await sleep(thinking);
 	objPlay.addCard(aiCard);
 	objPlay.render();
