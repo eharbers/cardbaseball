@@ -67,4 +67,19 @@ function moveOnWalk_test() { //TODO dat loopt nog niet helemaal lekker
     console.log('moveOnWalk_test end');
 }
 
-    
+  
+let rating = [];
+for (let i=1 ; i <= 6 ; i++) {
+    rating[i] = 10-i;
+    console.log( i + ': ' + rating[i]);
+}
+console.log('2:' + rating[2])
+rating =[]
+console.log('2:' + rating[2])
+for (let i=1 ; i <= 6 ; i++) {
+    rating[i] = 10+i;
+    console.log( i + ': ' + rating[i]);
+}
+console.log('2:' + rating[2])
+rating =[]
+console.log('2:' + rating[2])

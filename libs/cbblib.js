@@ -465,45 +465,56 @@ function checkOptions(hand) {
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
+		let rating = [];
 
 		switch (atBatStatus) {
 			case 'pitch':
 				if (hand[i].rank >= 11) {
 					outcome = 'BALL';
+					rating[i] = 1;
 				} else {
 					outcome = '?swing?';
+					rating[i] = 2;
 				}
 				break;
 			case 'swing':
 				if (hand[i].rank >= 11) {
 					if (numStrikes < 2) {
 						outcome = 'FOUL - STRIKE';
+						rating[i] = 2;
 						break;
 					} else {
 						outcome = '2-strike FOUL';
+						rating[i] = 2
 						break;
 					}
 				} else if (!eqSuit) {
 					if ((objOtherPlay.topCard().rank >= 9) && (eqRank === true) && (eqColor === true)) {
 						outcome = 'HBP';
+						rating[i] = 4;
 						break;
 					} else {
 						outcome = 'STRIKE';
+						rating[i] = 1;
 						break;
 					}
 				} else if (hand[i].rank < objOtherPlay.topCard().rank) {
 					outcome = 'BALL';
+					rating[i] = 3;
 					break;
 				} else {
 					outcome = '?connect?';
+					rating[i] = 5;
 					break;
 				}
 			case 'connect':
 				if (hand[i].rank >= 11) {
 					outcome = 'SAC';
+					rating[i] = 1;
 					break;
 				} else {
 					outcome = '?fielding?';
+					rating[i] = 2;
 					break;
 				}
 			case 'fielding':
@@ -513,17 +524,21 @@ function checkOptions(hand) {
 					if (hand[i].rank >= 11) {
 						if (eqSuit) {
 							outcome = 'SAC DOUBLE PLAY';
+							rating[i] = 3;
 							break;
 						} else {
 							outcome = 'SAC B:out R:adv';
+							rating[i] = 2;
 							break;
 						}
 					} else {
 						outcome = 'SAC B:safe R:adv';
+						rating[i] = 1;
 						break;
 					}
 				} else if (hand[i].rank >= 11) { // connect is #1-10						
 					outcome = 'HOMERUN';
+					rating[i] = 1;
 					break;
 				} else {
 					// berekening van eindresultaat obv biede #1-10 kaarten
@@ -542,27 +557,34 @@ function checkOptions(hand) {
 					switch (true) {
 						case (optionResult > 9):
 							outcome = 'HOMERUN' + outcome;
+							rating[i] = 1;
 							break;
 						case (optionResult > 7):
 							outcome = 'TRIPLE' + outcome;
+							rating[i] = 2;
 							break;
 						case (optionResult > 5):
 							outcome = 'DOUBLE' + outcome;
+							rating[i] = 3;
 							break;
 						case (optionResult > 3):
 							outcome = 'SINGLE' + outcome;
+							rating[i] = 4;
 							break;
 						case (optionResult >= 0):
 							outcome = 'OUT' + outcome;
+							rating[i] = 5;
 							break;
 						default:
 							outcome = '#NA#';
+							rating[i] = 0;
 							break;
 					}
 				}
 				break;
 			default:
 				outcome = '#NA#';
+				rating[i] = 0;
 				break;
 		} // end switch atBatStatus
 
@@ -615,7 +637,7 @@ function checkOptions(hand) {
 				break;
 		}
 		//option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
-		option = option + ' ' + symbolRank + ' ' + indComp + ' => ' + outcome + '&#013';
+		option = option + ' ' + symbolRank + ' ' + rating[i] + ' ' + indComp + ' => ' + outcome + '&#013';
 		sendOption(option);
 		// let tipCard = hand[i];
 		// let tip = outcome;
