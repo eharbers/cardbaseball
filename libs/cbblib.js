@@ -454,6 +454,7 @@ async function sendMessage(message) {
 function checkOptions(hand) {
 	let outcome = '';
 	let option = '';
+	let rating = [];
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
 	// maar die zal ook weer ergens aangezet moeten worden...
 
@@ -465,7 +466,7 @@ function checkOptions(hand) {
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
-		let rating = [];
+		//let rating = []; /// hier stond ie eerst / nu boven loop 
 
 		switch (atBatStatus) {
 			case 'pitch':
@@ -596,8 +597,6 @@ function checkOptions(hand) {
 				}
 			}
 		
-		console.log(cardColor(hand[i]), hand[i].shortName, ' => ', outcome);		
-		
 		// add a symbol based on the suit
 		let symbol ='';
 		switch (hand[i].suit) {
@@ -645,9 +644,32 @@ function checkOptions(hand) {
 	}
 	if (playAI && turnVisitor) {
 		console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
-		objHand.click(objHand[1]);
+		let maxRating = 0;
+		let maxRatingId = 0;
+		for (let i = 0; i < hand.length; i++) {
+			console.log(i + ': ' + rating[i] + ' => ' + hand[i])
+			if (rating[i] > maxRating) {
+				maxRating = rating[i];
+				maxRatingId = i;
+			}
+		}		
+		console.log('maxRating = ', maxRating);
+		console.log('maxRatingId = ', maxRatingId);
+		playerAI(hand[maxRatingId]);
 	}
 } // end checkOptions
+
+
+async function playerAI(aiCard){
+	let thinking = 0;
+	thinking = Math.random() * 3000
+	await sleep(thinking);
+	objPlay.addCard(aiCard);
+	objPlay.render();
+	objHand.render();
+	deck.render();
+	playValidate();
+}
 
 
 /**
