@@ -166,9 +166,8 @@ function countCategories() {
  * @param {*} play 
  */
 function moveRunners(play) { // TODO walk = true bij 4-wijd...
-	console.log('inside moveRunners');
-	console.log('play:', play);
-	//sendMessage(play); // uitgezet vanwege overschrijven playValidate-result
+	//console.log('inside moveRunners');
+	//console.log('play:', play);
 
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
 	// bijv voorste loper die twee honken loopt, eerst het eerstvolgende 
@@ -288,7 +287,7 @@ function playError() {
 			compCard = i;
 		}
 	}
-	console.log('hasComp= ', hasComp);
+	//console.log('hasComp= ', hasComp);
 
 	if (hasComp == true) {
 		if (confirm('Error')) {
@@ -301,7 +300,7 @@ function playError() {
 			isError = false;
 		}
 	}
-	console.log('isError= ', isError);
+	//console.log('isError= ', isError);
 }
 
 /**
@@ -349,7 +348,7 @@ function playCatchFoul() {
 }
 
 /**
- * Renederen van de honklopers
+ * Renderen van de honklopers
  */
 function renderRunners() {
 	var topRow = document.getElementById("bases").rows[0].cells
@@ -718,7 +717,7 @@ function fillToolTip(tipCard, tip) {
  */
 function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 	checkFaceCardsFlag = false;
-	console.log('check op #FaceCards');
+	//console.log('check op #FaceCards');
 
 	let numFaceCards = 0
 	for (let i = 0; i < hand.length; i++) {
@@ -728,7 +727,7 @@ function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 	}
 
 	if (numFaceCards >= 2) {
-		console.log('numFaceCards = ', numFaceCards);
+		//console.log('numFaceCards = ', numFaceCards);
 		vAtBat ? $('#hNB').show() : $('#vNB').show();
 	} else {
 		vAtBat ? $('#hNB').hide() : $('#vNB').hide();
