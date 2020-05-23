@@ -1,6 +1,7 @@
 
 //Tell the library which element to use for the table
 cards.init({ table: '#card-table' });
+let playAI = false;
 
 //Create a new deck of cards
 deck = new cards.Deck();
@@ -110,10 +111,24 @@ $('#vRP').hide();
 // endOfGame indicator
 var endOfGame = false;
 
+
+$('#aiDeal').click(function () {
+	playAI = true;
+	document.getElementById("playAI").innerHTML = 'AI';
+	console.log('AI = ' + playAI);
+	sendMessage('AI = ' + playAI);
+	$('#deal').click();
+})
+
 // activeren van het spel met de DEAL button (of Play Ball)
 $('#deal').click(function () {
+	console.log('deal clicked');
+	sendMessage('deal clicked');
+	console.log('AI = ' + playAI);
+	sendMessage('AI = ' + playAI);
 	//Deck has a built in method to deal to hands.
 	$('#deal').hide();
+	$('#aiDeal').hide();
 	deck.deal(6, [visitorHand, homeHand], 50, function () {
 		//This is a callback function, called when the dealing
 		//is done.

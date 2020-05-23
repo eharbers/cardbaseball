@@ -643,6 +643,10 @@ function checkOptions(hand) {
 		// let tip = outcome;
 		// fillToolTip(tipCard, tip);
 	}
+	if (playAI && turnVisitor) {
+		console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
+		objHand.click(objHand[1]);
+	}
 } // end checkOptions
 
 
