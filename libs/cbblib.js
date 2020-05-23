@@ -198,6 +198,12 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 		case 'hbp':
 			moveOnHBP();
 			break;
+		case 'sacDP':
+			break;
+		case 'sacBORA':
+			break;
+		case 'sacBSRA':
+			break;
 		default:
 			console.log('moveRunners default');
 			break;
@@ -482,30 +488,30 @@ function checkOptions(hand) {
 				if (hand[i].rank >= 11) {
 					if (numStrikes < 2) {
 						outcome = 'FOUL - STRIKE';
-						rating[i] = 2;
+						rating[i] = 1; // facecard bewaren ipv number-card??
 						break;
 					} else {
 						outcome = '2-strike FOUL';
-						rating[i] = 2
+						rating[i] = 3;
 						break;
 					}
 				} else if (!eqSuit) {
 					if ((objOtherPlay.topCard().rank >= 9) && (eqRank === true) && (eqColor === true)) {
 						outcome = 'HBP';
-						rating[i] = 4;
+						rating[i] = 5;
 						break;
 					} else {
 						outcome = 'STRIKE';
-						rating[i] = 1;
+						rating[i] = 2; // number-card eerder dan facecard S<2 ??
 						break;
 					}
 				} else if (hand[i].rank < objOtherPlay.topCard().rank) {
 					outcome = 'BALL';
-					rating[i] = 3;
+					rating[i] = 4;
 					break;
 				} else {
 					outcome = '?connect?';
-					rating[i] = 5;
+					rating[i] = 6;
 					break;
 				}
 			case 'connect':
@@ -636,7 +642,7 @@ function checkOptions(hand) {
 				break;
 		}
 		//option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
-		option = option + ' ' + symbolRank + ' ' + indComp + ' ' + rating[i] + ' => ' + outcome + '&#013';
+		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + outcome + '&#013';
 		sendOption(option);
 		// let tipCard = hand[i];
 		// let tip = outcome;

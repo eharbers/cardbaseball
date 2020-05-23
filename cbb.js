@@ -310,7 +310,7 @@ function checkInning() {
 		renderRunners();
 		numOuts = 0;
 		changePlayer();
-		if (objHand.length >6 || objOtherHand.length) {
+		if (objHand.length >6 || objOtherHand.length > 6) {
 			atBatStatus = 'decrease'
 			sendMessage('decrease to 6 cards');
 			turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
@@ -517,16 +517,19 @@ async function playValidate() {
 				if ((objPlay.topCard().rank >= 11) && (eqSuit === true)) {
 					console.log('SAC: double play');
 					sendMessage('SAC: double play');
+					moveRunners('sacDP');
 					// batter is out and runner out... de verste loper
 					break;
 				} else if (objPlay.topCard().rank >= 11 && (eqSuit === false)) {
 					console.log('SAC: B:out R:adv');
 					sendMessage('SAC: B:out R:adv');
+					moveRunners('sacBORA');
 					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
 					break;
 				} else if (objPlay.topCard().rank < 11) {
 					console.log('SAC: B:safe R:adv');
 					sendMessage('SAC: B:safe R:adv');
+					moveRunners('sacBSRA');
 					// batter is safe and runner(s) advance
 					break;
 				}
