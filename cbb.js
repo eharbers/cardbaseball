@@ -10,8 +10,11 @@ deck = new cards.Deck();
 deck.x -= 150;
 deck.y -= -40;
 
+
+
 //cards.all contains all cards, put them all in the deck
 deck.addCards(cards.all);
+addCardProperties(); // extra properties
 //No animation here, just get the deck onto the table.
 deck.render({ immediate: true });
 

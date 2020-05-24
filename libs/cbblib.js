@@ -1,3 +1,52 @@
+function addCardProperties() {
+	for (card of deck) {
+		switch (card.suit) {
+			case 'd':
+				card.color = 'red';
+				card.symbol = '&diams;';
+				break;
+			case 'h':
+				card.color = 'red';
+				card.symbol = '&hearts;'
+				break;
+			case 's':
+				card.color = 'black';
+				card.symbol = '&spades;';
+				break;
+			case 'c':
+				card.color = 'black';
+				card.symbol = '&clubs;';
+				break;
+			default:
+				break;
+		}
+
+		switch (card.rank) {
+			case 1:
+				card.letter ='A';
+				card.faceCard = false;
+				break;
+			case 11:
+				card.letter = 'J';
+				card.faceCard = true;
+				break;
+			case 12:
+				card.letter = 'Q';
+				card.faceCard = true;
+				break;
+			case 13:
+				card.letter = 'K';
+				card.faceCard = true;
+				break;
+			default:
+				card.faceCard = false;
+				card.letter= '#';
+				break;
+		}
+	}
+}
+
+
 /**
  * Deck controleren op het aantal kaarten
  */
@@ -664,7 +713,10 @@ function checkOptions(hand) {
 	}
 } // end checkOptions
 
-
+/**
+ * AI functie om checkOption kaart te spelen
+ * @param {*} aiCard 
+ */
 async function playerAI(aiCard){
 	let thinking = 0;
 	thinking = 1000 + Math.random() * 2000
