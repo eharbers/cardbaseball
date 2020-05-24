@@ -529,19 +529,19 @@ async function playValidate() {
 					sendMessage('SAC: double play');
 					moveRunners('sacDP');
 					// batter is out and runner out... de verste loper
-					break;
+					//break;
 				} else if (objPlay.topCard().faceCard && (eqSuit === false)) {
 					console.log('SAC: B:out R:adv');
 					sendMessage('SAC: B:out R:adv');
 					moveRunners('sacBORA');
 					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
-					break;
+					//break;
 				} else if (!objPlay.topCard().faceCard) {
 					console.log('SAC: B:safe R:adv');
 					sendMessage('SAC: B:safe R:adv');
 					moveRunners('sacBSRA');
 					// batter is safe and runner(s) advance
-					break;
+					//break;
 				}
 				await sleep(2000);
 				moveCards(objPlay, discardPile);
@@ -552,20 +552,21 @@ async function playValidate() {
 				numStrikes = 0; // hoort dit bij checkAtBAt??
 				numBalls = 0; // of hoort dat op deze plek???????
 				displayStatus(atBatStatus);
-			} // einde sacrifice
-
-			if (eqSuit) { // dezelfde suit
-				result = result * 1;
-				console.log('result * 1:', result);
-			} else if (eqColor) { // dezelfde kleur
-				result = result * 2;
-				console.log('result * 2: ', result);
-			} else {
-				result = result * 3; // andere kleur
-				console.log('result * 3: ', result);
+				result = -1; // anders wordt de berekening gemaakt...
+				console.log('result (SAC):', result);
+			} else { // einde sacrifice
+				if (eqSuit) { // dezelfde suit
+					result = result * 1;
+					console.log('result * 1:', result);
+				} else if (eqColor) { // dezelfde kleur
+					result = result * 2;
+					console.log('result * 2: ', result);
+				} else {
+					result = result * 3; // andere kleur
+					console.log('result * 3: ', result);
+				}
+				console.log('Eind result: ', result);
 			}
-			console.log('Eind result: ', result);
-
 
 
 			switch (true) { // result met kernwoord naar moverunners sturen ipv numBases

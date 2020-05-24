@@ -232,10 +232,13 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 			moveOnHBP();
 			break;
 		case 'sacDP':
+			moveOnSac('sacDP');
 			break;
 		case 'sacBORA':
+			moveOnSac('sacBORA');
 			break;
 		case 'sacBSRA':
+			moveOnSac('sacBSRA');
 			break;
 		default:
 			console.log('moveRunners default');
@@ -271,31 +274,31 @@ function moveOnHit(bases) {
  * Verplaatsen honklopes
  * obv WALK
  */
-function moveOnWalk() { //TODO dat loopt nog niet helemaal lekker
+function moveOnWalk() { 
 	// EIGENLIJK DEZELFDE ALS moveOnHBP ... DUS UNIVERSEEL MAKEN
 	// verschillende situaties honken bezetting met case afwerken
 	// geeft mogelijkheid van een break en uitslag is uniek
 	// variant verzinnen op gedwongen opschuiven of door hit (of deze toch apart afhandelen)
-	if (baseRunners[1] == 1) {
-		if (baseRunners[2] == 1) {
-			if (baseRunners[3] == 1) {
+	if (baseRunners[1] == 1) {  // 1B bezet
+		if (baseRunners[2] == 1) { // 1B 2B bezet
+			if (baseRunners[3] == 1) { // 1B 2B 3B bezet
 				baseRunners[3] = 0;
 				if (vAtBat) { //visitor scoort...
 					vRun[inning]++;
 				} else { // home scoort
 					hRun[inning]++;
 				}
-				baseRunners[2] = 0;
+				baseRunners[2] = 0; // 1B 2B bezet
 				baseRunners[3] = 1;
 			}
-			baseRunners[2] = 0;
+			baseRunners[2] = 0; // 2B bezet
 			baseRunners[3] = 1;
 		}
-		baseRunners[1] = 0;
+		baseRunners[1] = 0; // 1B bezet
 		baseRunners[2] = 1;
 	}
-	// baseRunners[0] = 0; laten staan ... anders is er geen AB meer
-	baseRunners[1] = 1;
+	// baseRunners[0] = 0; laten staan ... anders is er geen AB meer, die eigenlijk bij new AB hoort
+	baseRunners[1] = 1; // 0B (en alle anderen)
 }
 
 /**
@@ -306,6 +309,27 @@ function moveOnHBP() {
 	console.log('Inside moveOnHBP');
 	console.log('Hetzelfde als moveOnWalk');
 	moveOnWalk(); // vandaar dat we die gewoon aanroepen
+}
+
+function moveOnSac(sac) {
+	// hier eerst de uitzonderingen uitsluiten
+	// en de kaart terugschuiven
+	// met messageboard-message
+	console.log('moveOnSac(' + sac + ')');
+
+	switch (sac) {
+		case 'sacDP':
+			// AB sowieso uit
+			break;
+		case 'sacBORA':
+			// AB sowieso uit
+			break;
+		case 'sacBSRA':
+			// iedereen behalve 3B schuift op
+			break;
+		default:
+			break;
+	}
 }
 
 /**
