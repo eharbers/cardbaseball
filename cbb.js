@@ -32,88 +32,88 @@ visitorPlay = new cards.Hand({ faceUp: true, y: 200 });
 homePlay = new cards.Hand({ faceUp: true, y: 300 });
 
 // TODO bepalen wie er begint door een kaart te trekken. de hoogste kaart bepaalt start field of atBat 
-var turnHome = true; // in dev & test begint Lower met pitchen/veld
+let turnHome = true; // in dev & test begint Lower met pitchen/veld
 $("#home").css("background-color", "red");
 $("#home").val('pitch');
-var turnVisitor = false;
+let turnVisitor = false;
 $("#visitor").css("background-color", "green");
 
-var objHand = homeHand; // het zetten van de eerste speler,
-var objPlay = homePlay; // omdat er nog geen functie voor de ad random selectie is
-var objOtherHand = visitorHand // die ander moet ook herkend worden
-var objOtherPlay = visitorPlay // en deze andere ook
-var atBatStatus = '';
+let objHand = homeHand; // het zetten van de eerste speler,
+let objPlay = homePlay; // omdat er nog geen functie voor de ad random selectie is
+let objOtherHand = visitorHand // die ander moet ook herkend worden
+let objOtherPlay = visitorPlay // en deze andere ook
+let atBatStatus = '';
 
 // voor de initiatie van de baseballgame
-var numStrikes = 0;
-var numBalls = 0;
-var numOuts = 0;
-var halfInning = 0;
-var inning = 0;
+let numStrikes = 0;
+let numBalls = 0;
+let numOuts = 0;
+let halfInning = 0;
+let inning = 0;
 
 // voor de bepaling van wie er aan de beurt is om een kaart te klikken
-var vAtBat = true;
-var hAtBat = false;
+let vAtBat = true;
+let hAtBat = false;
 
 // voor de initiatie van de honklopers
-var numBases = 0; // aantal honken op geslagen bal (of walk...)
-var baseRunners = [];
+let numBases = 0; // aantal honken op geslagen bal (of walk...)
+let baseRunners = [];
 for (i = 0; i <= 3; i++) {
 	baseRunners[i] = 0;
 }
-var play = '';
+let play = '';
 renderRunners();
 
 // voor de bepaling van de plays in playValidate
-var eqRank = false;
-var eqColor = false;
-var eqSuit = false;
-var isFace = false;
+let eqRank = false;
+let eqColor = false;
+let eqSuit = false;
+let isFace = false;
 
-// voor de bepaling van Error en CacthFoul in playValidate
+// voor de bepaling van Error en CatchFoul in playValidate
 let hasComp = false;
 let isError = false;
 let isCatchFoul = false;
 
 // voor de telling van de categories in playValidate per Hand
-var vFace = 0;
-var vCompanion = 0;
-var vDenomination = 0;
+let vFace = 0;
+let vCompanion = 0;
+let vDenomination = 0;
 
-var hFace = 0;
-var hCompanion = 0;
-var hDenomination = 0;
+let hFace = 0;
+let hCompanion = 0;
+let hDenomination = 0;
 
 // voor de initiatie van het scoreboard
-var vRun = [];
+let vRun = [];
 vRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
-var hRun = [];
+let hRun = [];
 hRun.push(0) // nulde element moet gevuld worden. verder halve-innings-gewijs updaten
 
-var vHits = 0;
-var vErrors = 0;
-var hHits = 0;
-var hErrors = 0;
+let vHits = 0;
+let vErrors = 0;
+let hHits = 0;
+let hErrors = 0;
 
-var hitsInning = 0; // minimum 2 Hits in inning voor relief pithers inzet
-var hReliever = false; // max 1 per game
-var vReliever = false; // max 1 per game
-var checkRelieverFlag = true; // mag er gecheckt worden
-
-var checkOptionsFlag = true;
-var checkFaceCardsFlag = true;
+let checkOptionsFlag = true;
+let checkFaceCardsFlag = true;
 
 // NB knop
 let newBallFlag = false;
 $('#hNB').hide();
 $('#vNB').hide();
+
 // RP knop
+let hitsInning = 0; // minimum 2 Hits in inning voor relief pithers inzet
+let hReliever = false; // max 1 per game
+let vReliever = false; // max 1 per game
+let checkRelieverFlag = true; // mag er gecheckt worden
 $('#hRP').hide();
 $('#vRP').hide();
 
 
 // endOfGame indicator
-var endOfGame = false;
+let endOfGame = false;
 
 
 $('#aiDeal').click(function () {
@@ -194,6 +194,14 @@ $('#hRP').click(function () {
 	refillHand(objHand);
 })
 
+$('#vRP').click(function () {
+	//console.log('hRP-clicked');	
+	sendMessage('Relief Pitcher');
+	vReliever = true; // de reliever is ingezet
+	refillHand(objHand);
+	refillHand(objHand);
+})
+
 // dit stukje code zorgt voor de game-loop
 // vergelijk met sitepoint website of dat beter is
 
@@ -233,7 +241,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
-		var playable = false
+		let playable = false
 		for (i = 0; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
 			if (card === objHand[i]) {
 				playable = true;
@@ -250,7 +258,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 		} else {
 			//console.log('playable:', playable);
 			//console.log('Op beurt wachten');
-			var msgBeurt = "WACHTEN !";
+			let msgBeurt = "WACHTEN !";
 			if (turnHome) {
 				$("#visitor").val(msgBeurt);
 			} else {
@@ -498,14 +506,15 @@ async function playValidate() {
 
 			atBatStatus = 'result';
 			displayStatus(atBatStatus);
+			console.log('playValidate inside atBatStatus fielding');
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		// result
 		case 'result': // berekening van het resultaat van de connect vs fielding
 			console.log('inside RESULT');
 			console.log('atBatStatus: ', atBatStatus);
-			var result = Math.abs(objPlay.topCard().rank - objOtherPlay.topCard().rank);
-			console.log('result is now:', result);
+			let result = Math.abs(objPlay.topCard().rank - objOtherPlay.topCard().rank);
+			console.log('result ', result);
 
 			// verwerking van bijzondere connect-kaart of bijzondere connect-fielding-combi
 
@@ -534,7 +543,6 @@ async function playValidate() {
 					// batter is safe and runner(s) advance
 					break;
 				}
-				console.log('start sleep(2000)');
 				await sleep(2000);
 				moveCards(objPlay, discardPile);
 				moveCards(objOtherPlay, discardPile);

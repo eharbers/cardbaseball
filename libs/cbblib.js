@@ -55,7 +55,6 @@ function addCardProperties() {
  * Deck controleren op het aantal kaarten
  */
 async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
-	console.log('Inside checkDeck: ', deck.length);
 	if (deck.length < 7) {
 		console.log('Het worden er te weinig')
 		moveCards(discardPile, deck)
@@ -397,15 +396,15 @@ function renderRunners() {
 	}
 
 	if (baseRunners[1] != 0) {
-		topRow[4].innerHTML = "1B";
+		topRow[5].innerHTML = "1B";
 	} else {
-		topRow[4].innerHTML = "O";
+		topRow[5].innerHTML = "O";
 	}
 
 	if (baseRunners[0] != 0) {
-		bottomRow[4].innerHTML = "AB";
+		bottomRow[5].innerHTML = "AB";
 	} else {
-		bottomRow[4].innerHTML = "O";
+		bottomRow[5].innerHTML = "O";
 	}
 }
 
