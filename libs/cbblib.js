@@ -123,9 +123,6 @@ function detEquals() {
 			eqColor = true;
 		}
 	}
-	//console.log('eqRank: ', eqRank);
-	//console.log('eqSuit: ', eqSuit);
-	//console.log('eqColor: ', eqColor);
 }
 
 /**
@@ -196,8 +193,6 @@ function countCategories() {
 			}
 		}
 	}
-	//console.log('visitorHand: Face: ', vFace, ' Denom: ', vDenomination, ' Comp: ', vCompanion);
-	//console.log('   homeHand: Face: ', hFace, ' Denom: ', hDenomination, ' Comp: ', hCompanion);
 }
 
 /**
@@ -327,7 +322,6 @@ function playError() {
 			compCard = i;
 		}
 	}
-	//console.log('hasComp= ', hasComp);
 
 	if (hasComp == true) {
 		if (confirm('Error')) {
@@ -340,7 +334,6 @@ function playError() {
 			isError = false;
 		}
 	}
-	//console.log('isError= ', isError);
 }
 
 /**
@@ -348,7 +341,7 @@ function playError() {
  * en uitvoering
  */
 function playCatchFoul() {
-	// CacthFoul-card in DEFFENSE-HAND en toepassen ??
+	// CatchFoul-card in DEFFENSE-HAND en toepassen ??
 	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
 			&& objOtherHand[i].color === objPlay.topCard().color) {
@@ -356,8 +349,6 @@ function playCatchFoul() {
 			compCard = i;
 		}
 	}
-	console.log('hasComp= ', hasComp);
-
 	if (hasComp == true) {
 		if (confirm('Catch Foul')) {
 			isCatchFoul = true;
@@ -384,7 +375,6 @@ function playCatchFoul() {
 			isCatchFoul = false;
 		}
 	}
-	console.log('isCatchFoul= ', isCatchFoul);
 }
 
 /**
@@ -493,7 +483,7 @@ async function sendMessage(message) {
 }
 
 /**
- * functie om het resultaat van elke kaart in hand te geven, zou deze gespeeld worden
+ * functie om het resultaat van elke kaart in hand te bepalen, zou deze gespeeld worden
  * @param {*} hand 
  */
 function checkOptions(hand) {
@@ -635,8 +625,8 @@ function checkOptions(hand) {
 		} // end switch atBatStatus
 
 		if (objOtherPlay.length > 0) {
-			if ((hand[i].rank === objOtherPlay.topCard().rank) 
-				&& (hand[i].suit != objOtherPlay.topCard().suit)
+			if ((hand[i].rank === objOtherPlay.topCard().rank)
+				&& (hand[i].suit != objOtherPlay.topCard().suit) 
 				&& (hand[i].color === objOtherPlay.topCard().color) ) {
 					indComp = '[comp]';
 				}
@@ -645,12 +635,8 @@ function checkOptions(hand) {
 		let symbolRank = '';
 		symbolRank = hand[i].symbol + hand[i].letter;
 
-		//option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + outcome + '&#013';
 		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + outcome + '&#013';
 		sendOption(option);
-		// let tipCard = hand[i];
-		// let tip = outcome;
-		// fillToolTip(tipCard, tip);
 	}
 	if (playAI && turnVisitor) {
 		console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
@@ -684,40 +670,6 @@ async function playerAI(aiCard){
 	playValidate();
 }
 
-
-/**
- * Vullen van tooltip obv kaart in hand
- * @param {*} tipCard 
- * @param {*} tip 
- */
-function fillToolTip(tipCard, tip) {
-	// het idee is om obv hover the outcome te tonen
-	// het vinden van de kaart in de html is het probleem
-	// met css-property background-position zou dat mogeljk kunnen
-	// te berekenen obv rij en kolom en afm card 69x94
-
-	console.log('Inside fillToolTip');
-
-	switch (tipCard.suit) {
-		case 'c':
-			console.log('clubs');
-			break;
-		case 'h':
-			console.log('hearts');
-			break;
-		case 'd':
-			console.log('diamonds');
-			break;
-		case 's':
-			console.log('spades');
-			break;
-		default:
-			console.log('#NA#');
-			break;
-	}
-}
-
-
 /**
  * Testen aantal FaceCards tbv NewBall
  * 
@@ -725,7 +677,6 @@ function fillToolTip(tipCard, tip) {
  */
 function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 	checkFaceCardsFlag = false;
-	//console.log('check op #FaceCards');
 
 	let numFaceCards = 0
 	for (let i = 0; i < hand.length; i++) {
@@ -735,20 +686,20 @@ function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 	}
 
 	if (numFaceCards >= 2) {
-		//console.log('numFaceCards = ', numFaceCards);
 		vAtBat ? $('#hNB').show() : $('#vNB').show();
 	} else {
 		vAtBat ? $('#hNB').hide() : $('#vNB').hide();
 	}
 } // end checkNumFaceCards
 
+/**
+ * iets met de Reliever....
+ */
 function checkReliever() {
 	checkRelieverFlag = false;
 	console.log('check Reliever');
 	vAtBat ? $('#hRP').show() : $('vRP').show();
 }
-
-
 
 /**
  * uitkomst checkOption op scherm tonen
