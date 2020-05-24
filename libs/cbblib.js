@@ -1,3 +1,7 @@
+/**
+ * functie om properties aan kaarten toe te voegen,
+ * waar cards.js niet in voorziet
+ */
 function addCardProperties() {
 	for (card of deck) {
 		switch (card.suit) {
@@ -40,11 +44,11 @@ function addCardProperties() {
 				break;
 			default:
 				card.faceCard = false;
-				card.letter= '#';
+				card.letter= card.rank;
 				break;
 		}
 	}
-}
+} // einde addCardProperties
 
 
 /**
@@ -172,11 +176,11 @@ function countCategories() {
 	vCompanion = 0;
 	vDenomination = 0;
 	for (let i = 0; i < visitorHand.length; i++) {
-		if (visitorHand[i].rank >= 11) {
+		if (visitorHand[i].faceCard) {
 			vFace++
 		}
 		for (let j = 0; j < homeHand.length; j++) {
-			if (visitorHand[i].rank === homeHand[j].rank && visitorHand[i].rank < 11) {
+			if (visitorHand[i].rank === homeHand[j].rank && !visitorHand[i].faceCard) {
 				vDenomination++
 				vColor = cardColor(visitorHand[i]);
 				hColor = cardColor(homeHand[j]);
@@ -191,11 +195,11 @@ function countCategories() {
 	hCompanion = 0;
 	hDenomination = 0;
 	for (let i = 0; i < homeHand.length; i++) {
-		if (homeHand[i].rank >= 11) {
+		if (homeHand[i].faceCard) {
 			hFace++
 		}
 		for (let j = 0; j < visitorHand.length; j++) {
-			if (homeHand[i].rank === visitorHand[j].rank && homeHand[i].rank < 11) {
+			if (homeHand[i].rank === visitorHand[j].rank && !homeHand[i].faceCard) {
 				hDenomination++
 				hColor = cardColor(homeHand[i]);
 				vColor = cardColor(visitorHand[j])
@@ -524,7 +528,7 @@ function checkOptions(hand) {
 
 		switch (atBatStatus) {
 			case 'pitch':
-				if (hand[i].rank >= 11) {
+				if (hand[i].faceCard) {
 					outcome = 'BALL';
 					rating[i] = 1;
 				} else {
@@ -533,7 +537,7 @@ function checkOptions(hand) {
 				}
 				break;
 			case 'swing':
-				if (hand[i].rank >= 11) {
+				if (hand[i].faceCard) {
 					if (numStrikes < 2) {
 						outcome = 'FOUL - STRIKE';
 						rating[i] = 1; // facecard bewaren ipv number-card??
@@ -563,7 +567,7 @@ function checkOptions(hand) {
 					break;
 				}
 			case 'connect':
-				if (hand[i].rank >= 11) {
+				if (hand[i].faceCard) {
 					outcome = 'SAC';
 					rating[i] = 1;
 					break;
@@ -575,8 +579,8 @@ function checkOptions(hand) {
 			case 'fielding':
 				outcome = '';
 				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
-				if (objOtherPlay.topCard().rank >= 11) { // connect = SAC
-					if (hand[i].rank >= 11) {
+				if (objOtherPlay.topCard().faceCard) { // connect = SAC
+					if (hand[i].faceCard) {
 						if (eqSuit) {
 							outcome = 'SAC DOUBLE PLAY';
 							rating[i] = 3;
@@ -591,7 +595,7 @@ function checkOptions(hand) {
 						rating[i] = 1;
 						break;
 					}
-				} else if (hand[i].rank >= 11) { // connect is #1-10						
+				} else if (hand[i].faceCard) { // connect is #1-10						
 					outcome = 'HOMERUN';
 					rating[i] = 1;
 					break;
@@ -650,46 +654,11 @@ function checkOptions(hand) {
 					indComp = '[comp]';
 				}
 			}
-		
-		// add a symbol based on the suit
-		let symbol ='';
-		switch (hand[i].suit) {
-			case 'd' :
-				symbol = '&diams;'
-				break;
-			case 'h':
-				symbol = '&hearts;';
-				break;
-			case 's':
-				symbol = '&spades;';
-				break;
-			case 'c':
-				symbol = '&clubs;';
-				break;
-			default:
-				break;
-		}
 
-		// replace facecards #11-13 and Ace with letter
 		let symbolRank = '';
-		switch (hand[i].rank) {
-			case 1:
-				symbolRank = symbol +'A';
-				break;
-			case 11:
-				symbolRank = symbol + 'J';
-				break;
-			case 12:
-				symbolRank = symbol + 'Q';
-				break;
-			case 13:
-				symbolRank = symbol + 'K';
-				break;
-			default:
-				symbolRank = symbol + hand[i].rank;
-				break;
-		}
-		//option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';
+		symbolRank = hand[i].symbol + hand[i].letter;
+
+		//option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + outcome + '&#013';
 		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + outcome + '&#013';
 		sendOption(option);
 		// let tipCard = hand[i];
@@ -773,7 +742,7 @@ function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 
 	let numFaceCards = 0
 	for (let i = 0; i < hand.length; i++) {
-		if (hand[i].rank >= 11) {
+		if (hand[i].faceCard) {
 			numFaceCards++
 		}
 	}

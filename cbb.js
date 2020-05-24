@@ -343,7 +343,7 @@ async function playValidate() {
 				// testen of beide kaarten faceCards zijn
 				let numNewBallFaceCards = 0;
 				for (let i=0; i < objPlay.length; i++) {
-					if (objPlay[i].rank >= 11) { 
+					if (objPlay[i].faceCard) { 
 						numNewBallFaceCards ++
 					}
 				}
@@ -386,7 +386,7 @@ async function playValidate() {
 		// de pitch
 		case 'pitch':
 			console.log('atBatStatus: ', 'pitch');
-			if (objPlay.topCard().rank >= 11) { // een plaatje => ball
+			if (objPlay.topCard().faceCard) { // een plaatje => ball
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
@@ -403,7 +403,7 @@ async function playValidate() {
 		// de swing
 		case 'swing':
 			console.log('atBatStatus: ', 'swing');
-			if (objPlay.topCard().rank >= 11) { // plaatje => foul
+			if (objPlay.topCard().faceCard) { // plaatje => foul
 				if (numStrikes < 2) { // <2 => strike
 					numStrikes += 1;
 					sendMessage('FOUL - STRIKE ' + numStrikes);
@@ -513,23 +513,23 @@ async function playValidate() {
 
 			// sacrifice alleen met 1 of 2 of 1 en 2 bezet.of 1 en 3; bases loaded en alleen loper op 3 kan niet
 			// dus iets met baseRunners[i] doen en zo... 
-			if (objOtherPlay.topCard().rank >= 11) { // sacrifice
+			if (objOtherPlay.topCard().faceCard) { // sacrifice
 				//TODO kan niet met bases loaded of alleen loper op 3 !! => afvangen van tevoren??
 				console.log('sacrifice attempt')
 				// plaatje van dezelfde suit
-				if ((objPlay.topCard().rank >= 11) && (eqSuit === true)) {
+				if ((objPlay.topCard().faceCard) && (eqSuit === true)) {
 					console.log('SAC: double play');
 					sendMessage('SAC: double play');
 					moveRunners('sacDP');
 					// batter is out and runner out... de verste loper
 					break;
-				} else if (objPlay.topCard().rank >= 11 && (eqSuit === false)) {
+				} else if (objPlay.topCard().faceCard && (eqSuit === false)) {
 					console.log('SAC: B:out R:adv');
 					sendMessage('SAC: B:out R:adv');
 					moveRunners('sacBORA');
 					// batter out and runner(s) advance ... kan niet met bases loaded, maar wel 1 en 3
 					break;
-				} else if (objPlay.topCard().rank < 11) {
+				} else if (!objPlay.topCard().faceCard) {
 					console.log('SAC: B:safe R:adv');
 					sendMessage('SAC: B:safe R:adv');
 					moveRunners('sacBSRA');
