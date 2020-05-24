@@ -313,7 +313,7 @@ function checkInning() {
 		renderRunners();
 		numOuts = 0;
 		changePlayer();
-		if (objHand.length >6 || objOtherHand.length > 6) {
+		if (objHand.length > 6 || objOtherHand.length > 6) {
 			atBatStatus = 'decrease'
 			sendMessage('decrease to 6 cards');
 			turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
@@ -506,8 +506,6 @@ async function playValidate() {
 			console.log('atBatStatus: ', atBatStatus);
 			var result = Math.abs(objPlay.topCard().rank - objOtherPlay.topCard().rank);
 			console.log('result is now:', result);
-			console.log('objPlay color: ', cardColor(objPlay.topCard()))
-			console.log('objOtherPlay color: ', cardColor(objOtherPlay.topCard()))
 
 			// verwerking van bijzondere connect-kaart of bijzondere connect-fielding-combi
 

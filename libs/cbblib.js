@@ -105,19 +105,6 @@ function sleep(ms) {
 }
 
 /**
- * kleur van de kaart bepalen
- * @param {*} kaart 
- */
-function cardColor(kaart) { // blijkbaar geen eigenschap van de kaart
-	if (kaart.suit === 'd' || kaart.suit === 'h') {
-		var color = 'red';
-	} else {
-		var color = 'black';
-	}
-	return color;
-}
-
-/**
  * checks op de topCards van elke speler
  * voor beslisboom
  */
@@ -132,7 +119,7 @@ function detEquals() {
 		if (objPlay.topCard().suit === objOtherPlay.topCard().suit) {
 			eqSuit = true;
 		}
-		if (cardColor(objPlay.topCard()) === cardColor(objOtherPlay.topCard())) {
+		if (objPlay.topCard().color === objOtherPlay.topCard().color) {
 			eqColor = true;
 		}
 	}
@@ -158,7 +145,7 @@ function detOptionEquals(hand) {
 		if (hand.suit === objOtherPlay.topCard().suit) {
 			eqSuit = true;
 		}
-		if (cardColor(hand) === cardColor(objOtherPlay.topCard())) {
+		if (hand.color === objOtherPlay.topCard().color) {
 			eqColor = true;
 		}
 	}
@@ -182,8 +169,8 @@ function countCategories() {
 		for (let j = 0; j < homeHand.length; j++) {
 			if (visitorHand[i].rank === homeHand[j].rank && !visitorHand[i].faceCard) {
 				vDenomination++
-				vColor = cardColor(visitorHand[i]);
-				hColor = cardColor(homeHand[j]);
+				vColor = visitorHand[i].color;
+				hColor = homeHand[j].color;
 				if (vColor === hColor) {
 					vCompanion++;
 				}
@@ -201,8 +188,8 @@ function countCategories() {
 		for (let j = 0; j < visitorHand.length; j++) {
 			if (homeHand[i].rank === visitorHand[j].rank && !homeHand[i].faceCard) {
 				hDenomination++
-				hColor = cardColor(homeHand[i]);
-				vColor = cardColor(visitorHand[j])
+				hColor = homeHand[i].color;
+				vColor = visitorHand[j].color;
 				if (hColor === vColor) {
 					hCompanion++;
 				}
@@ -335,7 +322,7 @@ function playError() {
 	// Error-card in OFFENSE-HAND en toepassen ??
 	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
-			&& cardColor(objOtherHand[i]) === cardColor(objPlay.topCard())) {
+			&& objOtherHand[i].color === objPlay.topCard().color) {
 			hasComp = true;
 			compCard = i;
 		}
@@ -364,7 +351,7 @@ function playCatchFoul() {
 	// CacthFoul-card in DEFFENSE-HAND en toepassen ??
 	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
-			&& cardColor(objOtherHand[i]) === cardColor(objPlay.topCard())) {
+			&& objOtherHand[i].color === objPlay.topCard().color) {
 			hasComp = true;
 			compCard = i;
 		}
@@ -648,9 +635,9 @@ function checkOptions(hand) {
 		} // end switch atBatStatus
 
 		if (objOtherPlay.length > 0) {
-			if ((hand[i].rank == objOtherPlay.topCard().rank) 
+			if ((hand[i].rank === objOtherPlay.topCard().rank) 
 				&& (hand[i].suit != objOtherPlay.topCard().suit)
-				&& (cardColor(hand[i]) == cardColor(objOtherPlay.topCard())) ) {
+				&& (hand[i].color === objOtherPlay.topCard().color) ) {
 					indComp = '[comp]';
 				}
 			}
