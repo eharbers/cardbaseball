@@ -218,8 +218,7 @@ function playBall() {
 	} else {
 		window.requestAnimationFrame(playBall);
 	}
-}
-// einde playBall
+} // einde playBall
 
 /**
  * functie om kaart te klikken uit de hand die aan de beurt is.
@@ -237,7 +236,6 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			checkReliever();
 		}		
 	}
-
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
@@ -266,7 +264,6 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			}
 		}
 	}); // end click objHand (of objOtherHand)
-	//checkDeck();
 } // end playCard
 
 
@@ -692,6 +689,7 @@ function changePlayer() {
 		objPlay = visitorPlay;
 		objOtherHand = homeHand;
 		objOtherPlay = homePlay;
+		console.log('Change player from turnHome to turnVisitor');
 	} else {
 		turnHome = true;
 		$("#home").css("background-color", "red");
@@ -703,6 +701,7 @@ function changePlayer() {
 		objPlay = homePlay;
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
+		console.log('Change player from turnVisitor to turnHome');
 	}
 }
 
