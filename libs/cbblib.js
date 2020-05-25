@@ -521,6 +521,8 @@ function checkOptions(hand) {
 	// en het resultaat bepalen
 
 	console.log('checkOptions status = ', atBatStatus);
+	console.log('turnHome: ' + turnHome + ' // playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor)
+	
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
@@ -651,7 +653,7 @@ function checkOptions(hand) {
 			if ((hand[i].rank === objOtherPlay.topCard().rank)
 				&& (hand[i].suit != objOtherPlay.topCard().suit) 
 				&& (hand[i].color === objOtherPlay.topCard().color) ) {
-					indComp = '[comp]';
+					indComp = '[c]';
 				}
 			}
 
@@ -666,7 +668,7 @@ function checkOptions(hand) {
 		let maxRating = 0;
 		let maxRatingId = 0;
 		for (let i = 0; i < hand.length; i++) {
-			console.log(i + ': ' + rating[i] + ' => ' + hand[i])
+			console.log(i + ': ' + rating[i] + ' => ' + hand[i].shortname)
 			if (rating[i] > maxRating) {
 				maxRating = rating[i];
 				maxRatingId = i;
@@ -685,7 +687,9 @@ function checkOptions(hand) {
 async function playerAI(aiCard){
 	let thinking = 0;
 	thinking = 1000 + Math.random() * 2000
+	console.log('AI thinking for atBatStatus: ', atBatStatus);
 	await sleep(thinking);
+	console.log ('AI plays: ', aiCard);
 	objPlay.addCard(aiCard);
 	objPlay.render();
 	objHand.render();

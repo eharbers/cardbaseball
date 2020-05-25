@@ -172,7 +172,7 @@ $('#hNB').click(function () {
 	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
-	sendMessage('New Balls request');
+	sendMessage('New Balls request &#013 Two facecards');
 })
 
 // afhandelen van het klikken op visitor NB-button voor new balls
@@ -182,7 +182,7 @@ $('#vNB').click(function () {
 	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
-	sendMessage('New Balls request');
+	sendMessage('New Balls request &#013 Two facecards');
 })
 
 // afhandelen van het klikken op home RP-button voor Relief Pitcher
@@ -239,6 +239,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
+		console.log('Human plays: ', card);
 		let playable = false
 		for (i = 0; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
 			if (card === objHand[i]) {
@@ -299,6 +300,7 @@ function checkInning() {
 	console.log('Inside checkInning');
 	if (numOuts === 3) {
 		sendMessage('3-OUTS Change fields')
+		console.log('3-OUTS Change fields');
 		if (vAtBat) {
 			vAtBat = false;
 			hAtBat = true;
@@ -332,6 +334,7 @@ function checkInning() {
  */
 async function playValidate() {
 	console.log('inside playValidate');
+	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
 	// feitelijke controle op de kaart die als laatste aan homePlay of visitorPlay is toegevoegd
 	// dit gaat dan met topCard() gebeuren
 
@@ -342,7 +345,7 @@ async function playValidate() {
 
 	switch (atBatStatus) {
 		case 'newball':
-			sendMessage('New Balls request');
+			sendMessage('New Balls request &#013 Two facecards');
 			if (objPlay.length == 2) {
 
 				// testen of beide kaarten faceCards zijn
@@ -390,7 +393,7 @@ async function playValidate() {
 			break;
 		// de pitch
 		case 'pitch':
-			console.log('atBatStatus: ', 'pitch');
+			console.log('atBatStatus: ', atBatStatus);
 			if (objPlay.topCard().faceCard) { // een plaatje => ball
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
@@ -407,7 +410,7 @@ async function playValidate() {
 			break;
 		// de swing
 		case 'swing':
-			console.log('atBatStatus: ', 'swing');
+			console.log('atBatStatus: ', atBatStatus);
 			if (objPlay.topCard().faceCard) { // plaatje => foul
 				if (numStrikes < 2) { // <2 => strike
 					numStrikes += 1;
@@ -630,7 +633,6 @@ async function playValidate() {
 			// de honklopers zijn verplaatst
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
-			console.log('start sleep(2000)');
 			await sleep(2000);
 			moveCards(objPlay, discardPile);
 			moveCards(objOtherPlay, discardPile);
@@ -659,6 +661,9 @@ async function playValidate() {
 	// check met strikes, balls, outs & innings
 	// die staat nu in de game-loop
 	checkAtBat();
+	/* if (numOuts === 3) { // anders gaat de AI te snel voor het leegmaken van het speelveld
+		await sleep(2000)
+	} */
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
 } // einde playValidate
