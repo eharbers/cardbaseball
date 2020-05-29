@@ -668,7 +668,7 @@ function checkOptions(hand) {
 		let maxRating = 0;
 		let maxRatingId = 0;
 		for (let i = 0; i < hand.length; i++) {
-			console.log(i + ': ' + rating[i] + ' => ' + hand[i].shortname)
+			console.log(i + ': ' + rating[i] + ' => ' + hand[i].shortName)
 			if (rating[i] > maxRating) {
 				maxRating = rating[i];
 				maxRatingId = i;

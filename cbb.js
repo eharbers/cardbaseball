@@ -327,7 +327,7 @@ function checkInning() {
 		}
 		atBatStatus = 'pitch';
 	}
-}
+} // einde checkInning
 
 /**
  * obv atBatStatus de uit te voeren play bepalen
@@ -384,7 +384,7 @@ async function playValidate() {
 				case (handLength > 6):
 					moveCards(objOtherHand, discardPile);
 					break;
-				case (handLength = 6):
+				case (handLength === 6):
 					atBatStatus = 'pitch';
 					sendMessage('Play Ball!');
 					displayStatus(atBatStatus);
@@ -667,13 +667,6 @@ async function playValidate() {
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
 } // einde playValidate
-
-/**
- * New Balls voor pitcher tegen inlevering van 2 faceCards
- */
-function newBall() {
-	console.log('inside newBall');
-} //einde click functie
 
 
 /**
