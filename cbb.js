@@ -80,6 +80,7 @@ let isFace = false;
 let hasComp = false;
 let isError = false;
 let isCatchFoul = false;
+let isLongFly = false;
 
 // voor de telling van de categories in playValidate per Hand
 let vFace = 0;
@@ -509,6 +510,9 @@ async function playValidate() {
 		case 'connect': // een kaart kiezen : hoe geslagen
 			console.log('atBatStatus: ', atBatStatus);
 			// a card is picked to place hit
+			if (objPlay.topCard().rank === 9 || objPlay.topCard().rank === 10) {
+				isLongFly = true;
+			}
 			atBatStatus = 'fielding';
 			changePlayer();
 			break;
@@ -634,7 +638,12 @@ async function playValidate() {
 					break;
 				case (result >= 0):
 					if (!isError) {
-						sendMessage('OUT');
+						if (isLongFly) {
+							sendMessage('FLY OUT');
+							isLongFly = false;
+						} else {
+							sendMessage('GROUND OUT');
+						} 
 						console.log('no runner to move (yes)');
 						numOuts += 1; // en daar hoort ook een check voor 3 out bij
 						updateScoreboard(); // naar game-loop ??

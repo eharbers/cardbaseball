@@ -540,6 +540,7 @@ function checkOptions(hand) {
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
+		let indFly ='';
 		//let rating = []; /// hier stond ie eerst / nu boven loop 
 
 		switch (atBatStatus) {
@@ -588,6 +589,9 @@ function checkOptions(hand) {
 					rating[i] = 1;
 					break;
 				} else {
+					if (isLongFly) {
+						indFly ='[F]';
+					}
 					outcome = '?fielding?';
 					rating[i] = 2;
 					break;
@@ -663,7 +667,7 @@ function checkOptions(hand) {
 				break;
 		} // end switch atBatStatus
 
-		if (objOtherPlay.length > 0) {
+		if (objOtherPlay.length > 0) {// de bovenste kaart van tegenspeler checken op companion-card
 			if ((hand[i].rank === objOtherPlay.topCard().rank)
 				&& (hand[i].suit != objOtherPlay.topCard().suit) 
 				&& (hand[i].color === objOtherPlay.topCard().color) ) {
@@ -674,7 +678,7 @@ function checkOptions(hand) {
 		let symbolRank = '';
 		symbolRank = hand[i].symbol + hand[i].letter;
 
-		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + outcome + '&#013';
+		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + indFly + ' ' + outcome + '&#013';
 		sendOption(option);
 	}
 	if (playAI && turnVisitor) {
