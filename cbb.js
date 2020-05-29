@@ -2,6 +2,7 @@
 //Tell the library which element to use for the table
 cards.init({ table: '#card-table' });
 let playAI = false;
+let maxInnings = 9; // max aantal te spelen voordat endOfGame wordt bepaald in checkInning
 let showCards = true; // met toggleCards-button bedienen
 
 //Create a new deck of cards
@@ -95,8 +96,8 @@ let vErrors = 0;
 let hHits = 0;
 let hErrors = 0;
 
-let checkOptionsFlag = true;
-let checkFaceCardsFlag = true;
+let checkOptionsFlag = true; // flag aan en uit om 1x door checkOptions per beurt/card te gaan
+let checkFaceCardsFlag = true; // flag om check tot 1x te beperken per beurt/card
 
 // NB knop
 let newBallFlag = false;
@@ -147,6 +148,9 @@ $('#deal').click(function () {
 	//Deck has a built in method to deal to hands.
 	$('#deal').hide();
 	$('#aiDeal').hide();
+	$('#bMaxInnings').hide();
+	$('#lblMaxInnings').hide();
+	$('#iMaxInnings').hide();
 	deck.deal(6, [visitorHand, homeHand], 50, function () {
 		//This is a callback function, called when the dealing
 		//is done.
@@ -212,6 +216,7 @@ window.requestAnimationFrame(playBall);
 function playBall() {
 	//slagbeurt 
 	//console.log('playBall atBatStatus: ', atBatStatus);
+	if (checkOptionsFlag == true) { checkOptions(objHand) }; // uit playCard ; meteen AI-speler
 	playCard();	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
 	if (endOfGame === true) { // dit stukje zorgt voor de herhaling, todat endOfGame 'waar' is
 		gameOver();
@@ -226,7 +231,7 @@ function playBall() {
 function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
-	if (checkOptionsFlag == true) { checkOptions(objHand) };
+	// if (checkOptionsFlag == true) { checkOptions(objHand) }; //verhuisd naar playBall
 	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
 
 	if ((checkRelieverFlag == true) && hitsInning >= 2) {
@@ -298,34 +303,40 @@ function checkAtBat() {
  */
 function checkInning() {
 	console.log('Inside checkInning');
-	if (numOuts === 3) {
-		sendMessage('3-OUTS Change fields')
-		console.log('3-OUTS Change fields');
-		if (vAtBat) {
-			vAtBat = false;
-			hAtBat = true;
-			hRun[inning] = 0;
-			hitsInning = 0;
-		} else {
-			hAtBat = false;
-			vAtBat = true;
-			inning++;
-			vRun[inning] = 0;
-			hitsInning = 0;
+	if (inning <= maxInnings) {
+		if (numOuts === 3) {
+			sendMessage('3-OUTS Change fields')
+			console.log('3-OUTS Change fields');
+			if (vAtBat) {
+				vAtBat = false;
+				hAtBat = true;
+				hRun[inning] = 0;
+				hitsInning = 0;
+			} else {
+				hAtBat = false;
+				vAtBat = true;
+				inning++;
+				vRun[inning] = 0;
+				hitsInning = 0;
+			}
+			for (i = 0; i <= 3; i++) {
+				baseRunners[i] = 0;
+			}
+			baseRunners[0] = 1;
+			renderRunners();
+			numOuts = 0;
+			changePlayer();
+			if (objHand.length > 6 || objOtherHand.length > 6) {
+				atBatStatus = 'decrease'
+				sendMessage('decrease to 6 cards');
+				// ??? moet dat wisselen van die spelers ???
+				turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+			}
+			atBatStatus = 'pitch';
 		}
-		for (i = 0; i <= 3; i++) {
-			baseRunners[i] = 0;
-		}
-		baseRunners[0] = 1;
-		renderRunners();
-		numOuts = 0;
-		changePlayer();
-		if (objHand.length > 6 || objOtherHand.length > 6) {
-			atBatStatus = 'decrease'
-			sendMessage('decrease to 6 cards');
-			turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
-		}
-		atBatStatus = 'pitch';
+	} else {
+		endOfGame = true;
+		// gameOver(); in playCard wordt op endOfGame gecheckt en doorgestuurd naar gameOver
 	}
 } // einde checkInning
 
@@ -655,7 +666,7 @@ async function playValidate() {
 			break;
 		default:
 			console.log('playValidate default');
-			endOfGame = true;
+			endOfGame = true; // gameOver :-)
 			break;
 	}
 	// check met strikes, balls, outs & innings

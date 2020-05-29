@@ -51,6 +51,11 @@ function addCardProperties() {
 } // einde addCardProperties
 
 
+function setMaxInnings() {
+	maxInnings = document.getElementById("iMaxInnings").value;
+	console.log('Max Innings: ', maxInnings);
+}
+
 /**
  * Deck controleren op het aantal kaarten
  */
@@ -311,6 +316,11 @@ function moveOnHBP() {
 	moveOnWalk(); // vandaar dat we die gewoon aanroepen
 }
 
+/**
+ * verplaatsen honklopers
+ * obv SAC
+ * @param {*} sac 
+ */
 function moveOnSac(sac) {
 	// hier eerst de uitzonderingen uitsluiten
 	// en de kaart terugschuiven
@@ -743,4 +753,5 @@ async function sendOption(option) {
  */
 function gameOver() {
 	console.log('GAME OVER');
+	sendMessage('GAME OVER');
 }

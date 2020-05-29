@@ -64,6 +64,28 @@ a:visited {color:blue;}
 	top:210px;
 }
 
+#bMaxInnings {
+	position: absolute;
+	left:310px;
+	top:250px;
+}
+
+#lblMaxInnings {
+	position: absolute;
+	left:310px;
+	top:300px;
+}
+
+#iMaxInnings {
+	position: absolute;
+	left:430px;
+	top:250px;
+	height: 24px;
+	width: 25px;
+	margin:8px auto;
+	padding: 1px 6px;
+}
+
 #vNB {
 	position: absolute;
 	left: 200px;
