@@ -52,7 +52,10 @@ function addCardProperties() {
 
 
 function setMaxInnings() {
-	maxInnings = document.getElementById("iMaxInnings").value;
+	let setMax = document.getElementById("iMaxInnings").value;
+	if (setMax >= 1 && setMax <= 9) {
+		maxInnings = setMax;
+	}
 	console.log('Max Innings: ', maxInnings);
 }
 
@@ -89,8 +92,9 @@ function moveCards(from, to) {
 		to.addCard(from[i]);
 		i--; // de from stapel-length wordt steeds kleiner ...
 	}
-	from.render();
 	to.render();
+	from.render();
+	
 }
 
 
@@ -530,7 +534,7 @@ function checkOptions(hand) {
 	// dezelfde controles uitvoeren op de kaart
 	// en het resultaat bepalen
 
-	console.log('checkOptions status = ', atBatStatus);
+	console.log('checkOptions atBatstatus = ', atBatStatus);
 	console.log('turnHome: ' + turnHome + ' // playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor)
 	
 	for (let i = 0; i < hand.length; i++) {

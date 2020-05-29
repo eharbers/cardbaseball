@@ -3,6 +3,11 @@
 cards.init({ table: '#card-table' });
 let playAI = false;
 let maxInnings = 9; // max aantal te spelen voordat endOfGame wordt bepaald in checkInning
+// This allows to use up and down arrows on the input, but doesn't allow keyboard input.
+$("[type='number']").keypress(function (evt) {
+    evt.preventDefault();
+});
+
 let showCards = true; // met toggleCards-button bedienen
 
 //Create a new deck of cards
@@ -275,7 +280,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 
 
 /**
- * controleren van de slagbeurt
+ * controleren van de slagbeurt (pitch2pitch)
  */
 function checkAtBat() {
 	console.log('Inside checkAtBat');
@@ -345,6 +350,7 @@ function checkInning() {
  */
 async function playValidate() {
 	console.log('inside playValidate');
+	console.log('playValidate atBatStatus: ', atBatStatus);
 	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
 	// feitelijke controle op de kaart die als laatste aan homePlay of visitorPlay is toegevoegd
 	// dit gaat dan met topCard() gebeuren
