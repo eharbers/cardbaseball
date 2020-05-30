@@ -67,6 +67,7 @@ let baseRunners = [];
 for (i = 0; i <= 3; i++) {
 	baseRunners[i] = 0;
 }
+
 let play = '';
 renderRunners();
 

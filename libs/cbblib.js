@@ -263,7 +263,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
  */
 function moveOnHit(bases) {
 	for (var b = 3; b >= 0; b--) {
-		if (baseRunners[b] != 0) {
+		if (baseRunners[b] == 1) {
 			if (b + bases >= 4) {
 				baseRunners[b] = 0;
 				if (vAtBat) { //visitor scoort...
@@ -290,7 +290,7 @@ function moveOnWalk() {
 	// variant verzinnen op gedwongen opschuiven of door hit (of deze toch apart afhandelen)
 	if (baseRunners[1] == 1) {  // 1B bezet
 		if (baseRunners[2] == 1) { // 1B 2B bezet
-			if (baseRunners[3] == 1) { // 1B 2B 3B bezet
+			if (baseRunners[3 ] == 1) { // 1B 2B 3B bezet
 				baseRunners[3] = 0;
 				if (vAtBat) { //visitor scoort...
 					vRun[inning]++;
@@ -307,7 +307,7 @@ function moveOnWalk() {
 		baseRunners[2] = 1;
 	}
 	// baseRunners[0] = 0; laten staan ... anders is er geen AB meer, die eigenlijk bij new AB hoort
-	baseRunners[1] = 1; // 0B (en alle anderen)
+	baseRunners[1] = 0; // 0B (en alle anderen)
 }
 
 /**
@@ -329,22 +329,109 @@ function moveOnSac(sac) {
 	// hier eerst de uitzonderingen uitsluiten
 	// en de kaart terugschuiven
 	// met messageboard-message
-	console.log('moveOnSac(' + sac + ')');
+	if ((baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 0)
+		|| (baseRunners[1] == 0 && baseRunners[2] == 1 && baseRunners[3] == 1)
+		|| (baseRunners[1] == 1 && baseRunners[2] == 1 && baseRunners[3] == 1)
+		|| (baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 1)) {
+			console.log('No SAC situation AB out');
+			sendMessage('No SAC situation Batter OUT');
+			// kaart teruggeven aan spelershand (check naar speel moment ipv hier // AI geen keuze)
+			// of AB => OUT ... of toch SQUEEZE toestaan ??
+			numOuts += 1;
+		}
+	console.log('moveOnSac(' + sac + ')');	
+			
+	switch (true) {
+		case (baseRunners[1] == 1 || (baseRunners[1] == 1 && baseRunners[3] == 1)): // 1B of 1B & 3B
+			switch (sac) {
+				case 'sacDP': // facecard same suit
+				baseRunners[1] = 0; // 1B: OUT
 
-	switch (sac) {
-		case 'sacDP':
-			// AB sowieso uit
+				baseRunners[0] = 0; // AB: OUT
+				numOuts += 2;
+				break;
+			case 'sacBORA': // facecard other suit
+				baseRunners[1] = 0;
+				baseRunners[2] = 1; // 1B => 2B
+
+				baseRunners[0] = 0; // AB: OUT
+				numOuts += 1;
+				break;
+			case 'sacBSRA': // #-card (any)
+				baseRunners[1] = 0;
+				baseRunners[2] = 1; // 1B => 2B
+
+				baseRunners[1] = 1; // AB => 1B
+				break;
+			default:
+				break;
+			}			
 			break;
-		case 'sacBORA':
-			// AB sowieso uit
+		case (baseRunners[1] == 1 && baseRunners[2] == 1 && baseRunners[3] == 0) : // 1B && 2B
+			switch (sac) {
+				case 'sacDP': // facecard same suit
+					baseRunners[2] = 0; // 2B: OUT
+
+					baseRunners[1] = 0;
+					baseRunners[2] = 1; // 1B => 2B
+
+					baseRunners[0] = 0; // AB: OUT
+					numOuts += 2;
+					break;
+				case 'sacBORA': // facecard other suit
+					baseRunners[2] = 0;
+					baseRunners[3] = 1; // 2B => 3B
+
+					baseRunners[1] = 0;
+					baseRunners[2] = 1; // 1B => 2B
+
+					baseRunners[0] = 0; // AB: OUT
+					numOuts += 1;
+					break;
+				case 'sacBSRA': // #-card (any)
+					baseRunners[2] = 0;
+					baseRunners[3] = 1; // 2B => 3B
+
+					baseRunners[1] = 0;
+					baseRunners[2] = 1; // 1B => 2B
+
+					baseRunners[0] = 0;
+					baseRunners[1] = 1; // AB => 1B
+					break;
+				default:
+					break;
+			}
 			break;
-		case 'sacBSRA':
-			// iedereen behalve 3B schuift op
+		case (baseRunners[1] == 0 && baseRunners[2] == 1 && baseRunners[3] == 0) : // 2B
+			switch (sac) {
+				case 'sacDP': // facecard same suit
+					baseRunners[2] = 0; // 2B: OUT
+
+					baseRunners[0] = 0; // AB: OUT
+					numOuts += 2;
+					break;
+				case 'sacBORA': // facecard other suit
+					baseRunners[2] = 0;
+					baseRunners[3] = 1; // 2B => 3B
+
+					baseRunners[0] = 0; // AB: OUT
+					numOuts += 1;
+					break;
+				case 'sacBSRA': // #-card (any)
+					baseRunners[2] = 0;
+					baseRunners[3] = 1; // 2B => 3B
+
+					baseRunners[0] = 0;
+					baseRunners[1] = 1; // AB => 1B
+					break;
+				default:
+					break;
+			}
 			break;
 		default:
 			break;
-	}
-}
+	} // end cases met situaties
+} // end moveOnSac
 
 /**
  * Bepalen obv OFFENSE-hand of ERROR gespeeld kan worden
@@ -421,25 +508,25 @@ function renderRunners() {
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[4].cells
 
-	if (baseRunners[3] != 0) {
+	if (baseRunners[3] == 1) {
 		bottomRow[0].innerHTML = "3B";
 	} else {
 		bottomRow[0].innerHTML = "O";
 	}
 
-	if (baseRunners[2] != 0) {
+	if (baseRunners[2] == 1) {
 		topRow[0].innerHTML = "2B";
 	} else {
 		topRow[0].innerHTML = "O";
 	}
 
-	if (baseRunners[1] != 0) {
+	if (baseRunners[1] == 1) {
 		topRow[5].innerHTML = "1B";
 	} else {
 		topRow[5].innerHTML = "O";
 	}
 
-	if (baseRunners[0] != 0) {
+	if (baseRunners[0] == 1) {
 		bottomRow[5].innerHTML = "AB";
 	} else {
 		bottomRow[5].innerHTML = "O";
@@ -704,7 +791,7 @@ function checkOptions(hand) {
  */
 async function playerAI(aiCard){
 	let thinking = 0;
-	thinking = 1000 + Math.random() * 2000
+	thinking = 2000 + Math.random() * 2000
 	console.log('AI thinking for atBatStatus: ', atBatStatus);
 	await sleep(thinking);
 	console.log ('AI plays: ', aiCard);
