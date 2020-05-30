@@ -514,6 +514,23 @@ async function playValidate() {
 			if (objPlay.topCard().rank === 9 || objPlay.topCard().rank === 10) {
 				isLongFly = true;
 			}
+
+			// if card is face card check for valid situation
+			if (objPlay.topCard().faceCard
+				&& ((baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 0)
+				|| (baseRunners[1] == 0 && baseRunners[2] == 1 && baseRunners[3] == 1)
+				|| (baseRunners[1] == 1 && baseRunners[2] == 1 && baseRunners[3] == 1)
+				|| (baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 1))) {
+				console.log('No SAC situation');
+				sendMessage('No SAC situation');
+				// kaart teruggeven aan spelershand (check naar speel moment ipv hier // AI geen keuze)
+				await sleep(1000)
+				objHand.addCard(objPlay.topCard());
+				objHand.render();
+				objPlay.render();
+				atBatStatus = 'connect';
+				break;
+			}
 			atBatStatus = 'fielding';
 			changePlayer();
 			break;

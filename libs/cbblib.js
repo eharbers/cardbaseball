@@ -307,7 +307,7 @@ function moveOnWalk() {
 		baseRunners[2] = 1;
 	}
 	// baseRunners[0] = 0; laten staan ... anders is er geen AB meer, die eigenlijk bij new AB hoort
-	baseRunners[1] = 0; // 0B (en alle anderen)
+	baseRunners[1] = 1; // 0B (en alle anderen)
 }
 
 /**
@@ -329,7 +329,7 @@ function moveOnSac(sac) {
 	// hier eerst de uitzonderingen uitsluiten
 	// en de kaart terugschuiven
 	// met messageboard-message
-	if ((baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 0)
+	/* if ((baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 0)
 		|| (baseRunners[1] == 0 && baseRunners[2] == 1 && baseRunners[3] == 1)
 		|| (baseRunners[1] == 1 && baseRunners[2] == 1 && baseRunners[3] == 1)
 		|| (baseRunners[1] == 0 && baseRunners[2] == 0 && baseRunners[3] == 1)) {
@@ -338,7 +338,7 @@ function moveOnSac(sac) {
 			// kaart teruggeven aan spelershand (check naar speel moment ipv hier // AI geen keuze)
 			// of AB => OUT ... of toch SQUEEZE toestaan ??
 			numOuts += 1;
-		}
+		} */
 	console.log('moveOnSac(' + sac + ')');	
 			
 	switch (true) {
