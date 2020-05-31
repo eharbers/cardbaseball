@@ -13,23 +13,60 @@
 
 	<img class="preload" src="img/cards.png" />
     <div id="card-table">
+        <table id="scoreboard">
+			<tr>
+				<th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>X</th><th>R</th><th>H</th><th>E</th><th>||</th><th>I:</th><th>0</th>
+			</tr>
+			<tr>
+				<td>V</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>B:</td><td>0</td>
+			</tr>
+			<tr>
+				<td>H</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>S:</td><td>0</td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>||</td><td>O:</td><td>0</td>
+			</tr>
+        </table>
+        
+        <div id="varTable">
 
-        <textarea id="option" readonly rows="10" cols="1"></textarea>
-
+        </div>
     </div>
 </body>
 
 <script>
-    //option = option + ' ' + hand[i].shortName + ' ' + indComp + ' => ' + outcome + '&#013';    
+    let maxScoreInnings = 6;
+    let tbody = '';
 
-    let option = 'wat hier zoal kan staan' + '&#013';
-    option = option + <span style='color:red'>&diams;6</span>
-    sendOption(option);
-    
-
-    function sendOption(option) {
-	    document.getElementById("option").innerHTML = option;
+    tbody += '<table id="varscoreboard">\n'
+    // row 0
+    tbody += '<tr>\n<th></th>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<th>' + i + '</th>'
     }
+    tbody += '<th>X</th><th>R</th><th>H</th><th>E</th><th>||</th><th>I:</th><th>0</th>\n';
+    tbody += '</tr>\n';
+    // row 1
+    tbody += '<tr>\n<td>V</td>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<td>--</td>';
+    }
+    tbody += '</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>B:</td><td>0</td>\n'
+    // row 2
+    tbody += '<tr>\n<td>H</td>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<td>--</td>';
+    }
+    tbody += '</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>S:</td><td>0</td>\n'
+    // row 3
+    tbody += '<tr>\n<td></td>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<td></td>';
+    }
+    tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>O:</td><td>0</td>\n'
+
+    tbody += '</tr>\n</table>'
+    document.getElementById('varTable').innerHTML = tbody;
 </script>
 
 </html>

@@ -59,6 +59,40 @@ function setMaxInnings() {
 	console.log('Max Innings: ', maxInnings);
 }
 
+function createScoreBoard(maxScoreInnings) {
+	let tbody = '';
+
+    tbody += '<table id="scoreboard">\n'
+    // row 0
+    tbody += '<tr>\n<th></th>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<th>' + i + '</th>'
+    }
+    tbody += '<th>X</th><th>R</th><th>H</th><th>E</th><th>||</th><th>I:</th><th>0</th>\n';
+    tbody += '</tr>\n';
+    // row 1
+    tbody += '<tr>\n<td>V</td>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<td>--</td>';
+    }
+    tbody += '</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>B:</td><td>0</td>\n'
+    // row 2
+    tbody += '<tr>\n<td>H</td>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<td>--</td>';
+    }
+    tbody += '</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>S:</td><td>0</td>\n'
+    // row 3
+    tbody += '<tr>\n<td></td>';
+    for (let i=1; i <= maxScoreInnings; i++) {
+        tbody += '<td></td>';
+    }
+    tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>O:</td><td>0</td>\n'
+
+    tbody += '</tr>\n</table>'
+    document.getElementById('varTable').innerHTML = tbody;
+}
+
 /**
  * Deck controleren op het aantal kaarten
  */
@@ -552,18 +586,18 @@ function displayStatus (atBatStatus) {
  * verversen van de gegevens op het scoreboard
  */
 function updateScoreboard() { // een-op-een van solitaire overgenomen
-	// update inning in cell rij 3 kolom 2
-	var inn = document.getElementById("scoreboard").rows[3].cells;
-	inn[2].innerHTML = inning;
-	// update balls in cell rij 3 kolom 5
-	var ball = document.getElementById("scoreboard").rows[3].cells;
-	ball[5].innerHTML = numBalls;
+	// update inning in cell rij 0 kolom 16
+	var inn = document.getElementById("scoreboard").rows[0].cells;
+	inn[16].innerHTML = inning;
+	// update balls in cell rij 1 kolom 16
+	var ball = document.getElementById("scoreboard").rows[1].cells;
+	ball[16].innerHTML = numBalls;
 	// update strikes in cell rij 3 kolom 8
-	var strike = document.getElementById("scoreboard").rows[3].cells;
-	strike[8].innerHTML = numStrikes;
+	var strike = document.getElementById("scoreboard").rows[2].cells;
+	strike[16].innerHTML = numStrikes;
 	// update outs in cell rij 3 kolom 11
 	var out = document.getElementById("scoreboard").rows[3].cells;
-	out[11].innerHTML = numOuts;
+	out[16].innerHTML = numOuts;
 
 	var vTotalRun = 0;
 	var hTotalRun = 0;
