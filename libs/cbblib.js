@@ -73,15 +73,15 @@ function createScoreBoard(maxScoreInnings) {
     // row 1
     tbody += '<tr>\n<td>V</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
-        tbody += '<td>--</td>';
+        tbody += '<td></td>';
     }
-    tbody += '</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>B:</td><td>0</td>\n'
+    tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>B:</td><td>0</td>\n'
     // row 2
     tbody += '<tr>\n<td>H</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
-        tbody += '<td>--</td>';
+        tbody += '<td></td>';
     }
-    tbody += '</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>S:</td><td>0</td>\n'
+    tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>S:</td><td>0</td>\n'
     // row 3
     tbody += '<tr>\n<td></td>';
     for (let i=1; i <= maxScoreInnings; i++) {
@@ -586,48 +586,50 @@ function displayStatus (atBatStatus) {
  * verversen van de gegevens op het scoreboard
  */
 function updateScoreboard() { // een-op-een van solitaire overgenomen
-	// update inning in cell rij 0 kolom 16
+	// update inning in cell rij 0 kolom maxInnings + 7
 	var inn = document.getElementById("scoreboard").rows[0].cells;
-	inn[16].innerHTML = inning;
-	// update balls in cell rij 1 kolom 16
+	inn[parseInt(maxInnings) + 7 ].innerHTML = inning;
+	// update balls in cell rij 1 kolom maxInnings + 7
 	var ball = document.getElementById("scoreboard").rows[1].cells;
-	ball[16].innerHTML = numBalls;
-	// update strikes in cell rij 3 kolom 8
+	ball[parseInt(maxInnings) + 7 ].innerHTML = numBalls;
+	// update strikes in cell rij 2 kolom maxInnings + 7
 	var strike = document.getElementById("scoreboard").rows[2].cells;
-	strike[16].innerHTML = numStrikes;
-	// update outs in cell rij 3 kolom 11
+	strike[parseInt(maxInnings) + 7 ].innerHTML = numStrikes;
+	// update outs in cell rij 3 kolom maxInnings + 7
 	var out = document.getElementById("scoreboard").rows[3].cells;
-	out[16].innerHTML = numOuts;
+	out[parseInt(maxInnings) + 7 ].innerHTML = numOuts;
 
 	var vTotalRun = 0;
 	var hTotalRun = 0;
-	// update VISITOR score
+	// update VISITOR score in rij 1
 	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
 		var vRunBoard = document.getElementById("scoreboard").rows[1].cells;
 		vRunBoard[inning].innerHTML = vRun[i];
 		vTotalRun = vTotalRun + vRun[i];
-		vRunBoard[11].innerHTML = vTotalRun;
+		// rij 1 kolom maxInnings + 2
+		vRunBoard[parseInt(maxInnings) + 2 ].innerHTML = vTotalRun;
 	}
-	// update hits in cell rij 1 kolom 12
+	// update hits in cell rij 1 kolom maxInnings + 3
 	var vHit = document.getElementById("scoreboard").rows[1].cells;
-	vHit[12].innerHTML = vHits;
-	// update errors in cell rij 1 kolom 13
+	vHit[parseInt(maxInnings) + 3 ].innerHTML = vHits;
+	// update errors in cell rij 1 kolom maxInnings + 4
 	var vError = document.getElementById("scoreboard").rows[1].cells;
-	vError[13].innerHTML = vErrors;
+	vError[parseInt(maxInnings) + 4 ].innerHTML = vErrors;
 
-	// update HOME score
+	// update HOME score in rij 2
 	for (i = 1; i < hRun.length; i++) { // starten bij index 1)
 		var hRunBoard = document.getElementById("scoreboard").rows[2].cells;
 		hRunBoard[inning].innerHTML = hRun[i];
 		hTotalRun = hTotalRun + hRun[i];
-		hRunBoard[11].innerHTML = hTotalRun;
+		// rij 2 kolom maxInnings + 2
+		hRunBoard[parseInt(maxInnings) + 2].innerHTML = hTotalRun;
 	}
-	// update hits in cell rij 2 kolom 12
+	// update hits in cell rij 2 kolom maxInnings + 3
 	var hHit = document.getElementById("scoreboard").rows[2].cells;
-	hHit[12].innerHTML = hHits;
-	// update errors in cell rij 2 kolom 13
+	hHit[parseInt(maxInnings) + 3 ].innerHTML = hHits;
+	// update errors in cell rij 2 kolom maxInnings + 4
 	var hError = document.getElementById("scoreboard").rows[2].cells;
-	hError[13].innerHTML = hErrors;
+	hError[parseInt(maxInnings) + 4 ].innerHTML = hErrors;
 }
 
 /**
