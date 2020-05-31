@@ -148,14 +148,11 @@ $('#toggleCards').click(function () {
 
 // activeren van het spel met de DEAL button (of Play Ball)
 $('#deal').click(function () {
-	//console.log('deal clicked');
-	//sendMessage('deal clicked');
-	//console.log('AI = ' + playAI);
-	//sendMessage('AI = ' + playAI);
 	//Deck has a built in method to deal to hands.
+	maxInnings = document.getElementById('iMaxInnings').value;
+	console.log('Max Innings: ', maxInnings);
 	$('#deal').hide();
 	$('#aiDeal').hide();
-	$('#bMaxInnings').hide();
 	$('#lblMaxInnings').hide();
 	$('#iMaxInnings').hide();
 

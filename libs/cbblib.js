@@ -50,15 +50,6 @@ function addCardProperties() {
 	}
 } // einde addCardProperties
 
-
-function setMaxInnings() {
-	let setMax = document.getElementById("iMaxInnings").value;
-	if (setMax >= 1 && setMax <= 9) {
-		maxInnings = setMax;
-	}
-	console.log('Max Innings: ', maxInnings);
-}
-
 function createScoreBoard(maxScoreInnings) {
 	let tbody = '';
 
