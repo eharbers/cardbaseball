@@ -90,7 +90,28 @@ function createScoreBoard(maxScoreInnings) {
 async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
 	if (deck.length < 7) {
 		console.log('Het worden er te weinig')
-		moveCards(discardPile, deck)
+		moveCards(discardPile, deck);
+		console.log('Shuffle deck');
+		shuffle(deck);
+	}
+}
+
+/**
+ * shuffle van het deck kaarten
+ * eigenlijk een kopie van die in cards.js
+ * waarom die niet aan te roepen is, is me niet duidelijk...
+ * @param {*} deck 
+ */
+function shuffle(deck) {
+	//Fisher yates shuffle
+	var i = deck.length;
+	if (i == 0) return;
+	while (--i) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var tempi = deck[i];
+		var tempj = deck[j];
+		deck[i] = tempj;
+		deck[j] = tempi;
 	}
 }
 
@@ -365,7 +386,8 @@ function moveOnSac(sac) {
 	console.log('moveOnSac(' + sac + ')');	
 			
 	switch (true) {
-		case (baseRunners[1] == 1 || (baseRunners[1] == 1 && baseRunners[3] == 1)): // 1B of 1B & 3B
+		case ((baseRunners[1] == 1 && baseRunners[2] == 0 && baseRunners[3] == 0)
+			|| (baseRunners[1] == 1 && baseRunners[2] == 0 && baseRunners[3] == 1)): // 1B of 1B & 3B
 			switch (sac) {
 				case 'sacDP': // facecard same suit
 				baseRunners[1] = 0; // 1B: OUT
@@ -384,6 +406,7 @@ function moveOnSac(sac) {
 				baseRunners[1] = 0;
 				baseRunners[2] = 1; // 1B => 2B
 
+				baseRunners[0] = 0;
 				baseRunners[1] = 1; // AB => 1B
 				break;
 			default:
@@ -454,7 +477,6 @@ function moveOnSac(sac) {
 		default:
 			break;
 	} // end cases met situaties
-	renderRunners();
 } // end moveOnSac
 
 /**
