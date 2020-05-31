@@ -3,18 +3,19 @@ function sleep(ms) {
 }
 
 async function delayedGreeting(){
-    console.log('Hello');
+    console.log('1: Hello');
     await sleep(2000);
-    console.log('World')
+    console.log('2: World')
     await sleep(2000);
-    console.log('Goodbye');
+    console.log('3: Goodbye');
 }
 
+console.log('0: Start');
 delayedGreeting();
+console.log('4: Hasta la Pasta');
+console.log('5: End');
 
-console.log('Hasta la Pasta');
-
-var baseRunners =[];
+/* var baseRunners =[];
 for (i=0; i<=3; i++) {
 	baseRunners[i] = 0;
 }
@@ -54,7 +55,7 @@ function moveOnWalk_test() { //TODO dat loopt nog niet helemaal lekker
 				} else { // home scoort
 					hRun[inning]++;
 				} */    
-            }             
+ /*           }             
 			baseRunners[2] = 0;
 			baseRunners[3] = 1;
         } 
@@ -82,4 +83,4 @@ for (let i=1 ; i <= 6 ; i++) {
 }
 console.log('2:' + rating[2])
 rating =[]
-console.log('2:' + rating[2])
+console.log('2:' + rating[2]) */

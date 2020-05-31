@@ -66,7 +66,6 @@ async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels be
 	if (deck.length < 7) {
 		console.log('Het worden er te weinig')
 		moveCards(discardPile, deck)
-		await sleep(2000); // helpt dit bij pile2deck
 	}
 }
 
@@ -74,7 +73,7 @@ async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels be
  * functie om de Hand aan te vullen met een kaart van deck
  * @param {*} fillHand 
  */
-function refillHand(fillHand) {
+async function refillHand(fillHand) {
 	fillHand.addCard(deck.topCard());
 	fillHand.render();
 	deck.render();
@@ -87,14 +86,13 @@ function refillHand(fillHand) {
  * @param {*} from 
  * @param {*} to 
  */
-function moveCards(from, to) {
+async function moveCards(from, to) {
 	for (let i = 0; i < from.length; i++) {
 		to.addCard(from[i]);
 		i--; // de from stapel-length wordt steeds kleiner ...
 	}
 	to.render();
-	from.render();
-	
+	from.render();	
 }
 
 
@@ -431,6 +429,7 @@ function moveOnSac(sac) {
 		default:
 			break;
 	} // end cases met situaties
+	renderRunners();
 } // end moveOnSac
 
 /**
@@ -505,6 +504,7 @@ function playCatchFoul() {
  * Renderen van de honklopers
  */
 function renderRunners() {
+	console.log('renderRunner', baseRunners)
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[4].cells
 
@@ -602,8 +602,6 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
  */
 async function sendMessage(message) {
 	document.getElementById("messageboard").innerHTML = message;
-	//await sleep(2000);
-	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
 }
 
 /**
@@ -797,8 +795,11 @@ async function playerAI(aiCard){
 	console.log ('AI plays: ', aiCard);
 	objPlay.addCard(aiCard);
 	objPlay.render();
+	await sleep(1000);
 	objHand.render();
+	await sleep(1000);
 	deck.render();
+	await sleep(1000);
 	playValidate();
 }
 
@@ -839,8 +840,6 @@ function checkReliever() {
  */
 async function sendOption(option) {
 	document.getElementById("option").innerHTML = option;
-	//await sleep(2000);
-	//document.getElementById("messageboard").innerHTML = ""; // leegmaken op ander moment
 }
 
 /**

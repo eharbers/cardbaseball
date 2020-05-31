@@ -358,6 +358,7 @@ async function playValidate() {
 	// dit gaat dan met topCard() gebeuren
 
 	checkDeck(); //staat ie hier beter??
+	await sleep(1000);
 
 	// bepaal de overeenkomstigheden (equals)
 	detEquals();
@@ -380,18 +381,18 @@ async function playValidate() {
 				// of terug naar Hand
 				if (numNewBallFaceCards == 2) {
 					//console.log('atBatStatus: newball');
-					await sleep(2000);
 					moveCards(objPlay, discardPile);
 					refillHand(objHand);
-					await sleep(1000);
+					await sleep(2000);
 					refillHand(objHand);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					displayStatus(atBatStatus);
 					sendMessage('Play Ball!');
 				} else {
 					sendMessage('2 Face-cards needed for New Balls');
-					await sleep(1000)
 					moveCards(objPlay, objHand);
+					await sleep(2000);
 				}					
 			} 
 			break;
@@ -417,9 +418,9 @@ async function playValidate() {
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
-				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				refillHand(objHand); // speelhand aanvullen
+				await sleep(2000);
 				atBatStatus = 'pitch'; // new pitch
 			} else {
 				atBatStatus = 'swing'; // kaarten laten liggen
@@ -435,7 +436,6 @@ async function playValidate() {
 					numStrikes += 1;
 					sendMessage('FOUL - STRIKE ' + numStrikes);
 					updateScoreboard();
-					await sleep(2000);
 
 					// CatchFoul-card in DEFFENSE-HAND en toepassen ??
 					hasComp = false;
@@ -446,15 +446,16 @@ async function playValidate() {
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
 					refillHand(objHand);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
-					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
 					refillHand(objHand);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				}
@@ -464,11 +465,11 @@ async function playValidate() {
 					console.log('Hit by Pitch');
 					sendMessage('Hit by Pitch');
 					moveRunners('hbp');
-					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
 					refillHand(objHand);
+					await sleep(2000);
 					numBalls = 0; //new batter
 					numStrikes = 0;//new batter
 					updateScoreboard();
@@ -479,11 +480,11 @@ async function playValidate() {
 					numStrikes += 1;
 					sendMessage('STRIKE ' + numStrikes);
 					updateScoreboard();
-					await sleep(2000);
 					moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
 					refillHand(objHand);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 					break;
@@ -492,13 +493,14 @@ async function playValidate() {
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls)
 				updateScoreboard();
-				await sleep(2000);
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				moveCards(objOtherPlay, discardPile); // en die andere ook
 				refillHand(objOtherHand); 
 				refillHand(objHand);
+				await sleep(2000);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
+				
 			} else { // dezelfde suit geen plaatje en hoger dan pitch
 				console.log('connecting with the pitch');
 				atBatStatus = 'connect';
@@ -524,10 +526,10 @@ async function playValidate() {
 				console.log('No SAC situation');
 				sendMessage('No SAC situation');
 				// kaart teruggeven aan spelershand (check naar speel moment ipv hier // AI geen keuze)
-				await sleep(1000)
 				objHand.addCard(objPlay.topCard());
 				objHand.render();
 				objPlay.render();
+				await sleep(1000);
 				atBatStatus = 'connect';
 				break;
 			}
@@ -536,7 +538,6 @@ async function playValidate() {
 			break;
 		case 'fielding': // een kaart kiezen : hoe verwerkt
 			console.log('atBatStatus: ', atBatStatus);
-			await sleep(2000);
 
 			// Error-card in OFFENSE-HAND en toepassen ??
 			hasComp = false;
@@ -546,6 +547,7 @@ async function playValidate() {
 			atBatStatus = 'result';
 			displayStatus(atBatStatus);
 			console.log('playValidate inside atBatStatus fielding');
+			await sleep(2000);
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		// result
@@ -582,9 +584,10 @@ async function playValidate() {
 					// batter is safe and runner(s) advance
 					//break;
 				}
-				await sleep(2000);
+
 				moveCards(objPlay, discardPile);
 				moveCards(objOtherPlay, discardPile);
+				await sleep(2000);
 				atBatStatus = 'pitch' // nieuwe slagman
 				baseRunners[0] = 1;
 				renderRunners();
@@ -677,11 +680,11 @@ async function playValidate() {
 			// de honklopers zijn verplaatst
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
-			await sleep(2000);
 			moveCards(objPlay, discardPile);
 			moveCards(objOtherPlay, discardPile);
 			refillHand(objOtherHand);
 			refillHand(objOtherHand);
+			await sleep(2000);
 			if (isError) {
 				refillHand(objOtherHand);
 			}
@@ -690,6 +693,7 @@ async function playValidate() {
 			if (isCatchFoul) {
 				refillHand(objHand);
 			}
+			await sleep(2000);
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
 			renderRunners();
@@ -718,7 +722,7 @@ async function playValidate() {
  * en aansturing indicator
  * met atBatStatus
  */
-function changePlayer() {
+async function changePlayer() {
 
 	if (turnHome) {
 		turnVisitor = true;
@@ -732,6 +736,7 @@ function changePlayer() {
 		objOtherHand = homeHand;
 		objOtherPlay = homePlay;
 		console.log('Change player from turnHome to turnVisitor');
+		await sleep(2000);
 	} else {
 		turnHome = true;
 		$("#home").css("background-color", "red");
@@ -744,6 +749,7 @@ function changePlayer() {
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
 		console.log('Change player from turnVisitor to turnHome');
+		await sleep(2000);
 	}
 }
 
