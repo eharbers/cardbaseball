@@ -386,16 +386,16 @@ async function playValidate() {
 					//console.log('atBatStatus: newball');
 					moveCards(objPlay, discardPile);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					displayStatus(atBatStatus);
 					sendMessage('Play Ball!');
 				} else {
 					sendMessage('2 Face-cards needed for New Balls');
 					moveCards(objPlay, objHand);
-					await sleep(2000);
+					await sleep(1000);
 				}					
 			} 
 			break;
@@ -423,7 +423,7 @@ async function playValidate() {
 				updateScoreboard() // naar scoreboard
 				moveCards(objPlay, discardPile); // cleanup playing hands !!
 				refillHand(objHand); // speelhand aanvullen
-				await sleep(2000);
+				await sleep(1000);
 				atBatStatus = 'pitch'; // new pitch
 			} else {
 				atBatStatus = 'swing'; // kaarten laten liggen
@@ -449,7 +449,7 @@ async function playValidate() {
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				} else {
@@ -458,7 +458,7 @@ async function playValidate() {
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				}
@@ -472,7 +472,7 @@ async function playValidate() {
 					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					numBalls = 0; //new batter
 					numStrikes = 0;//new batter
 					updateScoreboard();
@@ -487,7 +487,7 @@ async function playValidate() {
 					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 					break;
@@ -500,7 +500,7 @@ async function playValidate() {
 				moveCards(objOtherPlay, discardPile); // en die andere ook
 				refillHand(objOtherHand); 
 				refillHand(objHand);
-				await sleep(2000);
+				await sleep(1000);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
 				
@@ -550,7 +550,7 @@ async function playValidate() {
 			atBatStatus = 'result';
 			displayStatus(atBatStatus);
 			console.log('playValidate inside atBatStatus fielding');
-			await sleep(2000);
+			await sleep(1000);
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		// result
@@ -590,7 +590,7 @@ async function playValidate() {
 
 				moveCards(objPlay, discardPile);
 				moveCards(objOtherPlay, discardPile);
-				await sleep(2000);
+				await sleep(1000);
 				atBatStatus = 'pitch' // nieuwe slagman
 				baseRunners[0] = 1;
 				renderRunners();
@@ -687,7 +687,7 @@ async function playValidate() {
 			moveCards(objOtherPlay, discardPile);
 			refillHand(objOtherHand);
 			refillHand(objOtherHand);
-			await sleep(2000);
+			await sleep(1000);
 			if (isError) {
 				refillHand(objOtherHand);
 			}
@@ -696,7 +696,7 @@ async function playValidate() {
 			if (isCatchFoul) {
 				refillHand(objHand);
 			}
-			await sleep(2000);
+			await sleep(1000);
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
 			renderRunners();
@@ -713,7 +713,7 @@ async function playValidate() {
 	// die staat nu in de game-loop
 	checkAtBat();
 	/* if (numOuts === 3) { // anders gaat de AI te snel voor het leegmaken van het speelveld
-		await sleep(2000)
+		await sleep(1000)
 	} */
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
@@ -739,7 +739,7 @@ async function changePlayer() {
 		objOtherHand = homeHand;
 		objOtherPlay = homePlay;
 		console.log('Change player from turnHome to turnVisitor');
-		await sleep(2000);
+		await sleep(1000);
 	} else {
 		turnHome = true;
 		$("#home").css("background-color", "red");
@@ -752,7 +752,7 @@ async function changePlayer() {
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
 		console.log('Change player from turnVisitor to turnHome');
-		await sleep(2000);
+		await sleep(1000);
 	}
 }
 
