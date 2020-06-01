@@ -841,28 +841,40 @@ function checkOptions(hand) {
 		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + indFly + ' ' + outcome + '&#013';
 		sendOption(option);
 	}
-	if (playAI && turnVisitor) {
-		console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
-		let maxRating = 0;
-		let maxRatingId = 0;
-		for (let i = 0; i < hand.length; i++) {
-			console.log(i + ': ' + rating[i] + ' => ' + hand[i].shortName)
-			if (rating[i] > maxRating) {
-				maxRating = rating[i];
-				maxRatingId = i;
-			}
-		}		
-		console.log('maxRating = ', maxRating);
-		console.log('maxRatingId = ', maxRatingId);
-		playerAI(hand[maxRatingId]);
-	}
+	return rating
 } // end checkOptions
 
+
+
 /**
- * AI functie om checkOption kaart te spelen
+ * AI Player functie
+ * 
+ */
+async function playerAI () {
+	let ratingAI = checkOptions(objHand);
+	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
+	let maxRatingAI = 0;
+	let maxRatingAIId = 0;
+	for (let i = 0; i < objHand.length; i++) {
+		console.log(i + ': ' + ratingAI[i] + ' => ' + objHand[i].shortName)
+		if (ratingAI[i] > maxRatingAI) {
+			maxRatingAI = ratingAI[i];
+			maxRatingAIId = i;
+		}
+	}		
+	console.log('maxRatingAI = ', maxRatingAI);
+	console.log('maxRatingAIId = ', maxRatingAIId);
+	playAICard(objHand[maxRatingAIId]);
+	await sleep(2000);
+	checkPlayAIFlag = false; // flag uit zetten (aan in checkAtBat)
+	playValidate();
+}
+
+/**
+ * AI functie om checkOption-playerAI kaart te spelen
  * @param {*} aiCard 
  */
-async function playerAI(aiCard){
+async function playAICard(aiCard){
 	let thinking = 0;
 	thinking = 2000 + Math.random() * 2000
 	console.log('AI thinking for atBatStatus: ', atBatStatus);
@@ -875,7 +887,6 @@ async function playerAI(aiCard){
 	await sleep(1000);
 	deck.render();
 	await sleep(1000);
-	playValidate();
 }
 
 /**

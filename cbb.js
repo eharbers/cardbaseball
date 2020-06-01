@@ -105,6 +105,7 @@ let hErrors = 0;
 
 let checkOptionsFlag = true; // flag aan en uit om 1x door checkOptions per beurt/card te gaan
 let checkFaceCardsFlag = true; // flag om check tot 1x te beperken per beurt/card
+let checkPlayAIFlag = false; // flag om de beurt van AI onder controle te houden
 
 // NB knop
 let newBallFlag = false;
@@ -225,6 +226,7 @@ function playBall() {
 	//slagbeurt 
 	//console.log('playBall atBatStatus: ', atBatStatus);
 	if (checkOptionsFlag == true) { checkOptions(objHand) }; // uit playCard ; meteen AI-speler
+	
 	playCard();	// deze moet blijkbaar hier uit...vanwege atBatStatus result	
 	if (endOfGame === true) { // dit stukje zorgt voor de herhaling, todat endOfGame 'waar' is
 		gameOver();
@@ -249,6 +251,13 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			checkReliever();
 		}		
 	}
+
+	if (playAI && turnVisitor && checkPlayAIFlag) {
+		playerAI();
+	}
+
+	// wellicht dit de Human ge-else-d kan worden...
+	// ff los van het uit- en inschakel probleem rond de click-functie
 
 	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
 		document.getElementById("messageboard").innerHTML = "";
@@ -288,6 +297,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 function checkAtBat() {
 	console.log('Inside checkAtBat');
 	checkOptionsFlag = true; // vlag terugzetten zodat deze volgende keer met playCard kan worden uitgevoerd
+	if (playAI) { checkPlayAIFlag = true;} // aan zetten voor de volgende AI-play
 	checkFaceCardsFlag = true // vlag terugzetten
 	if (numStrikes === 3) {
 		//console.log('strik-out');
