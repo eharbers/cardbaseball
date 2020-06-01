@@ -64,12 +64,6 @@ a:visited {color:blue;}
 	top:210px;
 }
 
-#bMaxInnings {
-	position: absolute;
-	left:310px;
-	top:250px;
-}
-
 #lblMaxInnings {
 	position: absolute;
 	left:310px;

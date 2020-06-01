@@ -176,6 +176,7 @@ $('#deal').click(function () {
 	});
 })
 
+
 // afhandelen van het klikken op home NB-button voor new balls
 $('#hNB').click(function () {
 	//console.log('hNB-clicked');
