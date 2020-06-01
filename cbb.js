@@ -364,6 +364,8 @@ async function playValidate() {
 	// bepaal de overeenkomstigheden (equals)
 	detEquals();
 
+	countCards();
+
 	switch (atBatStatus) {
 		case 'newball':
 			sendMessage('New Balls request &#013 Two facecards');
@@ -419,8 +421,9 @@ async function playValidate() {
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
-				moveCards(objPlay, discardPile); // cleanup playing hands !!
-				refillHand(objHand); // speelhand aanvullen
+				cleanRefill();
+				//moveCards(objPlay, discardPile); // cleanup playing hands !!
+				//refillHand(objHand); // speelhand aanvullen
 				await sleep(1000);
 				atBatStatus = 'pitch'; // new pitch
 			} else {
@@ -442,20 +445,21 @@ async function playValidate() {
 					hasComp = false;
 					isCatchFoul = false;
 					playCatchFoul(); // zo ja,  dan ben je OUT !!
-
-					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					cleanRefill();
+					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
-					refillHand(objHand);
+					refillHand(objHand); */
 					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
-					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					cleanRefill();
+					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook
 					refillHand(objOtherHand);
-					refillHand(objHand);
+					refillHand(objHand); */
 					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
@@ -466,10 +470,11 @@ async function playValidate() {
 					console.log('Hit by Pitch');
 					sendMessage('Hit by Pitch');
 					moveRunners('hbp');
-					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					cleanRefill();
+					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
-					refillHand(objHand);
+					refillHand(objHand); */
 					await sleep(1000);
 					numBalls = 0; //new batter
 					numStrikes = 0;//new batter
@@ -481,10 +486,11 @@ async function playValidate() {
 					numStrikes += 1;
 					sendMessage('STRIKE ' + numStrikes);
 					updateScoreboard();
-					moveCards(objPlay, discardPile); // cleanup playing hands !!
+					cleanRefill();
+					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
 					moveCards(objOtherPlay, discardPile); // en die andere ook !!
 					refillHand(objOtherHand);
-					refillHand(objHand);
+					refillHand(objHand); */
 					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
@@ -494,10 +500,11 @@ async function playValidate() {
 				numBalls += 1;
 				sendMessage('BALL ' + numBalls)
 				updateScoreboard();
-				moveCards(objPlay, discardPile); // cleanup playing hands !!
+				cleanRefill();
+				/* moveCards(objPlay, discardPile); // cleanup playing hands !!
 				moveCards(objOtherPlay, discardPile); // en die andere ook
 				refillHand(objOtherHand); 
-				refillHand(objHand);
+				refillHand(objHand); */
 				await sleep(1000);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
@@ -527,6 +534,7 @@ async function playValidate() {
 				console.log('No SAC situation');
 				sendMessage('No SAC situation');
 				// kaart teruggeven aan spelershand (check naar speel moment ipv hier // AI geen keuze)
+				//TODO indien AI alleen faceCards heeft gaat ie in de loop => 3B ook bunt (squeeze) en 0B bunt-hit
 				objHand.addCard(objPlay.topCard());
 				objHand.render();
 				objPlay.render();
@@ -585,9 +593,9 @@ async function playValidate() {
 					// batter is safe and runner(s) advance
 					//break;
 				}
-
-				moveCards(objPlay, discardPile);
-				moveCards(objOtherPlay, discardPile);
+				cleanRefill();
+				/* moveCards(objPlay, discardPile);
+				moveCards(objOtherPlay, discardPile); */
 				await sleep(1000);
 				atBatStatus = 'pitch' // nieuwe slagman
 				baseRunners[0] = 1;
@@ -681,10 +689,11 @@ async function playValidate() {
 			// de honklopers zijn verplaatst
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
-			moveCards(objPlay, discardPile);
+			cleanRefill();
+			/* moveCards(objPlay, discardPile);
 			moveCards(objOtherPlay, discardPile);
 			refillHand(objOtherHand);
-			refillHand(objOtherHand);
+			refillHand(objOtherHand); 
 			await sleep(1000);
 			if (isError) {
 				refillHand(objOtherHand);
@@ -693,7 +702,7 @@ async function playValidate() {
 			refillHand(objHand);
 			if (isCatchFoul) {
 				refillHand(objHand);
-			}
+			} */
 			await sleep(1000);
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
@@ -707,6 +716,8 @@ async function playValidate() {
 			endOfGame = true; // gameOver :-)
 			break;
 	}
+	console.log('outside playValidate-case countCards')
+	countCards();
 	// check met strikes, balls, outs & innings
 	// die staat nu in de game-loop
 	checkAtBat();

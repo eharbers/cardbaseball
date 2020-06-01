@@ -113,6 +113,32 @@ function shuffle(deck) {
 		deck[i] = tempj;
 		deck[j] = tempi;
 	}
+	deck.render();
+}
+
+
+function countCards() {
+	console.log('==> atBatStatus: ', atBatStatus);
+	console.log('==> vAtBat: ' + vAtBat + ' | hAtBat: ' + hAtBat);
+	console.log('==> turnVisitor: ' + turnVisitor + ' | turnHome: ' + turnHome);
+	console.log('==> objHand: ' + objHand.length + ' | objPlay: ' + objPlay.length);
+	console.log('==> objOtherHand: ' + objOtherHand.length + ' | objOtherPlay: ' + objOtherPlay.length);
+}
+
+function cleanRefill() {
+	if (objPlay.length > 0) {
+		moveCards(objPlay, discardPile);
+	}
+	if (objOtherPlay.length > 0 ) {
+		moveCards(objOtherPlay, discardPile);
+	}
+	while (objHand.length != 6 ) {
+		refillHand(objHand);
+	}
+	while (objOtherHand.length != 6 ) {
+		refillHand(objOtherHand);
+	}
+
 }
 
 /**
