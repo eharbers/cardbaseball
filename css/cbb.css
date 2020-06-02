@@ -66,13 +66,13 @@ a:visited {color:blue;}
 
 #lblMaxInnings {
 	position: absolute;
-	left:310px;
-	top:300px;
+	left:360px;
+	top:265px;
 }
 
 #iMaxInnings {
 	position: absolute;
-	left:430px;
+	left:310px;
 	top:250px;
 	height: 24px;
 	width: 25px;

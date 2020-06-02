@@ -244,7 +244,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// if (checkOptionsFlag == true) { checkOptions(objHand) }; //verhuisd naar playBall
 	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
 
-	if ((checkRelieverFlag == true) && hitsInning >= 2) {
+	if ((checkRelieverFlag == true) && hitsInning >= 2) { // controle of RP mag worden ingezet
 		if (vAtBat === true && hReliever == false ) {
 			checkReliever();
 		} else if ( hAtBat === true && vReliever === false) {
@@ -253,6 +253,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	}
 
 	if (playAI && turnVisitor && checkPlayAIFlag) {
+		console.log('playerAI will think and play');
 		playerAI();
 	}
 

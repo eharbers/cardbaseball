@@ -87,7 +87,7 @@ function createScoreBoard(maxScoreInnings) {
 /**
  * Deck controleren op het aantal kaarten
  */
-async function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
+function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
 	if (deck.length < 7) {
 		console.log('Het worden er te weinig')
 		moveCards(discardPile, deck);
@@ -145,7 +145,7 @@ function cleanRefill() {
  * functie om de Hand aan te vullen met een kaart van deck
  * @param {*} fillHand 
  */
-async function refillHand(fillHand) {
+function refillHand(fillHand) {
 	fillHand.addCard(deck.topCard());
 	fillHand.render();
 	deck.render();
@@ -158,7 +158,7 @@ async function refillHand(fillHand) {
  * @param {*} from 
  * @param {*} to 
  */
-async function moveCards(from, to) {
+function moveCards(from, to) {
 	for (let i = 0; i < from.length; i++) {
 		to.addCard(from[i]);
 		i--; // de from stapel-length wordt steeds kleiner ...
@@ -675,7 +675,7 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
  * Plaatsen van een message op het messagebord
  * @param {*} message 
  */
-async function sendMessage(message) {
+function sendMessage(message) {
 	document.getElementById("messageboard").innerHTML = message;
 }
 
@@ -850,7 +850,7 @@ function checkOptions(hand) {
  * AI Player functie
  * 
  */
-async function playerAI () {
+function playerAI () {
 	let ratingAI = checkOptions(objHand);
 	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
 	let maxRatingAI = 0;
@@ -865,7 +865,6 @@ async function playerAI () {
 	console.log('maxRatingAI = ', maxRatingAI);
 	console.log('maxRatingAIId = ', maxRatingAIId);
 	playAICard(objHand[maxRatingAIId]);
-	await sleep(2000);
 	checkPlayAIFlag = false; // flag uit zetten (aan in checkAtBat)
 	playValidate();
 }
@@ -874,19 +873,16 @@ async function playerAI () {
  * AI functie om checkOption-playerAI kaart te spelen
  * @param {*} aiCard 
  */
-async function playAICard(aiCard){
+function playAICard(aiCard){
 	let thinking = 0;
 	thinking = 2000 + Math.random() * 2000
 	console.log('AI thinking for atBatStatus: ', atBatStatus);
-	await sleep(thinking);
+	// await sleep(thinking); async weggehaald 
 	console.log ('AI plays: ', aiCard);
 	objPlay.addCard(aiCard);
 	objPlay.render();
-	await sleep(1000);
 	objHand.render();
-	await sleep(1000);
 	deck.render();
-	await sleep(1000);
 }
 
 /**
@@ -924,7 +920,7 @@ function checkReliever() {
  * uitkomst checkOption op scherm tonen
  * @param {*} option 
  */
-async function sendOption(option) {
+function sendOption(option) {
 	document.getElementById("option").innerHTML = option;
 }
 
