@@ -887,7 +887,7 @@ function playAICard(aiCard){
 
 /**
  * Testen aantal FaceCards tbv NewBall
- * 
+ * in ObjHand ( de huidige OFFENSE)
  * @param {*} hand 
  */
 function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden

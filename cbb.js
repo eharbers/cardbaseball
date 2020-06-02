@@ -344,6 +344,10 @@ function checkInning() {
 			baseRunners[0] = 1;
 			renderRunners();
 			numOuts = 0;
+			$('#hNB').hide(); // NB-knoppen verwijderen
+			$('#vNB').hide();
+			$('#hRP').hide(); // RP knoppen verwijderen
+			$('#vRP').hide();			
 			changePlayer();
 			if (objHand.length > 6 || objOtherHand.length > 6) {
 				atBatStatus = 'decrease'
