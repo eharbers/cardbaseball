@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<style>
+#myContainer {
+  top: 150px;
+  left: 530px;
+  width: 250px;
+  height: 250px;
+  position: relative;
+  background: yellow;
+}
+
+#myAnimationAB {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 200px;
+  left: 200px;
+  background-color: blue;
+  color: white;
+  font-size: 40px;
+}
+
+#myAnimation1B {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 0px;
+  left: 200px;
+  background-color: blue;
+  color: white;
+  font-size: 40px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#myAnimation2B {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: blue;
+  color: white;
+  font-size: 40px;
+}
+
+#myAnimation3B {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 200px;
+  left: 0px;
+  background-color: blue;
+  color: white;
+  font-size: 40px;
+}
+
+</style>
+<body>
+
+<p>
+<button onclick="myMove()">Click Me</button> 
+</p>
+
+<div id ="myContainer">
+  <div id ="myAnimationAB">AB</div>
+  <div id ="myAnimation1B">#5</div>
+  <div id ="myAnimation2B">2B</div>
+  <div id ="myAnimation3B">3B</div>
+</div>
+
+<script>
+function myMove() {
+  moveAB1B();
+  move1B2B();
+  move2B3B();
+  move3BHB();
+}
+
+function moveAB1B() {
+  var elem = document.getElementById("myAnimationAB");   
+  var xposAB = 200;
+  var yposAB = 200;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xposAB == 0) {
+      clearInterval(id);
+    } else {
+      xposAB--; 
+      elem.style.top = xposAB + 'px';  
+    }
+  }
+}
+
+function move1B2B() {
+  var elem = document.getElementById("myAnimation1B");  
+  var xpos1B = 200; 
+  var ypos1B = 0;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xpos1B == 0) {
+      clearInterval(id);
+    } else {
+      xpos1B--; 
+      elem.style.left = xpos1B + 'px'; 
+    }
+  }
+}
+
+function move2B3B() {
+  var elem = document.getElementById("myAnimation2B");   
+  var xpos2B = 0;
+  var ypos2B = 0;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (ypos2B == 200) {
+      clearInterval(id);
+    } else {
+      ypos2B++; 
+      elem.style.top = ypos2B + 'px'; 
+    }
+  }
+}
+
+function move3BHB() {
+  var elem = document.getElementById("myAnimation3B");  
+  var xpos3B = 0;
+  var ypos3B = 200;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xpos3B == 200) {
+      clearInterval(id);
+    } else {
+      xpos3B++; 
+      elem.style.left = xpos3B + 'px'; 
+    }
+  }
+}
+</script>
+
+</body>
+</html>

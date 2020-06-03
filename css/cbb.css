@@ -219,3 +219,65 @@ footer a, footer a:visited{
 footer a:hover {
 	color:black;
 }
+
+#btRunners {
+	position: absolute;
+	left: 10px;
+	top: 100px;
+}
+
+#animBases {
+	top: 150px;
+	left: 530px;
+	width: 250px;
+	height: 250px;
+	position: relative;
+	background: rgb(255, 94, 0);
+  }
+  
+  #runnerAB {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: 200px;
+	left: 200px;
+	background-color: blue;
+	color: white;
+	font-size: 40px;
+  }
+  
+  #runner1B {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: 0px;
+	left: 200px;
+	background-color: blue;
+	color: white;
+	font-size: 40px;
+	text-align: center;
+	vertical-align: middle;
+  }
+  
+  #runner2B {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: blue;
+	color: white;
+	font-size: 40px;
+  }
+  
+  #runner3B {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: 200px;
+	left: 0px;
+	background-color: blue;
+	color: white;
+	font-size: 40px;
+  }
+  

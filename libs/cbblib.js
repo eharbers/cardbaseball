@@ -344,6 +344,7 @@ function moveOnHit(bases) {
 			} else {
 				baseRunners[b] = 0;
 				baseRunners[b + bases] = 1;
+				moveAB1B();
 			}
 		}
 	}
@@ -577,6 +578,8 @@ function playCatchFoul() {
  * Renderen van de honklopers
  */
 function renderRunners() {
+	return;
+	/*
 	console.log('renderRunner', baseRunners)
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[4].cells
@@ -603,7 +606,7 @@ function renderRunners() {
 		bottomRow[5].innerHTML = "AB";
 	} else {
 		bottomRow[5].innerHTML = "O";
-	}
+	} */
 }
 
 
@@ -930,4 +933,78 @@ function sendOption(option) {
 function gameOver() {
 	console.log('GAME OVER');
 	sendMessage('GAME OVER');
+}
+
+
+// animated baserunners
+function moveAnimRunners() {
+	// $('#runnerAB').hide();
+	$('#runner1B').hide();
+	$('#runner2B').hide();
+	$('#runner3B').hide();
+	
+	moveAB1B();
+	move1B2B();
+	move2B3B();
+	move3BHB();
+}
+
+function moveAB1B() {
+  var elem = document.getElementById("runnerAB");   
+  var xposAB = 200;
+  var yposAB = 200;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xposAB == 0) {
+      clearInterval(id);
+    } else {
+      xposAB--; 
+      elem.style.top = xposAB + 'px';  
+    }
+  }
+}
+
+function move1B2B() {
+  var elem = document.getElementById("runner1B");  
+  var xpos1B = 200; 
+  var ypos1B = 0;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xpos1B == 0) {
+      clearInterval(id);
+    } else {
+      xpos1B--; 
+      elem.style.left = xpos1B + 'px'; 
+    }
+  }
+}
+
+function move2B3B() {
+  var elem = document.getElementById("runner2B");   
+  var xpos2B = 0;
+  var ypos2B = 0;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (ypos2B == 200) {
+      clearInterval(id);
+    } else {
+      ypos2B++; 
+      elem.style.top = ypos2B + 'px'; 
+    }
+  }
+}
+
+function move3BHB() {
+  var elem = document.getElementById("runner3B");  
+  var xpos3B = 0;
+  var ypos3B = 200;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xpos3B == 200) {
+      clearInterval(id);
+    } else {
+      xpos3B++; 
+      elem.style.left = xpos3B + 'px'; 
+    }
+  }
 }

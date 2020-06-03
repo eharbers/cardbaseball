@@ -27,7 +27,16 @@
 		<input type="number" id="iMaxInnings" name="iMaxInnings" value="9" min="1" max="9">
 		<label id="lblMaxInnings">Set max innings</label>
 
+		<!-- animated runners -->
+		<button id=btRunners onclick="moveAnimRunners()">Runners</button>
+		<div id ="animBases">
+			<div id ="runnerAB">AB</div>
+			<div id ="runner1B">#5</div>
+			<div id ="runner2B">2B</div>
+			<div id ="runner3B">3B</div>
+		</div>
 
+<!--
 		<table id="bases">
 			<tr>
 				<td>2B</td><td>=</td><td>=</td><td>=</td><td>=</td><td>1B</td>
@@ -45,6 +54,7 @@
 				<td>3B</td><td>=</td><td>=</td><td>=</td><td>=</td><td>AB</td>
 			</tr>
 		</table>
+	-->
 		<div id="varTable"> 
 			<!-- scoreboard obv van maxInnings -->
 		</div>
