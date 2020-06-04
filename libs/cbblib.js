@@ -578,8 +578,6 @@ function playCatchFoul() {
  * Renderen van de honklopers
  */
 function renderRunners() {
-	return;
-	/*
 	console.log('renderRunner', baseRunners)
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[4].cells
@@ -606,7 +604,7 @@ function renderRunners() {
 		bottomRow[5].innerHTML = "AB";
 	} else {
 		bottomRow[5].innerHTML = "O";
-	} */
+	} 
 }
 
 
@@ -828,7 +826,7 @@ function checkOptions(hand) {
 				outcome = '#NA#';
 				rating[i] = 0;
 				break;
-		} // end switch atBatStatus
+		} // end switch options on atBatStatus
 
 		if (objOtherPlay.length > 0) {// de bovenste kaart van tegenspeler checken op companion-card
 			if ((hand[i].rank === objOtherPlay.topCard().rank)
@@ -936,6 +934,28 @@ function gameOver() {
 }
 
 
+
+/*
+#animBases {
+	top: 150px;
+	left: 530px;
+	width: 250px;
+	height: 250px;
+	position: relative;
+	background: rgb(255, 94, 0);
+  }
+*/
+
+function createDiamond() {
+	$('#animBases').css("top","350px");
+	$('#animBases').css("left","0px");
+	$('#animBases').css("width","200px");
+	$('#animBases').css("height","200px");
+	$('#animBases').css("position","relative");
+	$('#animBases').css("background","rgb(255, 94, 0)");
+
+}
+
 // animated baserunners
 function moveAnimRunners() {
 	// $('#runnerAB').hide();
@@ -951,8 +971,8 @@ function moveAnimRunners() {
 
 function moveAB1B() {
   var elem = document.getElementById("runnerAB");   
-  var xposAB = 200;
-  var yposAB = 200;
+  var xposAB = 150;
+  var yposAB = 150;
   var id = setInterval(frame, 5);
   function frame() {
     if (xposAB == 0) {
@@ -966,7 +986,7 @@ function moveAB1B() {
 
 function move1B2B() {
   var elem = document.getElementById("runner1B");  
-  var xpos1B = 200; 
+  var xpos1B = 150; 
   var ypos1B = 0;
   var id = setInterval(frame, 5);
   function frame() {
@@ -985,7 +1005,7 @@ function move2B3B() {
   var ypos2B = 0;
   var id = setInterval(frame, 5);
   function frame() {
-    if (ypos2B == 200) {
+    if (ypos2B == 150) {
       clearInterval(id);
     } else {
       ypos2B++; 
@@ -997,10 +1017,10 @@ function move2B3B() {
 function move3BHB() {
   var elem = document.getElementById("runner3B");  
   var xpos3B = 0;
-  var ypos3B = 200;
+  var ypos3B = 150;
   var id = setInterval(frame, 5);
   function frame() {
-    if (xpos3B == 200) {
+    if (xpos3B == 150) {
       clearInterval(id);
     } else {
       xpos3B++; 

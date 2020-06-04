@@ -226,6 +226,7 @@ footer a:hover {
 	top: 100px;
 }
 
+/*
 #animBases {
 	top: 150px;
 	left: 530px;
@@ -234,13 +235,14 @@ footer a:hover {
 	position: relative;
 	background: rgb(255, 94, 0);
   }
+*/
   
   #runnerAB {
 	width: 50px;
 	height: 50px;
 	position: absolute;
-	top: 200px;
-	left: 200px;
+	top: 150px;
+	left: 150px;
 	background-color: blue;
 	color: white;
 	font-size: 40px;
@@ -251,7 +253,7 @@ footer a:hover {
 	height: 50px;
 	position: absolute;
 	top: 0px;
-	left: 200px;
+	left: 150px;
 	background-color: blue;
 	color: white;
 	font-size: 40px;
@@ -274,7 +276,7 @@ footer a:hover {
 	width: 50px;
 	height: 50px;
 	position: absolute;
-	top: 200px;
+	top: 150px;
 	left: 0px;
 	background-color: blue;
 	color: white;
