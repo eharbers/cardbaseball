@@ -331,7 +331,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
  * obv aantal honken uit honkslag
  * @param {*} bases 
  */
-function moveOnHit(bases) {
+async function moveOnHit(bases) {
 	for (var b = 3; b >= 0; b--) {
 		if (baseRunners[b] == 1) {
 			if (b + bases >= 4) {
@@ -344,7 +344,12 @@ function moveOnHit(bases) {
 			} else {
 				baseRunners[b] = 0;
 				baseRunners[b + bases] = 1;
-				moveAB1B();
+				$('#runner1B').hide();
+				$('#runner2B').hide();
+				$('#runner3B').hide();
+				await moveAB1B("runnerAB");
+				await move1B2B("runnerAB");
+				//move2B3B("runner1B");
 			}
 		}
 	}
@@ -688,6 +693,7 @@ function checkOptions(hand) {
 	let outcome = '';
 	let option = '';
 	let rating = [];
+
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
 	// maar die zal ook weer ergens aangezet moeten worden...
 
@@ -703,6 +709,11 @@ function checkOptions(hand) {
 		let indComp ='';
 		let indFly ='';
 		//let rating = []; /// hier stond ie eerst / nu boven loop 
+
+			// de nieuwe functie om te valideren
+		let [outcomeNew, ratingNew, optionResultNew] = validateCard(hand[i]);
+		console.log('=====================================>>>>> O',[outcomeNew, ratingNew, optionResultNew]);
+
 
 		switch (atBatStatus) {
 			case 'pitch':
@@ -969,8 +980,8 @@ function moveAnimRunners() {
 	move3BHB();
 }
 
-function moveAB1B() {
-  var elem = document.getElementById("runnerAB");   
+function moveAB1B(runner) {
+  var elem = document.getElementById(runner);   
   var xposAB = 150;
   var yposAB = 150;
   var id = setInterval(frame, 5);
@@ -984,8 +995,8 @@ function moveAB1B() {
   }
 }
 
-function move1B2B() {
-  var elem = document.getElementById("runner1B");  
+function move1B2B(runner) {
+  var elem = document.getElementById(runner);  
   var xpos1B = 150; 
   var ypos1B = 0;
   var id = setInterval(frame, 5);
@@ -999,8 +1010,8 @@ function move1B2B() {
   }
 }
 
-function move2B3B() {
-  var elem = document.getElementById("runner2B");   
+function move2B3B(runner) {
+  var elem = document.getElementById(runner);   
   var xpos2B = 0;
   var ypos2B = 0;
   var id = setInterval(frame, 5);
@@ -1014,8 +1025,8 @@ function move2B3B() {
   }
 }
 
-function move3BHB() {
-  var elem = document.getElementById("runner3B");  
+function move3BHB(runner) {
+  var elem = document.getElementById(runner);  
   var xpos3B = 0;
   var ypos3B = 150;
   var id = setInterval(frame, 5);

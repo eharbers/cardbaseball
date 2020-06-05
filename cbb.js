@@ -243,6 +243,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// nu ontstaat er volgens mij een tweede object...
 	// wellicht terugkopieren?
 	// if (checkOptionsFlag == true) { checkOptions(objHand) }; //verhuisd naar playBall
+
 	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
 
 	if ((checkRelieverFlag == true) && hitsInning >= 2) { // controle of RP mag worden ingezet
@@ -277,10 +278,12 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			objPlay.render();
 			objHand.render();
 			deck.render();
-			playValidate();
+			playValidate(); // oude versie
+			// de nieuwe versie(s)
+			detEquals(); //voordat de functie wordt aangeroepen
+			[outcome, rating, optionResult] = validateCard(card);
+			console.log('=====================================>>>> ' + [outcome, rating, optionResult]);
 		} else {
-			//console.log('playable:', playable);
-			//console.log('Op beurt wachten');
 			let msgBeurt = "WACHTEN !";
 			if (turnHome) {
 				$("#visitor").val(msgBeurt);
@@ -438,8 +441,6 @@ async function playValidate() {
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
 				cleanRefill();
-				//moveCards(objPlay, discardPile); // cleanup playing hands !!
-				//refillHand(objHand); // speelhand aanvullen
 				await sleep(1000);
 				atBatStatus = 'pitch'; // new pitch
 			} else {
@@ -462,20 +463,12 @@ async function playValidate() {
 					isCatchFoul = false;
 					playCatchFoul(); // zo ja,  dan ben je OUT !!
 					cleanRefill();
-					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
-					moveCards(objOtherPlay, discardPile); // en die andere ook
-					refillHand(objOtherHand);
-					refillHand(objHand); */
 					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
 					cleanRefill();
-					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
-					moveCards(objOtherPlay, discardPile); // en die andere ook
-					refillHand(objOtherHand);
-					refillHand(objHand); */
 					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
@@ -487,10 +480,6 @@ async function playValidate() {
 					sendMessage('Hit by Pitch');
 					moveRunners('hbp');
 					cleanRefill();
-					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
-					moveCards(objOtherPlay, discardPile); // en die andere ook !!
-					refillHand(objOtherHand);
-					refillHand(objHand); */
 					await sleep(1000);
 					numBalls = 0; //new batter
 					numStrikes = 0;//new batter
@@ -503,10 +492,6 @@ async function playValidate() {
 					sendMessage('STRIKE ' + numStrikes);
 					updateScoreboard();
 					cleanRefill();
-					/*moveCards(objPlay, discardPile); // cleanup playing hands !!
-					moveCards(objOtherPlay, discardPile); // en die andere ook !!
-					refillHand(objOtherHand);
-					refillHand(objHand); */
 					await sleep(1000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
@@ -517,10 +502,6 @@ async function playValidate() {
 				sendMessage('BALL ' + numBalls)
 				updateScoreboard();
 				cleanRefill();
-				/* moveCards(objPlay, discardPile); // cleanup playing hands !!
-				moveCards(objOtherPlay, discardPile); // en die andere ook
-				refillHand(objOtherHand); 
-				refillHand(objHand); */
 				await sleep(1000);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
@@ -610,8 +591,6 @@ async function playValidate() {
 					//break;
 				}
 				cleanRefill();
-				/* moveCards(objPlay, discardPile);
-				moveCards(objOtherPlay, discardPile); */
 				await sleep(1000);
 				atBatStatus = 'pitch' // nieuwe slagman
 				baseRunners[0] = 1;
@@ -706,19 +685,6 @@ async function playValidate() {
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
 			cleanRefill();
-			/* moveCards(objPlay, discardPile);
-			moveCards(objOtherPlay, discardPile);
-			refillHand(objOtherHand);
-			refillHand(objOtherHand); 
-			await sleep(1000);
-			if (isError) {
-				refillHand(objOtherHand);
-			}
-			refillHand(objHand);
-			refillHand(objHand);
-			if (isCatchFoul) {
-				refillHand(objHand);
-			} */
 			await sleep(1000);
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
@@ -781,3 +747,133 @@ async function changePlayer() {
 	}
 }
 
+function validateCard(card) {
+	let optionResult = 0 ; //mogelijk straks weer weghalen
+	//console.log('============================ inside validateCard', card);
+	//console.log('============================ objOtherPlayCard   ', objOtherPlay.topCard());
+	switch (atBatStatus) {
+		case 'pitch':
+			if (card.faceCard) {
+				outcome = 'BALL';
+				rating = 1;
+			} else {
+				outcome = '?swing?';
+				rating = 2;
+			}
+			break;
+		case 'swing':
+			if (card.faceCard) {
+				if (numStrikes < 2) {
+					outcome = 'FOUL - STRIKE';
+					rating = 1; // facecard bewaren ipv number-card??
+					break;
+				} else {
+					outcome = '2-strike FOUL';
+					rating = 3;
+					break;
+				}
+			} else if (!eqSuit) {
+				if ((objOtherPlay.topCard().rank >= 9) && (eqRank === true) && (eqColor === true)) {
+					outcome = 'HBP';
+					rating = 5;
+					break;
+				} else {
+					outcome = 'STRIKE';
+					rating = 2; // number-card eerder dan facecard S<2 ??
+					break;
+				}
+			} else if (card.rank < objOtherPlay.topCard().rank) {
+				outcome = 'BALL';
+				rating = 4;
+				break;
+			} else {
+				outcome = '?connect?';
+				rating = 6;
+				break;
+			}
+		case 'connect':
+			if (card.faceCard) {
+				outcome = 'SAC';
+				rating = 1;
+				break;
+			} else {
+				if (isLongFly) {
+					indFly ='[F]';
+				}
+				outcome = '?fielding?';
+				rating = 2;
+				break;
+			}
+		case 'fielding':
+			outcome = '';
+			// die optionResult had eigenlijk een 'let' er voor staan
+			optionResult = Math.abs(card.rank - objOtherPlay.topCard().rank);
+			if (objOtherPlay.topCard().faceCard) { // connect = SAC
+				if (card.faceCard) {
+					if (eqSuit) {
+						outcome = 'SAC DOUBLE PLAY';
+						rating = 3;
+						break;
+					} else {
+						outcome = 'SAC B:out R:adv';
+						rating = 2;
+						break;
+					}
+				} else {
+					outcome = 'SAC B:safe R:adv';
+					rating = 1;
+					break;
+				}
+			} else if (card.faceCard) { // connect is #1-10						
+				outcome = 'HOMERUN';
+				rating = 1;
+				break;
+			} else {
+				// berekening van eindresultaat obv biede #1-10 kaarten
+				outcome = ': ' + outcome + optionResult;
+				if (eqSuit) { // dezelfde suit
+					optionResult = optionResult * 1;
+					outcome = outcome + ' * 1 = ' + optionResult // + ' <=> eqSuit';
+				} else if (eqColor) { // dezelfde kleur
+					optionResult = optionResult * 2;
+					outcome = outcome + ' * 2 = ' + optionResult // + ' <=> eqColor';
+				} else {
+					optionResult = optionResult * 3; // andere kleur
+					outcome = outcome + ' * 3 = ' + optionResult  //+ ' <=> NOT eqSuit or eqColor';
+				}
+
+				switch (true) {
+					case (optionResult > 9):
+						outcome = 'HOMERUN' + outcome;
+						rating = 1;
+						break;
+					case (optionResult > 7):
+						outcome = 'TRIPLE' + outcome;
+						rating = 2;
+						break;
+					case (optionResult > 5):
+						outcome = 'DOUBLE' + outcome;
+						rating = 3;
+						break;
+					case (optionResult > 3):
+						outcome = 'SINGLE' + outcome;
+						rating = 4;
+						break;
+					case (optionResult >= 0):
+						outcome = 'OUT' + outcome;
+						rating = 5;
+						break;
+					default:
+						outcome = '#NA#';
+						rating = 0;
+						break;
+				}
+			}
+			break;
+		default:
+			outcome = '#NA#';
+			rating = 0;
+			break;
+	} // end switch options on atBatStatus
+	return [outcome, rating, optionResult];
+}
