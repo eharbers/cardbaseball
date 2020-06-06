@@ -710,9 +710,17 @@ function checkOptions(hand) {
 		let indFly ='';
 		//let rating = []; /// hier stond ie eerst / nu boven loop 
 
-			// de nieuwe functie om te valideren
-		let [outcomeNew, ratingNew, optionResultNew] = validateCard(hand[i]);
-		console.log('=====================================>>>>> O',[outcomeNew, ratingNew, optionResultNew]);
+		// de nieuwe functie om te valideren
+		let outcomeNew = [];
+		let ratingNew =[];
+		let optionResultNew =[];
+
+		let [outcomeVal, ratingVal, optionResultVal] = validateCard(hand[i]);
+		outcomeNew[i] = outcomeVal;
+		ratingNew[i] = ratingVal;
+		optionResultNew[i] = optionResultVal
+
+		console.log('=====================================>>>>> O',outcomeNew[i], ratingNew[i], optionResultNew[i]);
 
 
 		switch (atBatStatus) {
@@ -721,7 +729,7 @@ function checkOptions(hand) {
 					outcome = 'BALL';
 					rating[i] = 1;
 				} else {
-					outcome = '?swing?';
+					outcome = 'swing';
 					rating[i] = 2;
 				}
 				break;
@@ -751,7 +759,7 @@ function checkOptions(hand) {
 					rating[i] = 4;
 					break;
 				} else {
-					outcome = '?connect?';
+					outcome = 'connect';
 					rating[i] = 6;
 					break;
 				}
@@ -764,7 +772,7 @@ function checkOptions(hand) {
 					if (isLongFly) {
 						indFly ='[F]';
 					}
-					outcome = '?fielding?';
+					outcome = 'fielding';
 					rating[i] = 2;
 					break;
 				}

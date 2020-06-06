@@ -257,7 +257,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	if (playAI && turnVisitor && checkPlayAIFlag) {
 		console.log('playerAI will think and play');
 		playerAI();
-	}
+	} else {
 
 	// wellicht dit de Human ge-else-d kan worden...
 	// ff los van het uit- en inschakel probleem rond de click-functie
@@ -292,6 +292,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			}
 		}
 	}); // end click objHand (of objOtherHand)
+ 	} 
 } // end playCard
 
 
@@ -757,7 +758,7 @@ function validateCard(card) {
 				outcome = 'BALL';
 				rating = 1;
 			} else {
-				outcome = '?swing?';
+				outcome = 'swing';
 				rating = 2;
 			}
 			break;
@@ -787,7 +788,7 @@ function validateCard(card) {
 				rating = 4;
 				break;
 			} else {
-				outcome = '?connect?';
+				outcome = 'connect';
 				rating = 6;
 				break;
 			}
@@ -800,7 +801,7 @@ function validateCard(card) {
 				if (isLongFly) {
 					indFly ='[F]';
 				}
-				outcome = '?fielding?';
+				outcome = 'fielding';
 				rating = 2;
 				break;
 			}
