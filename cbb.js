@@ -257,7 +257,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	if (playAI && turnVisitor && checkPlayAIFlag) {
 		console.log('playerAI will think and play');
 		playerAI();
-	} else {
+	}
 
 	// wellicht dit de Human ge-else-d kan worden...
 	// ff los van het uit- en inschakel probleem rond de click-functie
@@ -278,11 +278,16 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			objPlay.render();
 			objHand.render();
 			deck.render();
+			
 			playValidate(); // oude versie
+
+
 			// de nieuwe versie(s)
 			detEquals(); //voordat de functie wordt aangeroepen
 			[outcome, rating, optionResult] = validateCard(card);
-			console.log('=====================================>>>> ' + [outcome, rating, optionResult]);
+			console.log('=====================================>>>> vCard ' + [outcome, rating, optionResult]);
+			//executePlay(outcome);
+
 		} else {
 			let msgBeurt = "WACHTEN !";
 			if (turnHome) {
@@ -291,8 +296,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 				$("#home").val(msgBeurt);
 			}
 		}
-	}); // end click objHand (of objOtherHand)
- 	} 
+	}); // end click objHand (of objOtherHand) 
 } // end playCard
 
 
@@ -367,6 +371,14 @@ function checkInning() {
 		// gameOver(); in playCard wordt op endOfGame gecheckt en doorgestuurd naar gameOver
 	}
 } // einde checkInning
+
+/**
+ * Nieuwe slagman
+ */
+function newBatter() {
+	console.log('New Batter')
+	return
+}
 
 /**
  * obv atBatStatus de uit te voeren play bepalen
@@ -845,23 +857,23 @@ function validateCard(card) {
 
 				switch (true) {
 					case (optionResult > 9):
-						outcome = 'HOMERUN' + outcome;
+						outcome = 'HOMERUN' // + outcome;
 						rating = 1;
 						break;
 					case (optionResult > 7):
-						outcome = 'TRIPLE' + outcome;
+						outcome = 'TRIPLE' // + outcome;
 						rating = 2;
 						break;
 					case (optionResult > 5):
-						outcome = 'DOUBLE' + outcome;
+						outcome = 'DOUBLE' // + outcome;
 						rating = 3;
 						break;
 					case (optionResult > 3):
-						outcome = 'SINGLE' + outcome;
+						outcome = 'SINGLE' // + outcome;
 						rating = 4;
 						break;
 					case (optionResult >= 0):
-						outcome = 'OUT' + outcome;
+						outcome = 'OUT' // + outcome;
 						rating = 5;
 						break;
 					default:
@@ -877,4 +889,143 @@ function validateCard(card) {
 			break;
 	} // end switch options on atBatStatus
 	return [outcome, rating, optionResult];
+}
+
+/**
+ * uitvoeren van de UITKOMST van validateCard
+ * @param {*} outcome 
+ */
+async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCard 
+	console.log('==============================>>>>> inside executePlay');
+	switch (outcome) {
+		case ('swing') :
+			atBatStatus = 'swing';
+			changePlayer();
+			displayStatus(atBatStatus)
+			// kaarten laten liggen
+			break;
+		case ('connect') :
+			atBatStatus = 'connect';
+			displayStatus(atBatStatus);
+			break;
+		case ('fielding') :
+			atBatStatus = 'fielding';
+			changePlayer();
+			displayStatus(atBatStatus);
+			break;
+		case ('BALL') : // pitch of swing
+			numBalls += 1;
+			sendMessage ('BALL ' + numBalls);
+			updateScoreboard();
+			cleanRefill();
+			await sleep(1000);
+			break;
+		case ('STRIKE') :
+			numStrikes += 1;
+			sendMessage ('STRIKE ' + numStrikes);
+			updateScoreboard();
+			cleanRefill();
+			await sleep(1000);
+			atBatStatus = 'pitch';
+			changePlayer;
+			break;
+		case ('HBP') :
+			sendMessage ('Hit by Pitch');
+			moveRunners('hbp');
+			numBalls = 0 ;
+			numStrikes = 0 ;
+			updateScoreboard();
+			cleanRefill();
+			await sleep(1000);
+			atBatStatus = 'pitch';
+			changePlayer();
+			break;
+		case ('FOUL - STRIKE') :
+			numStrikes += 1;
+			sendMessage ('FOUL - STRIKE ' + numStrikes);
+			updateScoreboard();
+			hasComp = false;
+			isCatchFoul = false;
+			playCatchFoul();
+			cleanRefill();
+			await sleep(1000);
+			atBatStatus = 'pitch';
+			changePlayer();
+			break;
+		case ('2-strike FOUL') :
+			sendMessage ('2-strike FOUL');
+			hasComp = false; // deze twee stonden er eerst niet...
+			isCatchFoul = false;
+			playCatchFoul();
+			cleanRefill();
+			await sleep(1000);
+			atBatStatus ='pitch';
+			changePlayer()
+			break;
+		case ('SAC') :
+			sendMessage ('SAC attempt') ;
+			atBatStatus = 'fielding';
+			changePlayer()
+			break;
+		case ('SAC DOUBLE PLAY') :
+			sendMessage ('SAC DOUBLE PLAY') ;
+			moveRunners('sacDP');
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case ('SAC B:out R:adv') :
+			sendMessage ('SAC B:out R:adv') ;
+			moveRunners('sacBORA');
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case ('SAC B:safe R:adv') :
+			sendMessage ('SAC B:safe R:adv') ;
+			moveRunners('sacBSRA');
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case ('HOMERUN') :
+			sendMessage ('HOMERUN');
+			moveRunners ('homerun');
+			addHitsInning();
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case ('TRIPLE') :
+			sendMessage ('TRIPLE');
+			moveRunners ('triple');
+			addHitsInning();
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case ('DOUBLE') :
+			sendMessage ('DOUBLE');
+			moveRunners ('double');
+			addHitsInning();
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case ('SINGLE') :
+			sendMessage ('SINGLE');
+			moveRunners ('single');
+			addHitsInning();
+			cleanRefill()
+			await sleep(1000);
+			break;
+		case('OUT') :
+			numOuts += 1;
+			sendMessage('OUT');
+			updateScoreboard();
+			cleanRefill();
+			await sleep(1000);
+			break;
+		default:
+			break;
+	}
+}
+
+function addHitsInning() {
+	vAtBat ? vHits++ : hHits++;
+	hitsInning++;
 }
