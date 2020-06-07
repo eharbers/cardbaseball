@@ -279,14 +279,14 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			objHand.render();
 			deck.render();
 			
-			playValidate(); // oude versie
+			// playValidate(); // oude versie
 
 
 			// de nieuwe versie(s)
 			detEquals(); //voordat de functie wordt aangeroepen
-			[outcome, rating, optionResult] = validateCard(card);
+			[outcome, outcomeText, rating, optionResult] = validateCard(card);
 			console.log('=====================================>>>> vCard ' + [outcome, rating, optionResult]);
-			//executePlay(outcome);
+			executePlay(outcome);
 
 		} else {
 			let msgBeurt = "WACHTEN !";
@@ -391,7 +391,7 @@ async function playValidate() {
 	// dit gaat dan met topCard() gebeuren
 
 	checkDeck(); //staat ie hier beter??
-	await sleep(1000);
+	await sleep(2000);
 
 	// bepaal de overeenkomstigheden (equals)
 	detEquals();
@@ -418,16 +418,16 @@ async function playValidate() {
 					//console.log('atBatStatus: newball');
 					moveCards(objPlay, discardPile);
 					refillHand(objHand);
-					await sleep(1000);
+					await sleep(2000);
 					refillHand(objHand);
-					await sleep(1000);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					displayStatus(atBatStatus);
 					sendMessage('Play Ball!');
 				} else {
 					sendMessage('2 Face-cards needed for New Balls');
 					moveCards(objPlay, objHand);
-					await sleep(1000);
+					await sleep(2000);
 				}					
 			} 
 			break;
@@ -454,7 +454,7 @@ async function playValidate() {
 				sendMessage('BALL ' + numBalls); // onnozel als je geen 4-wijd wil gooien...
 				updateScoreboard() // naar scoreboard
 				cleanRefill();
-				await sleep(1000);
+				await sleep(2000);
 				atBatStatus = 'pitch'; // new pitch
 			} else {
 				atBatStatus = 'swing'; // kaarten laten liggen
@@ -476,13 +476,13 @@ async function playValidate() {
 					isCatchFoul = false;
 					playCatchFoul(); // zo ja,  dan ben je OUT !!
 					cleanRefill();
-					await sleep(1000);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				} else {
 					sendMessage('2-strike FOUL'); // 2-strike foul
 					cleanRefill();
-					await sleep(1000);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 				}
@@ -493,7 +493,7 @@ async function playValidate() {
 					sendMessage('Hit by Pitch');
 					moveRunners('hbp');
 					cleanRefill();
-					await sleep(1000);
+					await sleep(2000);
 					numBalls = 0; //new batter
 					numStrikes = 0;//new batter
 					updateScoreboard();
@@ -505,7 +505,7 @@ async function playValidate() {
 					sendMessage('STRIKE ' + numStrikes);
 					updateScoreboard();
 					cleanRefill();
-					await sleep(1000);
+					await sleep(2000);
 					atBatStatus = 'pitch'; // new pitch
 					changePlayer();
 					break;
@@ -515,7 +515,7 @@ async function playValidate() {
 				sendMessage('BALL ' + numBalls)
 				updateScoreboard();
 				cleanRefill();
-				await sleep(1000);
+				await sleep(2000);
 				atBatStatus = 'pitch'; // new pitch
 				changePlayer();
 				
@@ -548,7 +548,7 @@ async function playValidate() {
 				objHand.addCard(objPlay.topCard());
 				objHand.render();
 				objPlay.render();
-				await sleep(1000);
+				await sleep(2000);
 				atBatStatus = 'connect';
 				break;
 			}
@@ -566,7 +566,7 @@ async function playValidate() {
 			atBatStatus = 'result';
 			displayStatus(atBatStatus);
 			console.log('playValidate inside atBatStatus fielding');
-			await sleep(1000);
+			await sleep(2000);
 			playValidate(); // deze moet hier, om de click-card te omzeilen
 			break;
 		// result
@@ -604,7 +604,7 @@ async function playValidate() {
 					//break;
 				}
 				cleanRefill();
-				await sleep(1000);
+				await sleep(2000);
 				atBatStatus = 'pitch' // nieuwe slagman
 				baseRunners[0] = 1;
 				renderRunners();
@@ -698,7 +698,7 @@ async function playValidate() {
 			// het scoreboard is bijgewerkt
 			// kaarten opruimen
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
 			atBatStatus = 'pitch' // nieuwe slagman
 			baseRunners[0] = 1;
 			renderRunners();
@@ -717,7 +717,7 @@ async function playValidate() {
 	// die staat nu in de game-loop
 	checkAtBat();
 	/* if (numOuts === 3) { // anders gaat de AI te snel voor het leegmaken van het speelveld
-		await sleep(1000)
+		await sleep(2000)
 	} */
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
@@ -743,7 +743,7 @@ async function changePlayer() {
 		objOtherHand = homeHand;
 		objOtherPlay = homePlay;
 		console.log('Change player from turnHome to turnVisitor');
-		await sleep(1000);
+		await sleep(2000);
 	} else {
 		turnHome = true;
 		$("#home").css("background-color", "red");
@@ -756,12 +756,13 @@ async function changePlayer() {
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
 		console.log('Change player from turnVisitor to turnHome');
-		await sleep(1000);
+		await sleep(2000);
 	}
 }
 
 function validateCard(card) {
 	let optionResult = 0 ; //mogelijk straks weer weghalen
+	let outcomeText = '';
 	//console.log('============================ inside validateCard', card);
 	//console.log('============================ objOtherPlayCard   ', objOtherPlay.topCard());
 	switch (atBatStatus) {
@@ -818,7 +819,6 @@ function validateCard(card) {
 				break;
 			}
 		case 'fielding':
-			outcome = '';
 			// die optionResult had eigenlijk een 'let' er voor staan
 			optionResult = Math.abs(card.rank - objOtherPlay.topCard().rank);
 			if (objOtherPlay.topCard().faceCard) { // connect = SAC
@@ -837,22 +837,22 @@ function validateCard(card) {
 					rating = 1;
 					break;
 				}
-			} else if (card.faceCard) { // connect is #1-10						
+			} else if (card.faceCard) {  // connect is #1-10 and fielding faceCard					
 				outcome = 'HOMERUN';
 				rating = 1;
 				break;
-			} else {
+			} else { // connect is #1-10 and fielding is #1-10
 				// berekening van eindresultaat obv biede #1-10 kaarten
-				outcome = ': ' + outcome + optionResult;
+				outcomeText = ': ' + outcome + optionResult;
 				if (eqSuit) { // dezelfde suit
 					optionResult = optionResult * 1;
-					outcome = outcome + ' * 1 = ' + optionResult // + ' <=> eqSuit';
+					outcomeText = outcomeText + ' * 1 = ' + optionResult // + ' <=> eqSuit';
 				} else if (eqColor) { // dezelfde kleur
 					optionResult = optionResult * 2;
-					outcome = outcome + ' * 2 = ' + optionResult // + ' <=> eqColor';
+					outcomeText = outcomeText + ' * 2 = ' + optionResult // + ' <=> eqColor';
 				} else {
 					optionResult = optionResult * 3; // andere kleur
-					outcome = outcome + ' * 3 = ' + optionResult  //+ ' <=> NOT eqSuit or eqColor';
+					outcomeText = outcomeText + ' * 3 = ' + optionResult  //+ ' <=> NOT eqSuit or eqColor';
 				}
 
 				switch (true) {
@@ -888,7 +888,7 @@ function validateCard(card) {
 			rating = 0;
 			break;
 	} // end switch options on atBatStatus
-	return [outcome, rating, optionResult];
+	return [outcome, outcomeText, rating, optionResult];
 }
 
 /**
@@ -896,7 +896,7 @@ function validateCard(card) {
  * @param {*} outcome 
  */
 async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCard 
-	console.log('==============================>>>>> inside executePlay');
+	console.log('==============================>>>>> inside executePlay with outcome: ', outcome);
 	switch (outcome) {
 		case ('swing') :
 			atBatStatus = 'swing';
@@ -918,14 +918,16 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			sendMessage ('BALL ' + numBalls);
 			updateScoreboard();
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
+			atBatStatus = 'pitch';
+			changePlayer;
 			break;
 		case ('STRIKE') :
 			numStrikes += 1;
 			sendMessage ('STRIKE ' + numStrikes);
 			updateScoreboard();
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
 			atBatStatus = 'pitch';
 			changePlayer;
 			break;
@@ -936,7 +938,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			numStrikes = 0 ;
 			updateScoreboard();
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
 			atBatStatus = 'pitch';
 			changePlayer();
 			break;
@@ -948,17 +950,17 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			isCatchFoul = false;
 			playCatchFoul();
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
 			atBatStatus = 'pitch';
 			changePlayer();
 			break;
 		case ('2-strike FOUL') :
 			sendMessage ('2-strike FOUL');
-			hasComp = false; // deze twee stonden er eerst niet...
+			hasComp = false; // deze drie stonden er eerst niet...
 			isCatchFoul = false;
-			playCatchFoul();
+			playCatchFoul(); // en nu wel
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
 			atBatStatus ='pitch';
 			changePlayer()
 			break;
@@ -971,54 +973,54 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			sendMessage ('SAC DOUBLE PLAY') ;
 			moveRunners('sacDP');
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case ('SAC B:out R:adv') :
 			sendMessage ('SAC B:out R:adv') ;
 			moveRunners('sacBORA');
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case ('SAC B:safe R:adv') :
 			sendMessage ('SAC B:safe R:adv') ;
 			moveRunners('sacBSRA');
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case ('HOMERUN') :
 			sendMessage ('HOMERUN');
 			moveRunners ('homerun');
 			addHitsInning();
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case ('TRIPLE') :
 			sendMessage ('TRIPLE');
 			moveRunners ('triple');
 			addHitsInning();
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case ('DOUBLE') :
 			sendMessage ('DOUBLE');
 			moveRunners ('double');
 			addHitsInning();
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case ('SINGLE') :
 			sendMessage ('SINGLE');
 			moveRunners ('single');
 			addHitsInning();
 			cleanRefill()
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		case('OUT') :
 			numOuts += 1;
 			sendMessage('OUT');
 			updateScoreboard();
 			cleanRefill();
-			await sleep(1000);
+			await sleep(2000);
 			break;
 		default:
 			break;
