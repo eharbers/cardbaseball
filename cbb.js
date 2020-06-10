@@ -1027,6 +1027,9 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 		default:
 			break;
 	}
+	checkAtBat();
+	checkInning()
+	updateScoreboard();
 }
 
 function addHitsInning() {

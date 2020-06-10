@@ -697,6 +697,7 @@ function checkOptions(hand) {
 	let outcome = '';
 	let option = '';
 	let rating = [];
+	let ratingNew = [];
 
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
 	// maar die zal ook weer ergens aangezet moeten worden...
@@ -712,21 +713,25 @@ function checkOptions(hand) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
 		let indFly ='';
-		//let rating = []; /// hier stond ie eerst / nu boven loop 
+		//let rating = []; // hier stond ie eerst / nu boven loop 
 
 		// de nieuwe functie om te valideren
 		let outcomeNew = [];
-		let ratingNew =[];
+		let outcomeTextNew = [];
+		ratingNew =[]; // hier stond eerst let voor...nu naar boven de loop
 		let optionResultNew =[];
 
-		let [outcomeVal, ratingVal, optionResultVal] = validateCard(hand[i]);
+		let [outcomeVal, outcomeTextVal, ratingVal, optionResultVal] = validateCard(hand[i]);
+		//console.log('=====================================>>>>> O val -A-',outcomeVal,' -B- ', outcomeTextVal,' -C- ', ratingVal,' -D- ', optionResultVal);
 		outcomeNew[i] = outcomeVal;
+		outcomeTextNew[i] = outcomeTextVal; 
 		ratingNew[i] = ratingVal;
 		optionResultNew[i] = optionResultVal
 
-		console.log('=====================================>>>>> O',outcomeNew[i], ratingNew[i], optionResultNew[i]);
+		console.log('=====================================>>>>> O new -A- ',outcomeNew[i],' -B- ', outcomeTextNew[i],' -C- ', ratingNew[i],' -D- ', optionResultNew[i]);
 
-
+		/* 
+		// de oude uitvoering van option
 		switch (atBatStatus) {
 			case 'pitch':
 				if (hand[i].faceCard) {
@@ -849,7 +854,8 @@ function checkOptions(hand) {
 				outcome = '#NA#';
 				rating[i] = 0;
 				break;
-		} // end switch options on atBatStatus
+		} // end switch options on atBatStatus (oude versie)
+		*/
 
 		if (objOtherPlay.length > 0) {// de bovenste kaart van tegenspeler checken op companion-card
 			if ((hand[i].rank === objOtherPlay.topCard().rank)
@@ -862,10 +868,10 @@ function checkOptions(hand) {
 		let symbolRank = '';
 		symbolRank = hand[i].symbol + hand[i].letter;
 
-		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + rating[i] + ') ' + indFly + ' ' + outcome + '&#013';
+		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + ratingNew[i] + ') ' + indFly + ' ' + outcomeNew[i] + '&#013';
 		sendOption(option);
 	}
-	return rating
+	return ratingNew[i]
 } // end checkOptions
 
 
@@ -890,7 +896,9 @@ function playerAI () {
 	console.log('maxRatingAIId = ', maxRatingAIId);
 	playAICard(objHand[maxRatingAIId]);
 	checkPlayAIFlag = false; // flag uit zetten (aan in checkAtBat)
-	playValidate();
+	//playValidate(); // oude functie-aanroep om te spelen
+	validateCard();
+	executePlay();
 }
 
 /**
