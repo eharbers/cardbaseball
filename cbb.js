@@ -279,14 +279,14 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			objHand.render();
 			deck.render();
 			
-			playValidate(); // oude versie
+			//playValidate(); // oude versie
 
 
 			// de nieuwe versie(s)
 			detEquals(); //voordat de functie wordt aangeroepen
 			[outcome, outcomeText, rating, optionResult] = validateCard(card);
 			console.log('=====================================>>>> vCard ' + [outcome, rating, optionResult]);
-			// executePlay(outcome);
+			executePlay(outcome);
 
 		} else {
 			let msgBeurt = "WACHTEN !";
@@ -919,8 +919,10 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			updateScoreboard();
 			cleanRefill();
 			await sleep(2000);
-			atBatStatus = 'pitch';
-			changePlayer;
+			if (atBatStatus == 'swing') {
+				atBatStatus = 'pitch';
+				changePlayer();
+			}
 			break;
 		case ('STRIKE') :
 			numStrikes += 1;
@@ -929,7 +931,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			cleanRefill();
 			await sleep(2000);
 			atBatStatus = 'pitch';
-			changePlayer;
+			changePlayer();
 			break;
 		case ('HBP') :
 			sendMessage ('Hit by Pitch');

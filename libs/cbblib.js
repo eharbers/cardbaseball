@@ -125,18 +125,22 @@ function countCards() {
 	console.log('==> objOtherHand: ' + objOtherHand.length + ' | objOtherPlay: ' + objOtherPlay.length);
 }
 
-function cleanRefill() {
+async function cleanRefill() {
 	if (objPlay.length > 0) {
 		moveCards(objPlay, discardPile);
+		await sleep(1000);
 	}
 	if (objOtherPlay.length > 0 ) {
 		moveCards(objOtherPlay, discardPile);
+		await sleep(1000);
 	}
 	while (objHand.length != 6 ) {
 		refillHand(objHand);
+		await sleep(1000);
 	}
 	while (objOtherHand.length != 6 ) {
 		refillHand(objOtherHand);
+		await sleep(1000);
 	}
 
 }
