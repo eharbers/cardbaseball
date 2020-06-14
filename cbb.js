@@ -208,6 +208,7 @@ $('#hRP').click(function () {
 	refillHand(objHand);
 })
 
+// afhandelen van het klikken op visitor RP-button voor Relief Pitcher
 $('#vRP').click(function () {
 	//console.log('hRP-clicked');	
 	sendMessage('Relief Pitcher');
@@ -254,6 +255,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 		}		
 	}
 
+	// bepalen of de AI-player aan de beurt is om een kaart te spelen
 	if (playAI && turnVisitor && checkPlayAIFlag) {
 		console.log('playerAI will think and play');
 		playerAI();
@@ -262,18 +264,18 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// wellicht dit de Human ge-else-d kan worden...
 	// ff los van het uit- en inschakel probleem rond de click-functie
 
-	objHand.click(function (card) { // click op HAND die aan de beurt is, heeft effect
+	// bepalen welke kaart door de HUMAN-player wordt geclickt om te spelen
+	objHand.click(function (card) {
 		document.getElementById("messageboard").innerHTML = "";
 		console.log('Human plays: ', card);
 		let playable = false
 		for (i = 0; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
 			if (card === objHand[i]) {
 				playable = true;
-				//console.log('playable:', playable);
 			};
 		} // end test voor playable
-		if (playable === true) { //valid card/player 
-			//console.log('turnHome: ', turnHome, 'turnVisitor: ', turnVisitor);
+
+		if (playable === true) { //valid card-player 
 			objPlay.addCard(card);
 			objPlay.render();
 			objHand.render();
@@ -377,6 +379,20 @@ function checkInning() {
  */
 function newBatter() {
 	console.log('New Batter')
+	atBatStatus = 'pitch';
+	if (vAtBat) {
+		turnHome = true;
+		turnVisitor = false;
+	} else {
+		turnVisitor = true;
+		turnHome = false;
+	}
+	displayStatus(atBatStatus);
+	numBalls = 0;
+	numStrikes = 0;
+	updateScoreboard();
+	baseRunners[0] = 1;
+	renderRunners();
 	return
 }
 
@@ -765,6 +781,10 @@ function validateCard(card) {
 	let outcomeText = '';
 	//console.log('============================ inside validateCard', card);
 	//console.log('============================ objOtherPlayCard   ', objOtherPlay.topCard());
+
+	// check Deck op aantal kaarten
+	checkDeck();
+
 	switch (atBatStatus) {
 		case 'pitch':
 			if (card.faceCard) {
@@ -941,8 +961,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			updateScoreboard();
 			cleanRefill();
 			await sleep(2000);
-			atBatStatus = 'pitch';
-			changePlayer();
+			newBatter();
 			break;
 		case ('FOUL - STRIKE') :
 			numStrikes += 1;
@@ -976,6 +995,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			moveRunners('sacDP');
 			cleanRefill()
 			await sleep(2000);
+			newBatter();
 			break;
 		case ('SAC B:out R:adv') :
 			sendMessage ('SAC B:out R:adv') ;
@@ -988,6 +1008,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			moveRunners('sacBSRA');
 			cleanRefill()
 			await sleep(2000);
+			newBatter();
 			break;
 		case ('HOMERUN') :
 			sendMessage ('HOMERUN');
@@ -995,6 +1016,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
+			newBatter();
 			break;
 		case ('TRIPLE') :
 			sendMessage ('TRIPLE');
@@ -1002,6 +1024,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
+			newBatter();
 			break;
 		case ('DOUBLE') :
 			sendMessage ('DOUBLE');
@@ -1009,6 +1032,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
+			newBatter();
 			break;
 		case ('SINGLE') :
 			sendMessage ('SINGLE');
@@ -1016,6 +1040,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
+			newBatter();
 			break;
 		case('OUT') :
 			numOuts += 1;
@@ -1023,6 +1048,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			updateScoreboard();
 			cleanRefill();
 			await sleep(2000);
+			newBatter();
 			break;
 		default:
 			break;
