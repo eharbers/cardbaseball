@@ -15,6 +15,23 @@ delayedGreeting();
 console.log('4: Hasta la Pasta');
 console.log('5: End');
 
+
+function option() {
+    let a=[];
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = 2;
+    let b=[];
+    for (i=0; i < a.length; i++) {
+        console.log(a[i]);
+        b[i] = a[i];
+    }
+    return b
+}
+
+let c = option();
+console.log(c);
+
 /* var baseRunners =[];
 for (i=0; i<=3; i++) {
 	baseRunners[i] = 0;

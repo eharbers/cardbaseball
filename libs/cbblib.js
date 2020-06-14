@@ -698,6 +698,10 @@ function checkOptions(hand) {
 	let option = '';
 	let rating = [];
 	let ratingNew = [];
+	let outcomeNew = [];
+	let outcomeTextNew = [];
+	ratingNew =[]; // hier stond eerst let voor...nu naar boven de loop
+	let optionResultNew =[];
 
 	checkOptionsFlag = false; // vlag om te voorkomen dat het steeds in playCard wordt uitgevoerd
 	// maar die zal ook weer ergens aangezet moeten worden...
@@ -716,10 +720,7 @@ function checkOptions(hand) {
 		//let rating = []; // hier stond ie eerst / nu boven loop 
 
 		// de nieuwe functie om te valideren
-		let outcomeNew = [];
-		let outcomeTextNew = [];
-		ratingNew =[]; // hier stond eerst let voor...nu naar boven de loop
-		let optionResultNew =[];
+		
 
 		let [outcomeVal, outcomeTextVal, ratingVal, optionResultVal] = validateCard(hand[i]);
 		//console.log('=====================================>>>>> O val -A-',outcomeVal,' -B- ', outcomeTextVal,' -C- ', ratingVal,' -D- ', optionResultVal);
@@ -728,7 +729,7 @@ function checkOptions(hand) {
 		ratingNew[i] = ratingVal;
 		optionResultNew[i] = optionResultVal
 
-		console.log('=====================================>>>>> O new -A- ',outcomeNew[i],' -B- ', outcomeTextNew[i],' -C- ', ratingNew[i],' -D- ', optionResultNew[i]);
+		//console.log('=====================================>>>>> O new -A- ',outcomeNew[i],' -B- ', outcomeTextNew[i],' -C- ', ratingNew[i],' -D- ', optionResultNew[i]);
 
 		/* 
 		// de oude uitvoering van option
@@ -871,7 +872,7 @@ function checkOptions(hand) {
 		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + ratingNew[i] + ') ' + indFly + ' ' + outcomeNew[i] + '&#013';
 		sendOption(option);
 	}
-	return ratingNew[i]
+	return ratingNew;
 } // end checkOptions
 
 
@@ -882,6 +883,7 @@ function checkOptions(hand) {
  */
 function playerAI () {
 	let ratingAI = checkOptions(objHand);
+	console.log(ratingAI);
 	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
 	let maxRatingAI = 0;
 	let maxRatingAIId = 0;
@@ -894,11 +896,14 @@ function playerAI () {
 	}		
 	console.log('maxRatingAI = ', maxRatingAI);
 	console.log('maxRatingAIId = ', maxRatingAIId);
+	let thinking = 0;
+	thinking = 2000 + Math.random() * 2000;
+	console.log('AI thinking for atBatStatus: ', atBatStatus);
+	//await sleep(thinking);
 	playAICard(objHand[maxRatingAIId]);
 	checkPlayAIFlag = false; // flag uit zetten (aan in checkAtBat)
-	//playValidate(); // oude functie-aanroep om te spelen
-	validateCard();
-	executePlay();
+	[outcome, outcomeText, rating, optionResult] = validateCard(objPlay.topCard());
+	executePlay(outcome);
 }
 
 /**
@@ -906,10 +911,6 @@ function playerAI () {
  * @param {*} aiCard 
  */
 function playAICard(aiCard){
-	let thinking = 0;
-	thinking = 2000 + Math.random() * 2000
-	console.log('AI thinking for atBatStatus: ', atBatStatus);
-	// await sleep(thinking); async weggehaald 
 	console.log ('AI plays: ', aiCard);
 	objPlay.addCard(aiCard);
 	objPlay.render();

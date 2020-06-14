@@ -287,7 +287,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			// de nieuwe versie(s)
 			detEquals(); //voordat de functie wordt aangeroepen
 			[outcome, outcomeText, rating, optionResult] = validateCard(card);
-			console.log('=====================================>>>> vCard ' + [outcome, rating, optionResult]);
+			//console.log('=====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
 			executePlay(outcome);
 
 		} else {
@@ -314,17 +314,15 @@ function checkAtBat() {
 	if (numStrikes === 3) {
 		//console.log('strik-out');
 		sendMessage('STRIKE-OUT');
-		numStrikes = 0;
-		numBalls = 0;
 		numOuts++
+		newBatter();
 	}
 
 	if (numBalls === 4) {
 		//console.log('walk');
 		sendMessage('WALK');
 		moveRunners('walk');
-		numStrikes = 0;
-		numBalls = 0;
+		newBatter();
 	}
 }
 
@@ -352,21 +350,18 @@ function checkInning() {
 			for (i = 0; i <= 3; i++) {
 				baseRunners[i] = 0;
 			}
-			baseRunners[0] = 1;
-			renderRunners();
 			numOuts = 0;
-			$('#hNB').hide(); // NB-knoppen verwijderen
-			$('#vNB').hide();
-			$('#hRP').hide(); // RP knoppen verwijderen
-			$('#vRP').hide();			
-			changePlayer();
+			newBatter();
 			if (objHand.length > 6 || objOtherHand.length > 6) {
 				atBatStatus = 'decrease'
 				sendMessage('decrease to 6 cards');
 				// ??? moet dat wisselen van die spelers ???
 				turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
 			}
-			atBatStatus = 'pitch';
+			$('#hNB').hide(); // NB-knoppen verwijderen
+			$('#vNB').hide();
+			$('#hRP').hide(); // RP knoppen verwijderen
+			$('#vRP').hide();			
 		}
 	} else {
 		endOfGame = true;
@@ -378,7 +373,8 @@ function checkInning() {
  * Nieuwe slagman
  */
 function newBatter() {
-	console.log('New Batter')
+	console.log('New Batter');
+	sendMessage('New Batter');
 	atBatStatus = 'pitch';
 	if (vAtBat) {
 		turnHome = true;
@@ -776,6 +772,10 @@ async function changePlayer() {
 	}
 }
 
+/**
+ * valideren van de kaart 
+ * @param {*} card 
+ */
 function validateCard(card) {
 	let optionResult = 0 ; //mogelijk straks weer weghalen
 	let outcomeText = '';
