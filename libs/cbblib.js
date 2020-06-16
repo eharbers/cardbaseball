@@ -360,7 +360,7 @@ async function moveOnHit(bases) {
 }
 
 /**
- * Verplaatsen honklopes
+ * Verplaatsen honklopers
  * obv WALK
  */
 function moveOnWalk() { 
@@ -899,9 +899,11 @@ function playerAI () {
 	let thinking = 0;
 	thinking = 2000 + Math.random() * 2000;
 	console.log('AI thinking for atBatStatus: ', atBatStatus);
+	sendMessage('AI is thinking');
 	//await sleep(thinking);
 	playAICard(objHand[maxRatingAIId]);
 	checkPlayAIFlag = false; // flag uit zetten (aan in checkAtBat)
+	detEquals();
 	[outcome, outcomeText, rating, optionResult] = validateCard(objPlay.topCard());
 	executePlay(outcome);
 }

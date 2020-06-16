@@ -37,17 +37,17 @@ homeHand = new cards.Hand({ faceUp: true, y: 440 });
 visitorPlay = new cards.Hand({ faceUp: true, y: 200 });
 homePlay = new cards.Hand({ faceUp: true, y: 300 });
 
-// TODO bepalen wie er begint door een kaart te trekken. de hoogste kaart bepaalt start field of atBat 
-let turnHome = true; // in dev & test begint Lower met pitchen/veld
+// flag die bepaalt wie er aan de beurt is
+let turnHome = true; // home start als DEFENSE
 $("#home").css("background-color", "red");
 $("#home").val('pitch');
-let turnVisitor = false;
+let turnVisitor = false; // visitor start als OFFENSE
 $("#visitor").css("background-color", "green");
 
-let objHand = homeHand; // het zetten van de eerste speler,
-let objPlay = homePlay; // omdat er nog geen functie voor de ad random selectie is
-let objOtherHand = visitorHand // die ander moet ook herkend worden
-let objOtherPlay = visitorPlay // en deze andere ook
+let objHand = homeHand; // het zetten van de speler die (als eerste) aan de beurt is
+let objPlay = homePlay; // om een kaart te spelen
+let objOtherHand = visitorHand 
+let objOtherPlay = visitorPlay 
 let atBatStatus = '';
 
 // voor de initiatie van de baseballgame
@@ -57,7 +57,7 @@ let numOuts = 0;
 let halfInning = 0;
 let inning = 0;
 
-// voor de bepaling van wie er aan de beurt is om een kaart te klikken
+// voor de bepaling van wie OFFENSE en wie DEFENSE is
 let vAtBat = true;
 let hAtBat = false;
 
@@ -71,19 +71,19 @@ for (i = 0; i <= 3; i++) {
 let play = '';
 renderRunners();
 
-// voor de bepaling van de plays in playValidate
+// voor de bepaling van de plays in validateCard
 let eqRank = false;
 let eqColor = false;
 let eqSuit = false;
 let isFace = false;
 
-// voor de bepaling van Error en CatchFoul in playValidate
+// voor de bepaling van Error en CatchFoul in validateCard
 let hasComp = false;
 let isError = false;
 let isCatchFoul = false;
 let isLongFly = false;
 
-// voor de telling van de categories in playValidate per Hand
+// voor de telling van de categories in validateCard per Hand
 let vFace = 0;
 let vCompanion = 0;
 let vDenomination = 0;
@@ -166,8 +166,6 @@ $('#deal').click(function () {
 		// om de initiatie van het spel op te starten en uit te voeren
 		sendMessage("PLAY BALL !!")
 		atBatStatus = 'pitch';
-		//halfInning = 1;
-		//inning = Math.floor(halfInning / 2);
 		inning = 1;
 		vRun.push(0); // de top first wordt gevuld met 0. geeft de actieve slagbeurt aan
 		updateScoreboard();
@@ -312,14 +310,12 @@ function checkAtBat() {
 	if (playAI) { checkPlayAIFlag = true;} // aan zetten voor de volgende AI-play
 	checkFaceCardsFlag = true // vlag terugzetten
 	if (numStrikes === 3) {
-		//console.log('strik-out');
 		sendMessage('STRIKE-OUT');
 		numOuts++
 		newBatter();
 	}
 
 	if (numBalls === 4) {
-		//console.log('walk');
 		sendMessage('WALK');
 		moveRunners('walk');
 		newBatter();
