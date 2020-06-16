@@ -39,10 +39,7 @@ homePlay = new cards.Hand({ faceUp: true, y: 300 });
 
 // flag die bepaalt wie er aan de beurt is
 let turnHome = true; // home start als DEFENSE
-$("#home").css("background-color", "red");
-$("#home").val('pitch');
 let turnVisitor = false; // visitor start als OFFENSE
-$("#visitor").css("background-color", "green");
 
 let objHand = homeHand; // het zetten van de speler die (als eerste) aan de beurt is
 let objPlay = homePlay; // om een kaart te spelen
@@ -166,6 +163,7 @@ $('#deal').click(function () {
 		// om de initiatie van het spel op te starten en uit te voeren
 		sendMessage("PLAY BALL !!")
 		atBatStatus = 'pitch';
+		displayStatus(atBatStatus);
 		inning = 1;
 		vRun.push(0); // de top first wordt gevuld met 0. geeft de actieve slagbeurt aan
 		updateScoreboard();
