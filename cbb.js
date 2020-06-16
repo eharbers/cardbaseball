@@ -388,10 +388,15 @@ function newBatter() {
 	return
 }
 
-/**
- * obv atBatStatus de uit te voeren play bepalen
- */
-async function playValidate() {
+
+
+
+/* oude versie van playValidate
+//vervangen door validateCard
+
+//LATEN STAAN IVM HERSTELLEN BIJZONDERE ACTIES
+
+ async function playValidate() {
 	console.log('inside playValidate');
 	console.log('playValidate atBatStatus: ', atBatStatus);
 	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
@@ -724,12 +729,11 @@ async function playValidate() {
 	// check met strikes, balls, outs & innings
 	// die staat nu in de game-loop
 	checkAtBat();
-	/* if (numOuts === 3) { // anders gaat de AI te snel voor het leegmaken van het speelveld
-		await sleep(2000)
-	} */
 	checkInning();
 	updateScoreboard(); // naar game-loop ??
 } // einde playValidate
+*/
+
 
 
 /**
