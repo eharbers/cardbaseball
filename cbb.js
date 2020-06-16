@@ -328,7 +328,7 @@ function checkAtBat() {
 function checkInning() {
 	console.log('Inside checkInning');
 	if (inning <= maxInnings) {
-		if (numOuts === 3) {
+		if (numOuts === 1) {
 			sendMessage('3-OUTS Change fields')
 			console.log('3-OUTS Change fields');
 			if (vAtBat) {
@@ -745,30 +745,24 @@ async function changePlayer() {
 
 	if (turnHome) {
 		turnVisitor = true;
-		$("#visitor").css("background-color", "red");
-		$("#visitor").val(atBatStatus);
 		turnHome = false;
-		$("#home").css("background-color", "green");
-		$("#home").val("");
+		displayStatus(atBatStatus);
 		objHand = visitorHand;
 		objPlay = visitorPlay;
 		objOtherHand = homeHand;
 		objOtherPlay = homePlay;
 		console.log('Change player from turnHome to turnVisitor');
-		await sleep(2000);
+		await sleep(1000);
 	} else {
 		turnHome = true;
-		$("#home").css("background-color", "red");
-		$("#home").val(atBatStatus);
 		turnVisitor = false;
-		$("#visitor").css("background-color", "green");
-		$("#visitor").val("");
+		displayStatus(atBatStatus);
 		objHand = homeHand;
 		objPlay = homePlay;
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
 		console.log('Change player from turnVisitor to turnHome');
-		await sleep(2000);
+		await sleep(1000);
 	}
 }
 
@@ -917,6 +911,7 @@ function validateCard(card) {
  */
 async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCard 
 	console.log('==============================>>>>> inside executePlay with outcome: ', outcome);
+	await sleep(2000);
 	switch (outcome) {
 		case ('swing') :
 			atBatStatus = 'swing';

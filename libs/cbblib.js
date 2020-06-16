@@ -624,9 +624,15 @@ function renderRunners() {
  */
 function displayStatus (atBatStatus) {
 	if (turnHome) {
+		$("#home").css("background-color", "red");
 		$("#home").val(atBatStatus);
+		$("#visitor").css("background-color", "green");
+		$("#visitor").val("");
 	} else {
+		$("#visitor").css("background-color", "red");
 		$("#visitor").val(atBatStatus);
+		$("#home").css("background-color", "green");
+		$("#home").val("");
 	}
 } 
 
