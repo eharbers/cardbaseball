@@ -720,145 +720,14 @@ function checkOptions(hand) {
 		//let rating = []; // hier stond ie eerst / nu boven loop 
 
 		// de nieuwe functie om te valideren
-		
-
 		let [outcomeVal, outcomeTextVal, ratingVal, optionResultVal] = validateCard(hand[i]);
-		//console.log('=====================================>>>>> O val -A-',outcomeVal,' -B- ', outcomeTextVal,' -C- ', ratingVal,' -D- ', optionResultVal);
 		outcomeNew[i] = outcomeVal;
 		outcomeTextNew[i] = outcomeTextVal; 
 		ratingNew[i] = ratingVal;
 		optionResultNew[i] = optionResultVal
 
-		//console.log('=====================================>>>>> O new -A- ',outcomeNew[i],' -B- ', outcomeTextNew[i],' -C- ', ratingNew[i],' -D- ', optionResultNew[i]);
-
-		/* 
-		// de oude uitvoering van option
-		switch (atBatStatus) {
-			case 'pitch':
-				if (hand[i].faceCard) {
-					outcome = 'BALL';
-					rating[i] = 1;
-				} else {
-					outcome = 'swing';
-					rating[i] = 2;
-				}
-				break;
-			case 'swing':
-				if (hand[i].faceCard) {
-					if (numStrikes < 2) {
-						outcome = 'FOUL - STRIKE';
-						rating[i] = 1; // facecard bewaren ipv number-card??
-						break;
-					} else {
-						outcome = '2-strike FOUL';
-						rating[i] = 3;
-						break;
-					}
-				} else if (!eqSuit) {
-					if ((objOtherPlay.topCard().rank >= 9) && (eqRank === true) && (eqColor === true)) {
-						outcome = 'HBP';
-						rating[i] = 5;
-						break;
-					} else {
-						outcome = 'STRIKE';
-						rating[i] = 2; // number-card eerder dan facecard S<2 ??
-						break;
-					}
-				} else if (hand[i].rank < objOtherPlay.topCard().rank) {
-					outcome = 'BALL';
-					rating[i] = 4;
-					break;
-				} else {
-					outcome = 'connect';
-					rating[i] = 6;
-					break;
-				}
-			case 'connect':
-				if (hand[i].faceCard) {
-					outcome = 'SAC';
-					rating[i] = 1;
-					break;
-				} else {
-					if (isLongFly) {
-						indFly ='[F]';
-					}
-					outcome = 'fielding';
-					rating[i] = 2;
-					break;
-				}
-			case 'fielding':
-				outcome = '';
-				let optionResult = Math.abs(hand[i].rank - objOtherPlay.topCard().rank);
-				if (objOtherPlay.topCard().faceCard) { // connect = SAC
-					if (hand[i].faceCard) {
-						if (eqSuit) {
-							outcome = 'SAC DOUBLE PLAY';
-							rating[i] = 3;
-							break;
-						} else {
-							outcome = 'SAC B:out R:adv';
-							rating[i] = 2;
-							break;
-						}
-					} else {
-						outcome = 'SAC B:safe R:adv';
-						rating[i] = 1;
-						break;
-					}
-				} else if (hand[i].faceCard) { // connect is #1-10						
-					outcome = 'HOMERUN';
-					rating[i] = 1;
-					break;
-				} else {
-					// berekening van eindresultaat obv biede #1-10 kaarten
-					outcome = ': ' + outcome + optionResult;
-					if (eqSuit) { // dezelfde suit
-						optionResult = optionResult * 1;
-						outcome = outcome + ' * 1 = ' + optionResult // + ' <=> eqSuit';
-					} else if (eqColor) { // dezelfde kleur
-						optionResult = optionResult * 2;
-						outcome = outcome + ' * 2 = ' + optionResult // + ' <=> eqColor';
-					} else {
-						optionResult = optionResult * 3; // andere kleur
-						outcome = outcome + ' * 3 = ' + optionResult  //+ ' <=> NOT eqSuit or eqColor';
-					}
-
-					switch (true) {
-						case (optionResult > 9):
-							outcome = 'HOMERUN' + outcome;
-							rating[i] = 1;
-							break;
-						case (optionResult > 7):
-							outcome = 'TRIPLE' + outcome;
-							rating[i] = 2;
-							break;
-						case (optionResult > 5):
-							outcome = 'DOUBLE' + outcome;
-							rating[i] = 3;
-							break;
-						case (optionResult > 3):
-							outcome = 'SINGLE' + outcome;
-							rating[i] = 4;
-							break;
-						case (optionResult >= 0):
-							outcome = 'OUT' + outcome;
-							rating[i] = 5;
-							break;
-						default:
-							outcome = '#NA#';
-							rating[i] = 0;
-							break;
-					}
-				}
-				break;
-			default:
-				outcome = '#NA#';
-				rating[i] = 0;
-				break;
-		} // end switch options on atBatStatus (oude versie)
-		*/
-
-		if (objOtherPlay.length > 0) {// de bovenste kaart van tegenspeler checken op companion-card
+		// de bovenste kaart van tegenspeler checken op companion-card
+		if (objOtherPlay.length > 0) {
 			if ((hand[i].rank === objOtherPlay.topCard().rank)
 				&& (hand[i].suit != objOtherPlay.topCard().suit) 
 				&& (hand[i].color === objOtherPlay.topCard().color) ) {
@@ -899,7 +768,7 @@ function playerAI () {
 	let thinking = 0;
 	thinking = 2000 + Math.random() * 2000;
 	console.log('AI thinking for atBatStatus: ', atBatStatus);
-	sendMessage('AI is thinking');
+	//sendMessage('AI is thinking');
 	//await sleep(thinking);
 	playAICard(objHand[maxRatingAIId]);
 	checkPlayAIFlag = false; // flag uit zetten (aan in checkAtBat)

@@ -348,12 +348,12 @@ function checkInning() {
 			}
 			numOuts = 0;
 			newBatter();
-			if (objHand.length > 6 || objOtherHand.length > 6) {
+			/* if (objHand.length > 6 || objOtherHand.length > 6) {
 				atBatStatus = 'decrease'
 				sendMessage('decrease to 6 cards');
 				// ??? moet dat wisselen van die spelers ???
 				turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
-			}
+			} */
 			$('#hNB').hide(); // NB-knoppen verwijderen
 			$('#vNB').hide();
 			$('#hRP').hide(); // RP knoppen verwijderen
