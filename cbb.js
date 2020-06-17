@@ -148,7 +148,7 @@ $('#toggleCards').click(function () {
 $('#deal').click(function () {
 	//Deck has a built in method to deal to hands.
 	maxInnings = document.getElementById('iMaxInnings').value;
-	console.log('Max Innings: ', maxInnings);
+	console.log('[deal] Max Innings: ', maxInnings);
 	$('#deal').hide();
 	$('#aiDeal').hide();
 	$('#lblMaxInnings').hide();
@@ -253,7 +253,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 
 	// bepalen of de AI-player aan de beurt is om een kaart te spelen
 	if (playAI && turnVisitor && checkPlayAIFlag) {
-		console.log('playerAI will think and play');
+		console.log('[playCard] playerAI will think and play');
 		playerAI();
 	}
 
@@ -263,7 +263,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	// bepalen welke kaart door de HUMAN-player wordt geclickt om te spelen
 	objHand.click(function (card) {
 		document.getElementById("messageboard").innerHTML = "";
-		console.log('Human plays: ', card);
+		console.log('[playCard] Human plays: ', card);
 		let playable = false
 		for (i = 0; i < objHand.length; i++) { // om te testen of de geklikte card van de play-Hand is
 			if (card === objHand[i]) {
@@ -303,7 +303,7 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
  * controleren van de slagbeurt (pitch2pitch)
  */
 function checkAtBat() {
-	console.log('Inside checkAtBat');
+	console.log('[checkAtBat] Inside checkAtBat');
 	checkOptionsFlag = true; // vlag terugzetten zodat deze volgende keer met playCard kan worden uitgevoerd
 	if (playAI) { checkPlayAIFlag = true;} // aan zetten voor de volgende AI-play
 	checkFaceCardsFlag = true // vlag terugzetten
@@ -324,11 +324,11 @@ function checkAtBat() {
  * controlen van de  inning
  */
 function checkInning() {
-	console.log('Inside checkInning');
+	console.log('[checkInning] Inside checkInning');
 	if (inning <= maxInnings) {
 		if (numOuts === 1) {
 			sendMessage('3-OUTS Change fields')
-			console.log('3-OUTS Change fields');
+			console.log('[checkInning] 3-OUTS Change fields');
 			if (vAtBat) {
 				vAtBat = false;
 				hAtBat = true;
@@ -367,7 +367,7 @@ function checkInning() {
  * Nieuwe slagman
  */
 function newBatter() {
-	console.log('New Batter');
+	console.log('[newBatter] New Batter');
 	sendMessage('New Batter');
 	atBatStatus = 'pitch';
 	if (vAtBat) {
@@ -740,6 +740,7 @@ function newBatter() {
  * met atBatStatus
  */
 async function changePlayer() {
+	console.log('[changePlayer]');
 
 	if (turnHome) {
 		turnVisitor = true;
@@ -749,7 +750,7 @@ async function changePlayer() {
 		objPlay = visitorPlay;
 		objOtherHand = homeHand;
 		objOtherPlay = homePlay;
-		console.log('Change player from turnHome to turnVisitor');
+		console.log('[changePlayer] Change player from turnHome to turnVisitor');
 		await sleep(1000);
 	} else {
 		turnHome = true;
@@ -759,7 +760,7 @@ async function changePlayer() {
 		objPlay = homePlay;
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
-		console.log('Change player from turnVisitor to turnHome');
+		console.log('[changePlayer] Change player from turnVisitor to turnHome');
 		await sleep(1000);
 	}
 }
@@ -769,6 +770,7 @@ async function changePlayer() {
  * @param {*} card 
  */
 function validateCard(card) {
+	console.log('[validateCard]');
 	let optionResult = 0 ; //mogelijk straks weer weghalen
 	let outcomeText = '';
 	//console.log('============================ inside validateCard', card);
@@ -908,7 +910,7 @@ function validateCard(card) {
  * @param {*} outcome 
  */
 async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCard 
-	console.log('==============================>>>>> inside executePlay with outcome: ', outcome);
+	console.log('[executePlay] ==============================>>>>> inside executePlay with outcome: ', outcome);
 	await sleep(2000);
 	switch (outcome) {
 		case ('swing') :
@@ -1052,6 +1054,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 }
 
 function addHitsInning() {
+	console.log('[addHitsInning]');
 	vAtBat ? vHits++ : hHits++;
 	hitsInning++;
 }

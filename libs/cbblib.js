@@ -3,6 +3,7 @@
  * waar cards.js niet in voorziet
  */
 function addCardProperties() {
+	console.log('[addCardProperties]');
 	for (card of deck) {
 		switch (card.suit) {
 			case 'd':
@@ -51,6 +52,7 @@ function addCardProperties() {
 } // einde addCardProperties
 
 function createScoreBoard(maxScoreInnings) {
+	console.log('[createScoreBoard]');
 	let tbody = '';
 
     tbody += '<table id="scoreboard">\n'
@@ -88,10 +90,11 @@ function createScoreBoard(maxScoreInnings) {
  * Deck controleren op het aantal kaarten
  */
 function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
+	console.log('[checkDeck]');
 	if (deck.length < 7) {
-		console.log('Het worden er te weinig')
+		console.log('[checkDeck] Het worden er te weinig')
 		moveCards(discardPile, deck);
-		console.log('Shuffle deck');
+		console.log('[checkDeck] Shuffle deck');
 		shuffle(deck);
 	}
 }
@@ -103,6 +106,7 @@ function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
  * @param {*} deck 
  */
 function shuffle(deck) {
+	console.log('[shuffle]');
 	//Fisher yates shuffle
 	var i = deck.length;
 	if (i == 0) return;
@@ -118,6 +122,7 @@ function shuffle(deck) {
 
 
 function countCards() {
+	console.log('[countCards]');
 	console.log('==> atBatStatus: ', atBatStatus);
 	console.log('==> vAtBat: ' + vAtBat + ' | hAtBat: ' + hAtBat);
 	console.log('==> turnVisitor: ' + turnVisitor + ' | turnHome: ' + turnHome);
@@ -126,6 +131,7 @@ function countCards() {
 }
 
 async function cleanRefill() {
+	console.log('[cleanRefill]');
 	if (objPlay.length > 0) {
 		moveCards(objPlay, discardPile);
 		await sleep(1000);
@@ -150,6 +156,7 @@ async function cleanRefill() {
  * @param {*} fillHand 
  */
 function refillHand(fillHand) {
+	console.log('[refillHand]');
 	fillHand.addCard(deck.topCard());
 	fillHand.render();
 	deck.render();
@@ -163,6 +170,7 @@ function refillHand(fillHand) {
  * @param {*} to 
  */
 function moveCards(from, to) {
+	console.log('[moveCards]');
 	for (let i = 0; i < from.length; i++) {
 		to.addCard(from[i]);
 		i--; // de from stapel-length wordt steeds kleiner ...
@@ -191,6 +199,7 @@ function sleep(ms) {
  * voor beslisboom
  */
 function detEquals() {
+	console.log('[detEquals]');
 	eqRank = false;
 	eqSuit = false;
 	eqColor = false;
@@ -213,6 +222,7 @@ function detEquals() {
  * @param {*} hand 
  */
 function detOptionEquals(hand) {
+	console.log('[detOptionEquals]');
 	// checks op de topCards van elke speler
 	eqRank = false;
 	eqSuit = false;
@@ -235,6 +245,7 @@ function detOptionEquals(hand) {
  * Face, COmpanion en Denomination
  */
 function countCategories() {
+	console.log('[countCategories]');
 	//TODO Denom wordt verkeerd geteld, maar is volgens mij niet erg...
 	// het gaat erom dat ik weet dat ze bestaan...denk ik
 	// voor visitorHand
@@ -283,7 +294,7 @@ function countCategories() {
  * @param {*} play 
  */
 function moveRunners(play) { // TODO walk = true bij 4-wijd...
-	//console.log('inside moveRunners');
+	console.log('[moveRunners]');
 	//console.log('play:', play);
 
 	// lopers tegelijkertijd en honk-voor-honk laten lopen.
@@ -324,7 +335,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 			moveOnSac('sacBSRA');
 			break;
 		default:
-			console.log('moveRunners default');
+			console.log('[moveRunners] moveRunners default');
 			break;
 	}
 	renderRunners();
@@ -336,6 +347,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
  * @param {*} bases 
  */
 async function moveOnHit(bases) {
+	console.log('[moveOnHit]');
 	for (var b = 3; b >= 0; b--) {
 		if (baseRunners[b] == 1) {
 			if (b + bases >= 4) {
@@ -364,6 +376,7 @@ async function moveOnHit(bases) {
  * obv WALK
  */
 function moveOnWalk() { 
+	console.log('[moveOnWalk]');
 	// EIGENLIJK DEZELFDE ALS moveOnHBP ... DUS UNIVERSEEL MAKEN
 	// verschillende situaties honken bezetting met case afwerken
 	// geeft mogelijkheid van een break en uitslag is uniek
@@ -395,8 +408,7 @@ function moveOnWalk() {
  * obv HBP (als WALK)
  */
 function moveOnHBP() {
-	console.log('Inside moveOnHBP');
-	console.log('Hetzelfde als moveOnWalk');
+	console.log('[moveOnHBP] Inside moveOnHBP === moveOnWalk');
 	moveOnWalk(); // vandaar dat we die gewoon aanroepen
 }
 
@@ -419,7 +431,7 @@ function moveOnSac(sac) {
 			// of AB => OUT ... of toch SQUEEZE toestaan ??
 			numOuts += 1;
 		} */
-	console.log('moveOnSac(' + sac + ')');	
+	console.log('[moveOnSac] moveOnSac(' + sac + ')');	
 			
 	switch (true) {
 		case ((baseRunners[1] == 1 && baseRunners[2] == 0 && baseRunners[3] == 0)
@@ -520,6 +532,7 @@ function moveOnSac(sac) {
  * en uitvoering
  */
 function playError() {
+	console.log('[playError]');
 	// Error-card in OFFENSE-HAND en toepassen ??
 	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
@@ -547,6 +560,7 @@ function playError() {
  * en uitvoering
  */
 function playCatchFoul() {
+	console.log('[playCatchFoul]');
 	// CatchFoul-card in DEFFENSE-HAND en toepassen ??
 	for (let i = 0; i < objOtherHand.length; i++) {
 		if (objOtherHand[i].rank === objPlay.topCard().rank
@@ -568,7 +582,7 @@ function playCatchFoul() {
 			//refillHand(objHand);
 
 			// BATTER = OUT!
-			console.log('FOUL caught - OUT');
+			console.log('[playCatchFoul] FOUL caught - OUT');
 			sendMessage('FOUL caught - OUT');
 			numStrikes = 0;
 			numBalls = 0;
@@ -587,7 +601,7 @@ function playCatchFoul() {
  * Renderen van de honklopers
  */
 function renderRunners() {
-	console.log('renderRunner', baseRunners)
+	console.log('[renderRunner] renderRunners', baseRunners)
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[4].cells
 
@@ -623,6 +637,7 @@ function renderRunners() {
  * @param {*} atBatStatus 
  */
 function displayStatus (atBatStatus) {
+	console.log('[displayStatus]');
 	if (turnHome) {
 		$("#home").css("background-color", "red");
 		$("#home").val(atBatStatus);
@@ -641,6 +656,7 @@ function displayStatus (atBatStatus) {
  * verversen van de gegevens op het scoreboard
  */
 function updateScoreboard() { // een-op-een van solitaire overgenomen
+	console.log('[updateSCoreboard]');
 	// update inning in cell rij 0 kolom maxInnings + 7
 	var inn = document.getElementById("scoreboard").rows[0].cells;
 	inn[parseInt(maxInnings) + 7 ].innerHTML = inning;
@@ -700,6 +716,7 @@ function sendMessage(message) {
  * @param {*} hand 
  */
 function checkOptions(hand) {
+	console.log('[checkOptions]');
 	let outcome = '';
 	let option = '';
 	let rating = [];
@@ -716,8 +733,8 @@ function checkOptions(hand) {
 	// dezelfde controles uitvoeren op de kaart
 	// en het resultaat bepalen
 
-	console.log('checkOptions atBatstatus = ', atBatStatus);
-	console.log('turnHome: ' + turnHome + ' // playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor)
+	console.log('[checkOptions] atBatstatus = ', atBatStatus);
+	console.log('[checkOptions] turnHome: ' + turnHome + ' // playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor)
 	
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
@@ -758,22 +775,22 @@ function checkOptions(hand) {
  */
 function playerAI () {
 	let ratingAI = checkOptions(objHand);
-	console.log(ratingAI);
-	console.log('playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
+	console.log('[playerAI] ', ratingAI);
+	console.log('[playerAI] playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
 	let maxRatingAI = 0;
 	let maxRatingAIId = 0;
 	for (let i = 0; i < objHand.length; i++) {
-		console.log(i + ': ' + ratingAI[i] + ' => ' + objHand[i].shortName)
+		console.log('[playerAI] ',i + ': ' + ratingAI[i] + ' => ' + objHand[i].shortName)
 		if (ratingAI[i] > maxRatingAI) {
 			maxRatingAI = ratingAI[i];
 			maxRatingAIId = i;
 		}
 	}		
-	console.log('maxRatingAI = ', maxRatingAI);
-	console.log('maxRatingAIId = ', maxRatingAIId);
+	console.log('[playerAI] maxRatingAI = ', maxRatingAI);
+	console.log('[playerAI] maxRatingAIId = ', maxRatingAIId);
 	let thinking = 0;
 	thinking = 2000 + Math.random() * 2000;
-	console.log('AI thinking for atBatStatus: ', atBatStatus);
+	console.log('[playerAI] AI thinking for atBatStatus: ', atBatStatus);
 	//sendMessage('AI is thinking');
 	//await sleep(thinking);
 	playAICard(objHand[maxRatingAIId]);
@@ -788,7 +805,7 @@ function playerAI () {
  * @param {*} aiCard 
  */
 function playAICard(aiCard){
-	console.log ('AI plays: ', aiCard);
+	console.log ('[playAICard] AI plays: ', aiCard);
 	objPlay.addCard(aiCard);
 	objPlay.render();
 	objHand.render();
@@ -801,6 +818,7 @@ function playAICard(aiCard){
  * @param {*} hand 
  */
 function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
+	console.log('[checkNumFaceCards]');
 	checkFaceCardsFlag = false;
 
 	let numFaceCards = 0
@@ -822,7 +840,7 @@ function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
  */
 function checkReliever() {
 	checkRelieverFlag = false;
-	console.log('check Reliever');
+	console.log('[checkReliever]');
 	vAtBat ? $('#hRP').show() : $('vRP').show();
 }
 
@@ -838,7 +856,7 @@ function sendOption(option) {
  * EINDE WEDSTRIJD
  */
 function gameOver() {
-	console.log('GAME OVER');
+	console.log('[gameOver]');
 	sendMessage('GAME OVER');
 }
 
