@@ -326,7 +326,7 @@ function checkAtBat() {
 function checkInning() {
 	console.log('[checkInning] Inside checkInning');
 	if (inning <= maxInnings) {
-		if (numOuts === 1) {
+		if (numOuts === 3) {
 			sendMessage('3-OUTS Change fields')
 			console.log('[checkInning] 3-OUTS Change fields');
 			if (vAtBat) {
@@ -373,9 +373,17 @@ function newBatter() {
 	if (vAtBat) {
 		turnHome = true;
 		turnVisitor = false;
+		objHand = homeHand;
+		objPlay = homePlay;
+		objOtherHand = visitorHand;
+		objOtherPlay = visitorPlay;
 	} else {
 		turnVisitor = true;
 		turnHome = false;
+		objHand = visitorHand;
+		objPlay = visitorPlay;
+		objOtherHand = homeHand;
+		objOtherPlay = homePlay;
 	}
 	displayStatus(atBatStatus);
 	numBalls = 0;
@@ -776,9 +784,6 @@ function validateCard(card) {
 	//console.log('============================ inside validateCard', card);
 	//console.log('============================ objOtherPlayCard   ', objOtherPlay.topCard());
 
-	// check Deck op aantal kaarten
-	checkDeck();
-
 	switch (atBatStatus) {
 		case 'pitch':
 			if (card.faceCard) {
@@ -911,6 +916,8 @@ function validateCard(card) {
  */
 async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCard 
 	console.log('[executePlay] ==============================>>>>> inside executePlay with outcome: ', outcome);
+	// check Deck op aantal kaarten
+	checkDeck();
 	await sleep(2000);
 	switch (outcome) {
 		case ('swing') :
