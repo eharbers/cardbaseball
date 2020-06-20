@@ -360,6 +360,8 @@ function moveOnHit(bases) {
 				baseRunners[b + bases] = baseRunners[b];
 				baseRunners[b] = 0;
 				
+
+				/*
 				$('#runner1B').hide();
 				//$('#runner2B').hide();
 				$('#runner3B').hide();
@@ -367,6 +369,7 @@ function moveOnHit(bases) {
 				//move1B2B("runnerAB");
 				//move1B2B("runner1B");
 				move2B3B("runner2B");
+				*/
 			}
 		}
 	}
@@ -772,7 +775,11 @@ function checkOptions(hand) {
 		symbolRank = hand[i].symbol + hand[i].letter;
 
 		option = option + ' ' + symbolRank + ' ' + indComp + ' => (' + ratingNew[i] + ') ' + indFly + ' ' + outcomeNew[i] + '&#013';
-		sendOption(option);
+		if (playAI && turnVisitor && showCards == false) {
+			sendOption("");
+		} else {
+			sendOption(option);
+		}
 	}
 	return ratingNew;
 } // end checkOptions

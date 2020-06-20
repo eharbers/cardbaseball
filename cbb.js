@@ -168,7 +168,7 @@ $('#deal').click(function () {
 	$('#iMaxInnings').hide();
 
 	createScoreBoard(maxInnings);
-	createDiamond();
+	//createDiamond();
 
 	deck.deal(6, [visitorHand, homeHand], 50, function () {
 		//This is a callback function, called when the dealing
