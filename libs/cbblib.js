@@ -64,19 +64,19 @@ function createScoreBoard(maxScoreInnings) {
     tbody += '<th>X</th><th>R</th><th>H</th><th>E</th><th>||</th><th>I:</th><th>0</th>\n';
     tbody += '</tr>\n';
     // row 1
-    tbody += '<tr>\n<td>V</td>';
+    tbody += '<tr>\n<td>VST</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
         tbody += '<td></td>';
     }
     tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>B:</td><td>0</td>\n'
     // row 2
-    tbody += '<tr>\n<td>H</td>';
+    tbody += '<tr>\n<td>HME</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
         tbody += '<td></td>';
     }
     tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>S:</td><td>0</td>\n'
     // row 3
-    tbody += '<tr>\n<td></td>';
+    tbody += '<tr>\n<td>AB #</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
         tbody += '<td></td>';
     }
@@ -182,7 +182,7 @@ function moveCards(from, to) {
 // sitepoint sleep function met async ...await
 // https://www.sitepoint.com/delay-sleep-pause-wait/
 // de functie die een slaapmoment moet hebben wordt vooraf gegaan met async
-// zoals de playValidate-function
+// zoals de playValidate-function was... :-) 
 // in de functie wordt het slaapmoment aangeroepen met await sleep(ms)
 // zie de movecards aanroepen
 /**
@@ -345,7 +345,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
  * obv aantal honken uit honkslag
  * @param {*} bases 
  */
-async function moveOnHit(bases) {
+function moveOnHit(bases) {
 	console.log('[moveOnHit]');
 	for (var b = 3; b >= 0; b--) {
 		if (baseRunners[b] == 1) {
@@ -360,11 +360,12 @@ async function moveOnHit(bases) {
 				baseRunners[b] = 0;
 				baseRunners[b + bases] = 1;
 				$('#runner1B').hide();
-				$('#runner2B').hide();
+				//$('#runner2B').hide();
 				$('#runner3B').hide();
-				await moveAB1B("runnerAB");
-				await move1B2B("runnerAB");
-				//move2B3B("runner1B");
+				moveAB1B("runnerAB");
+				//move1B2B("runnerAB");
+				//move1B2B("runner1B");
+				move2B3B("runner2B");
 			}
 		}
 	}
@@ -382,7 +383,7 @@ function moveOnWalk() {
 	// variant verzinnen op gedwongen opschuiven of door hit (of deze toch apart afhandelen)
 	if (baseRunners[1] == 1) {  // 1B bezet
 		if (baseRunners[2] == 1) { // 1B 2B bezet
-			if (baseRunners[3 ] == 1) { // 1B 2B 3B bezet
+			if (baseRunners[3] == 1) { // 1B 2B 3B bezet
 				baseRunners[3] = 0;
 				if (vAtBat) { //visitor scoort...
 					vRun[inning]++;
@@ -654,7 +655,7 @@ function displayStatus (atBatStatus) {
 /**
  * verversen van de gegevens op het scoreboard
  */
-function updateScoreboard() { // een-op-een van solitaire overgenomen
+function updateScoreboard() { 
 	console.log('[updateSCoreboard]');
 	// update inning in cell rij 0 kolom maxInnings + 7
 	var inn = document.getElementById("scoreboard").rows[0].cells;
@@ -700,6 +701,15 @@ function updateScoreboard() { // een-op-een van solitaire overgenomen
 	// update errors in cell rij 2 kolom maxInnings + 4
 	var hError = document.getElementById("scoreboard").rows[2].cells;
 	hError[parseInt(maxInnings) + 4 ].innerHTML = hErrors;
+
+	// current batter
+	if (vAtBat) {
+		var currAB = document.getElementById("scoreboard").rows[3].cells;
+		currAB[1].innerHTML = currentVisitorBatter;
+	} else {
+		var currAB = document.getElementById("scoreboard").rows[3].cells;
+		currAB[1].innerHTML = currentHomeBatter;
+	}
 }
 
 /**
@@ -896,33 +906,35 @@ function moveAnimRunners() {
 }
 
 function moveAB1B(runner) {
-  var elem = document.getElementById(runner);   
-  var xposAB = 150;
-  var yposAB = 150;
-  var id = setInterval(frame, 5);
-  function frame() {
-    if (xposAB == 0) {
-      clearInterval(id);
-    } else {
-      xposAB--; 
-      elem.style.top = xposAB + 'px';  
-    }
-  }
+	console.log('[moveAB1B]');
+	var elem = document.getElementById(runner);   
+	var xposAB = 150;
+	var yposAB = 150;
+	var id = setInterval(frame, 5);
+	function frame() {
+		if (xposAB == 0) {
+		clearInterval(id);
+		} else {
+		xposAB--; 
+		elem.style.top = xposAB + 'px';  
+		}
+	}
 }
 
 function move1B2B(runner) {
-  var elem = document.getElementById(runner);  
-  var xpos1B = 150; 
-  var ypos1B = 0;
-  var id = setInterval(frame, 5);
-  function frame() {
-    if (xpos1B == 0) {
-      clearInterval(id);
-    } else {
-      xpos1B--; 
-      elem.style.left = xpos1B + 'px'; 
-    }
-  }
+	console.log('[move1B2B]');
+	var elem = document.getElementById(runner);  
+	var xpos1B = 150; 
+	var ypos1B = 0;
+	var id = setInterval(frame, 5);
+	function frame() {
+		if (xpos1B == 0) {
+		clearInterval(id);
+		} else {
+		xpos1B--; 
+		elem.style.left = xpos1B + 'px'; 
+		}
+	}
 }
 
 function move2B3B(runner) {

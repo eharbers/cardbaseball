@@ -54,6 +54,19 @@ let numOuts = 0;
 let halfInning = 0;
 let inning = 0;
 
+// slagvolgordes vullen
+let vBatter = [];
+for (i=1; i<=9; i++) {
+	vBatter[i] = '#' + i;
+}
+let currentVisitorBatter = 1;
+
+let hBatter = [];
+for (i=1; i<= 9; i++) {
+	hBatter[i] = '#' + i;
+}
+let currentHomeBatter = 1;
+
 // voor de bepaling van wie OFFENSE en wie DEFENSE is
 let vAtBat = true;
 let hAtBat = false;
@@ -279,8 +292,6 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 			objPlay.render();
 			objHand.render();
 			deck.render();
-			
-			//playValidate(); // oude versie
 
 			// de nieuwe versie(s)
 			detEquals(); //voordat validateCard wordt aangeroepen
@@ -369,9 +380,14 @@ function checkInning() {
  */
 function newBatter() {
 	console.log('[newBatter] New Batter');
-	sendMessage('New Batter');
 	atBatStatus = 'pitch';
 	if (vAtBat) {
+		if (currentVisitorBatter < 9) {
+			currentVisitorBatter += 1;
+		} else {
+			currentVisitorBatter = 1;
+		}
+		sendMessage('New Batter &#013 #' + currentVisitorBatter);
 		turnHome = true;
 		turnVisitor = false;
 		objHand = homeHand;
@@ -379,6 +395,12 @@ function newBatter() {
 		objOtherHand = visitorHand;
 		objOtherPlay = visitorPlay;
 	} else {
+		if (currentHomeBatter < 9) {
+			currentHomeBatter += 1;
+		} else {
+			currentHomeBatter = 1;
+		}
+		sendMessage('New Batter &#013 #' + currentHomeBatter);
 		turnVisitor = true;
 		turnHome = false;
 		objHand = visitorHand;
