@@ -348,7 +348,7 @@ function moveRunners(play) { // TODO walk = true bij 4-wijd...
 function moveOnHit(bases) {
 	console.log('[moveOnHit]');
 	for (var b = 3; b >= 0; b--) {
-		if (baseRunners[b] == 1) {
+		if (baseRunners[b] != 0) {
 			if (b + bases >= 4) {
 				baseRunners[b] = 0;
 				if (vAtBat) { //visitor scoort...
@@ -357,8 +357,9 @@ function moveOnHit(bases) {
 					hRun[inning]++;
 				}
 			} else {
+				baseRunners[b + bases] = baseRunners[b];
 				baseRunners[b] = 0;
-				baseRunners[b + bases] = 1;
+				
 				$('#runner1B').hide();
 				//$('#runner2B').hide();
 				$('#runner3B').hide();
@@ -381,26 +382,26 @@ function moveOnWalk() {
 	// verschillende situaties honken bezetting met case afwerken
 	// geeft mogelijkheid van een break en uitslag is uniek
 	// variant verzinnen op gedwongen opschuiven of door hit (of deze toch apart afhandelen)
-	if (baseRunners[1] == 1) {  // 1B bezet
-		if (baseRunners[2] == 1) { // 1B 2B bezet
-			if (baseRunners[3] == 1) { // 1B 2B 3B bezet
+	if (baseRunners[1] != 0) {  // 1B bezet
+		if (baseRunners[2] != 0) { // 1B 2B bezet
+			if (baseRunners[3] != 0) { // 1B 2B 3B bezet
 				baseRunners[3] = 0;
 				if (vAtBat) { //visitor scoort...
 					vRun[inning]++;
 				} else { // home scoort
 					hRun[inning]++;
 				}
+				baseRunners[3] = baseRunners[2];
 				baseRunners[2] = 0; // 1B 2B bezet
-				baseRunners[3] = 1;
 			}
-			baseRunners[2] = 0; // 2B bezet
-			baseRunners[3] = 1;
+			baseRunners[3] = baseRunners[2];
+			baseRunners[2] = 0; // 1B 2B bezet
 		}
-		baseRunners[1] = 0; // 1B bezet
-		baseRunners[2] = 1;
+		baseRunners[2] = baseRunners[1]; // 1B bezet
+		baseRunners[1] = 0;
 	}
 	// baseRunners[0] = 0; laten staan ... anders is er geen AB meer, die eigenlijk bij new AB hoort
-	baseRunners[1] = 1; // 0B (en alle anderen)
+	baseRunners[1] = baseRunners[0]; // 0B (en alle anderen)
 }
 
 /**
@@ -434,8 +435,8 @@ function moveOnSac(sac) {
 	console.log('[moveOnSac] moveOnSac(' + sac + ')');	
 			
 	switch (true) {
-		case ((baseRunners[1] == 1 && baseRunners[2] == 0 && baseRunners[3] == 0)
-			|| (baseRunners[1] == 1 && baseRunners[2] == 0 && baseRunners[3] == 1)): // 1B of 1B & 3B
+		case ((baseRunners[1] != 0 && baseRunners[2] == 0 && baseRunners[3] == 0)
+			|| (baseRunners[1] != 0 && baseRunners[2] == 0 && baseRunners[3] != 0)): // 1B of 1B & 3B
 			switch (sac) {
 				case 'sacDP': // facecard same suit
 				baseRunners[1] = 0; // 1B: OUT
@@ -444,59 +445,59 @@ function moveOnSac(sac) {
 				numOuts += 2;
 				break;
 			case 'sacBORA': // facecard other suit
+				baseRunners[2] = baseRunners[1]; // 1B => 2B	
 				baseRunners[1] = 0;
-				baseRunners[2] = 1; // 1B => 2B
 
 				baseRunners[0] = 0; // AB: OUT
 				numOuts += 1;
 				break;
 			case 'sacBSRA': // #-card (any)
+				baseRunners[2] = baseRunners[1]; // 1B => 2B	
 				baseRunners[1] = 0;
-				baseRunners[2] = 1; // 1B => 2B
 
+				baseRunners[1] = baseRunners[0]; // AB => 1B
 				baseRunners[0] = 0;
-				baseRunners[1] = 1; // AB => 1B
 				break;
 			default:
 				break;
 			}			
 			break;
-		case (baseRunners[1] == 1 && baseRunners[2] == 1 && baseRunners[3] == 0) : // 1B && 2B
+		case (baseRunners[1] != 0 && baseRunners[2] != 0 && baseRunners[3] == 0) : // 1B && 2B
 			switch (sac) {
 				case 'sacDP': // facecard same suit
 					baseRunners[2] = 0; // 2B: OUT
 
+					baseRunners[2] = baseRunners[1]; // 1B => 2B
 					baseRunners[1] = 0;
-					baseRunners[2] = 1; // 1B => 2B
 
 					baseRunners[0] = 0; // AB: OUT
 					numOuts += 2;
 					break;
 				case 'sacBORA': // facecard other suit
+					baseRunners[3] = baseRunners[2]; // 2B => 3B
 					baseRunners[2] = 0;
-					baseRunners[3] = 1; // 2B => 3B
 
-					baseRunners[1] = 0;
-					baseRunners[2] = 1; // 1B => 2B
+					baseRunners[2] = baseRunners[1]; // 1B => 2B
+					baseRunners[1] = 0;					
 
 					baseRunners[0] = 0; // AB: OUT
 					numOuts += 1;
 					break;
 				case 'sacBSRA': // #-card (any)
-					baseRunners[2] = 0;
-					baseRunners[3] = 1; // 2B => 3B
+					baseRunners[3] = baseRunners[2]; // 2B => 3B
+					baseRunners[2] = 0;					
 
-					baseRunners[1] = 0;
-					baseRunners[2] = 1; // 1B => 2B
+					baseRunners[2] = baseRunners[1]; // 1B => 2B
+					baseRunners[1] = 0;					
 
-					baseRunners[0] = 0;
-					baseRunners[1] = 1; // AB => 1B
+					baseRunners[1] = baseRunners[0]; // AB => 1B
+					baseRunners[0] = 0;					
 					break;
 				default:
 					break;
 			}
 			break;
-		case (baseRunners[1] == 0 && baseRunners[2] == 1 && baseRunners[3] == 0) : // 2B
+		case (baseRunners[1] == 0 && baseRunners[2] != 0 && baseRunners[3] == 0) : // 2B
 			switch (sac) {
 				case 'sacDP': // facecard same suit
 					baseRunners[2] = 0; // 2B: OUT
@@ -505,15 +506,15 @@ function moveOnSac(sac) {
 					numOuts += 2;
 					break;
 				case 'sacBORA': // facecard other suit
+					baseRunners[3] = baseRunners[2]; // 2B => 3B
 					baseRunners[2] = 0;
-					baseRunners[3] = 1; // 2B => 3B
 
 					baseRunners[0] = 0; // AB: OUT
 					numOuts += 1;
 					break;
 				case 'sacBSRA': // #-card (any)
+					baseRunners[3] = baseRunners[2]; // 2B => 3B
 					baseRunners[2] = 0;
-					baseRunners[3] = 1; // 2B => 3B
 
 					baseRunners[0] = 0;
 					baseRunners[1] = 1; // AB => 1B
@@ -605,26 +606,26 @@ function renderRunners() {
 	var topRow = document.getElementById("bases").rows[0].cells
 	var bottomRow = document.getElementById("bases").rows[4].cells
 
-	if (baseRunners[3] == 1) {
-		bottomRow[0].innerHTML = "3B";
+	if (baseRunners[3] != 0) {
+		bottomRow[0].innerHTML = baseRunners[3];
 	} else {
 		bottomRow[0].innerHTML = "O";
 	}
 
-	if (baseRunners[2] == 1) {
-		topRow[0].innerHTML = "2B";
+	if (baseRunners[2] != 0) {
+		topRow[0].innerHTML = baseRunners[2];
 	} else {
 		topRow[0].innerHTML = "O";
 	}
 
-	if (baseRunners[1] == 1) {
-		topRow[5].innerHTML = "1B";
+	if (baseRunners[1] != 0) {
+		topRow[5].innerHTML = baseRunners[1];
 	} else {
 		topRow[5].innerHTML = "O";
 	}
 
-	if (baseRunners[0] == 1) {
-		bottomRow[5].innerHTML = "AB";
+	if (baseRunners[0] != 0) {
+		bottomRow[5].innerHTML = vAtBat ? vBatter[currentVisitorBatter] : hBatter[currentHomeBatter];
 	} else {
 		bottomRow[5].innerHTML = "O";
 	} 

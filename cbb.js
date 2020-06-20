@@ -66,7 +66,7 @@ for (i=1; i<= 9; i++) {
 	hBatter[i] = '#' + i;
 }
 let currentHomeBatter = 1;
-
+sendMessage('New Batter &#013 #' + currentVisitorBatter);
 // voor de bepaling van wie OFFENSE en wie DEFENSE is
 let vAtBat = true;
 let hAtBat = false;
@@ -180,7 +180,7 @@ $('#deal').click(function () {
 		inning = 1;
 		vRun.push(0); // de top first wordt gevuld met 0. geeft de actieve slagbeurt aan
 		updateScoreboard();
-		baseRunners[0] = 1;
+		baseRunners[0] = vAtBat ? vBatter[currentVisitorBatter] : hBatter[currentHomeBatter];
 		renderRunners();
 		countCategories();
 		checkOptionsFlag = true;
@@ -388,6 +388,7 @@ function newBatter() {
 			currentVisitorBatter = 1;
 		}
 		sendMessage('New Batter &#013 #' + currentVisitorBatter);
+		baseRunners[0] = vBatter[currentVisitorBatter];
 		turnHome = true;
 		turnVisitor = false;
 		objHand = homeHand;
@@ -401,6 +402,7 @@ function newBatter() {
 			currentHomeBatter = 1;
 		}
 		sendMessage('New Batter &#013 #' + currentHomeBatter);
+		baseRunners[0] = hBatter[currentHomeBatter];
 		turnVisitor = true;
 		turnHome = false;
 		objHand = visitorHand;
@@ -411,8 +413,7 @@ function newBatter() {
 	displayStatus(atBatStatus);
 	numBalls = 0;
 	numStrikes = 0;
-	updateScoreboard();
-	baseRunners[0] = 1;
+	updateScoreboard();	
 	renderRunners();
 	return
 }
