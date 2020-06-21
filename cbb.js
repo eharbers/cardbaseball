@@ -1,14 +1,6 @@
 
 //Tell the library which element to use for the table
 cards.init({ table: '#card-table' });
-let playAI = false;
-let maxInnings = 9; // max aantal te spelen voordat endOfGame wordt bepaald in checkInning
-// This allows to use up and down arrows on the input, but doesn't allow keyboard input.
-$("[type='number']").keypress(function (evt) {
-    evt.preventDefault();
-});
-
-let showCards = true; // met toggleCards-button bedienen
 
 //Create a new deck of cards
 deck = new cards.Deck();
@@ -67,6 +59,7 @@ for (i=1; i<= 9; i++) {
 }
 let currentHomeBatter = 1;
 sendMessage('New Batter &#013 #' + currentVisitorBatter);
+
 // voor de bepaling van wie OFFENSE en wie DEFENSE is
 let vAtBat = true;
 let hAtBat = false;
@@ -124,6 +117,24 @@ let newBallFlag = false;
 $('#hNB').hide();
 $('#vNB').hide();
 
+// afhandelen van het klikken op home NB-button voor new balls
+$('#hNB').click(function () {
+	//console.log('hNB-clicked');
+	newBallFlag = true;
+	//console.log('newBallFlag = true');
+	atBatStatus = 'newball';
+	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+})
+
+// afhandelen van het klikken op visitor NB-button voor new balls
+$('#vNB').click(function () {
+	//console.log('vNB-clicked');
+	newBallFlag = true;
+	//console.log('newBallFlag = true');
+	atBatStatus = 'newball';
+	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+})
+
 // RP knop
 let hitsInning = 0; // minimum 2 Hits in inning voor relief pithers inzet
 let hReliever = false; // max 1 per game
@@ -132,10 +143,36 @@ let checkRelieverFlag = true; // mag er gecheckt worden
 $('#hRP').hide();
 $('#vRP').hide();
 
+// bepalen van hits per inning om RP-knop te activeren
+function addHitsInning() {
+	console.log('[addHitsInning]');
+	vAtBat ? vHits++ : hHits++;
+	hitsInning++;
+}
+
+// afhandelen van het klikken op home RP-button voor Relief Pitcher
+$('#hRP').click(function () {
+	//console.log('hRP-clicked');	
+	sendMessage('Relief Pitcher');
+	hReliever = true; // de reliever is ingezet
+	refillHand(objHand);
+	refillHand(objHand);
+})
+
+// afhandelen van het klikken op visitor RP-button voor Relief Pitcher
+$('#vRP').click(function () {
+	//console.log('hRP-clicked');	
+	sendMessage('Relief Pitcher');
+	vReliever = true; // de reliever is ingezet
+	refillHand(objHand);
+	refillHand(objHand);
+})
 
 // endOfGame indicator
 let endOfGame = false;
 
+let playAI = false;
+let showCards = true; // met toggleCards-button bedienen
 
 $('#aiDeal').click(function () {
 	playAI = true;
@@ -158,6 +195,12 @@ $('#toggleCards').click(function () {
 		$('#toggleCards').text("Hide Cards")
 	}
 })
+
+let maxInnings = 9; // max aantal te spelen voordat endOfGame wordt bepaald in checkInning
+// This allows to use up and down arrows on the input, but doesn't allow keyboard input.
+$("[type='number']").keypress(function (evt) {
+    evt.preventDefault();
+});
 
 // activeren van het spel met de DEAL button (of Play Ball)
 $('#deal').click(function () {
@@ -187,43 +230,6 @@ $('#deal').click(function () {
 		countCategories();
 		checkOptionsFlag = true;
 	});
-})
-
-
-// afhandelen van het klikken op home NB-button voor new balls
-$('#hNB').click(function () {
-	//console.log('hNB-clicked');
-	newBallFlag = true;
-	//console.log('newBallFlag = true');
-	atBatStatus = 'newball';
-	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
-})
-
-// afhandelen van het klikken op visitor NB-button voor new balls
-$('#vNB').click(function () {
-	//console.log('vNB-clicked');
-	newBallFlag = true;
-	//console.log('newBallFlag = true');
-	atBatStatus = 'newball';
-	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
-})
-
-// afhandelen van het klikken op home RP-button voor Relief Pitcher
-$('#hRP').click(function () {
-	//console.log('hRP-clicked');	
-	sendMessage('Relief Pitcher');
-	hReliever = true; // de reliever is ingezet
-	refillHand(objHand);
-	refillHand(objHand);
-})
-
-// afhandelen van het klikken op visitor RP-button voor Relief Pitcher
-$('#vRP').click(function () {
-	//console.log('hRP-clicked');	
-	sendMessage('Relief Pitcher');
-	vReliever = true; // de reliever is ingezet
-	refillHand(objHand);
-	refillHand(objHand);
 })
 
 // dit stukje code zorgt voor de game-loop
@@ -311,8 +317,6 @@ function playCard() { // kan dat ook op een 'naam' van het object-manier??
 	}); // end click objHand (of objOtherHand) 
 } // end playCard
 
-
-
 /**
  * controleren van de slagbeurt (pitch2pitch)
  */
@@ -332,7 +336,7 @@ function checkAtBat() {
 		moveRunners('walk');
 		newBatter();
 	}
-}
+} // einde checkAtBat
 
 /**
  * controlen van de  inning
@@ -421,7 +425,7 @@ function newBatter() {
 		sendMessage('New Batter &#013 #' + currentHomeBatter);
 	}
 	return
-}
+} // einde newBatter
 
 /**
  * van speelbeurt wisselen
@@ -452,7 +456,7 @@ async function changePlayer() {
 		console.log('[changePlayer] Change player from turnVisitor to turnHome');
 		await sleep(500);
 	}
-}
+} // einde changPlayer
 
 /**
  * valideren van de kaart 
@@ -595,7 +599,7 @@ function validateCard(card) {
 			break;
 	} // end switch options on atBatStatus
 	return [outcome, outcomeText, rating, optionResult];
-}
+} // einde validateCard
 
 /**
  * uitvoeren van de UITKOMST van validateCard
@@ -830,10 +834,4 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 	checkAtBat();
 	checkInning()
 	updateScoreboard();
-}
-
-function addHitsInning() {
-	console.log('[addHitsInning]');
-	vAtBat ? vHits++ : hHits++;
-	hitsInning++;
-}
+} // einde executePlay

@@ -84,7 +84,7 @@ function createScoreBoard(maxScoreInnings) {
 
     tbody += '</tr>\n</table>'
     document.getElementById('varTable').innerHTML = tbody;
-}
+} // einde createScoreBoard
 
 /**
  * Deck controleren op het aantal kaarten
@@ -241,7 +241,7 @@ function detOptionEquals(hand) {
 
 /**
  * Tellen van categorien
- * Face, COmpanion en Denomination
+ * Face, Companion en Denomination
  */
 function countCategories() {
 	console.log('[countCategories]');
@@ -532,6 +532,39 @@ function moveOnSac(sac) {
 } // end moveOnSac
 
 /**
+ * Renderen van de honklopers
+ */
+function renderRunners() {
+	console.log('[renderRunner] renderRunners', baseRunners)
+	var topRow = document.getElementById("bases").rows[0].cells
+	var bottomRow = document.getElementById("bases").rows[4].cells
+
+	if (baseRunners[3] != 0) {
+		bottomRow[0].innerHTML = baseRunners[3];
+	} else {
+		bottomRow[0].innerHTML = "O";
+	}
+
+	if (baseRunners[2] != 0) {
+		topRow[0].innerHTML = baseRunners[2];
+	} else {
+		topRow[0].innerHTML = "O";
+	}
+
+	if (baseRunners[1] != 0) {
+		topRow[5].innerHTML = baseRunners[1];
+	} else {
+		topRow[5].innerHTML = "O";
+	}
+
+	if (baseRunners[0] != 0) {
+		bottomRow[5].innerHTML = vAtBat ? vBatter[currentVisitorBatter] : hBatter[currentHomeBatter];
+	} else {
+		bottomRow[5].innerHTML = "O";
+	} 
+}
+
+/**
  * Bepalen obv OFFENSE-hand of ERROR gespeeld kan worden
  * en uitvoering
  */
@@ -580,41 +613,6 @@ function playCatchFoul() {
 		}
 	}
 }
-
-/**
- * Renderen van de honklopers
- */
-function renderRunners() {
-	console.log('[renderRunner] renderRunners', baseRunners)
-	var topRow = document.getElementById("bases").rows[0].cells
-	var bottomRow = document.getElementById("bases").rows[4].cells
-
-	if (baseRunners[3] != 0) {
-		bottomRow[0].innerHTML = baseRunners[3];
-	} else {
-		bottomRow[0].innerHTML = "O";
-	}
-
-	if (baseRunners[2] != 0) {
-		topRow[0].innerHTML = baseRunners[2];
-	} else {
-		topRow[0].innerHTML = "O";
-	}
-
-	if (baseRunners[1] != 0) {
-		topRow[5].innerHTML = baseRunners[1];
-	} else {
-		topRow[5].innerHTML = "O";
-	}
-
-	if (baseRunners[0] != 0) {
-		bottomRow[5].innerHTML = vAtBat ? vBatter[currentVisitorBatter] : hBatter[currentHomeBatter];
-	} else {
-		bottomRow[5].innerHTML = "O";
-	} 
-}
-
-
 
 /**
  * Display the current atBatStatus at current player
