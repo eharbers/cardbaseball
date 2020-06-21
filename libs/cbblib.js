@@ -659,7 +659,7 @@ function updateScoreboard() {
 	// update VISITOR score in rij 1
 	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
 		var vRunBoard = document.getElementById("scoreboard").rows[1].cells;
-		vRunBoard[inning].innerHTML = vRun[i];
+		vRunBoard[i].innerHTML = vRun[i];
 		vTotalRun = vTotalRun + vRun[i];
 		// rij 1 kolom maxInnings + 2
 		vRunBoard[parseInt(maxInnings) + 2 ].innerHTML = vTotalRun;
@@ -674,7 +674,7 @@ function updateScoreboard() {
 	// update HOME score in rij 2
 	for (i = 1; i < hRun.length; i++) { // starten bij index 1)
 		var hRunBoard = document.getElementById("scoreboard").rows[2].cells;
-		hRunBoard[inning].innerHTML = hRun[i];
+		hRunBoard[i].innerHTML = hRun[i];
 		hTotalRun = hTotalRun + hRun[i];
 		// rij 2 kolom maxInnings + 2
 		hRunBoard[parseInt(maxInnings) + 2].innerHTML = hTotalRun;
