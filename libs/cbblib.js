@@ -564,6 +564,8 @@ function playCatchFoul() {
 	}
 	if (hasComp == true) {
 		if (confirm('Catch Foul')) {
+			// BATTER = OUT!
+			console.log('[playCatchFoul] FOUL caught - OUT');
 			isCatchFoul = true;
 			objOtherPlay.addCard(objOtherHand[compCard]);
 			objOtherHand.render();
@@ -573,17 +575,6 @@ function playCatchFoul() {
 			moveCards(objOtherPlay, discardPile); // en die andere ook
 			//refillHand(objOtherHand);
 			//refillHand(objHand);
-
-			// BATTER = OUT!
-			console.log('[playCatchFoul] FOUL caught - OUT');
-			sendMessage('FOUL caught - OUT');
-			numStrikes = 0;
-			numBalls = 0;
-			numOuts++
-
-			// checkInning toepassen
-			checkInning();
-			atBatStatus = 'pitch'; // new pitch
 		} else {
 			isCatchFoul = false;
 		}

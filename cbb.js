@@ -389,21 +389,19 @@ function newBatter() {
 		} else {
 			currentVisitorBatter = 1;
 		}
-		sendMessage('New Batter &#013 #' + currentVisitorBatter);
 		baseRunners[0] = vBatter[currentVisitorBatter];
 		turnHome = true;
 		turnVisitor = false;
 		objHand = homeHand;
 		objPlay = homePlay;
 		objOtherHand = visitorHand;
-		objOtherPlay = visitorPlay;
+		objOtherPlay = visitorPlay;		
 	} else {
 		if (currentHomeBatter < 9) {
 			currentHomeBatter += 1;
 		} else {
 			currentHomeBatter = 1;
 		}
-		sendMessage('New Batter &#013 #' + currentHomeBatter);
 		baseRunners[0] = hBatter[currentHomeBatter];
 		turnVisitor = true;
 		turnHome = false;
@@ -417,6 +415,11 @@ function newBatter() {
 	numStrikes = 0;
 	updateScoreboard();	
 	renderRunners();
+	if (vAtBat) {
+		sendMessage('New Batter &#013 #' + currentVisitorBatter);
+	} else {
+		sendMessage('New Batter &#013 #' + currentHomeBatter);
+	}
 	return
 }
 
@@ -673,7 +676,14 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			cleanRefill();
 			await sleep(2000);
 			atBatStatus = 'pitch';
-			changePlayer();
+			if (isCatchFoul) {
+				numOuts++
+				sendMessage('FOUL caught - OUT');
+				await sleep(1000);
+				newBatter();
+			} else {
+				changePlayer();
+			}
 			break;
 		case ('2-strike FOUL') :
 			sendMessage ('2-strike FOUL');
@@ -683,7 +693,14 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			cleanRefill();
 			await sleep(2000);
 			atBatStatus ='pitch';
-			changePlayer()
+			if (isCatchFoul) {
+				numOuts++
+				sendMessage('FOUL caught - OUT');
+				await sleep(1000);
+				newBatter();
+			} else {
+				changePlayer();
+			}
 			break;
 		case ('SAC') :
 			sendMessage ('Sacrifice attempt') ;
