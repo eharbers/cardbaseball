@@ -545,18 +545,7 @@ function playError() {
 			compCard = i;
 		}
 	}
-
-	if (hasComp == true) {
-		if (confirm('Error')) {
-			isError = true;
-			vAtBat ? hErrors++ : vErrors++; // error counter op scoreboard
-			objOtherPlay.addCard(objOtherHand[compCard]);
-			objOtherHand.render();
-			objOtherPlay.render();
-		} else {
-			isError = false;
-		}
-	}
+	return [hasComp, compCard];
 }
 
 /**
@@ -752,7 +741,7 @@ function checkOptions(hand) {
 	for (let i = 0; i < hand.length; i++) {
 		detOptionEquals(hand[i]); // ook hier uitvoeren voor elke kaart. nodig voor beslisboom
 		let indComp ='';
-		let indFly ='';
+		indFly ='';
 		//let rating = []; // hier stond ie eerst / nu boven loop 
 
 		// de nieuwe functie om te valideren

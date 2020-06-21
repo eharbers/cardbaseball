@@ -89,9 +89,11 @@ let isFace = false;
 
 // voor de bepaling van Error en CatchFoul in validateCard
 let hasComp = false;
+let compCard = 0;
 let isError = false;
 let isCatchFoul = false;
 let isLongFly = false;
+let indFly = "";
 
 // voor de telling van de categories in validateCard per Hand
 let vFace = 0;
@@ -506,7 +508,8 @@ function validateCard(card) {
 				rating = 1;
 				break;
 			} else {
-				if (isLongFly) {
+				if (card.rank === 9 || card.rank === 10) {
+					isLongFly = true;
 					indFly ='[F]';
 				}
 				outcome = 'fielding';
@@ -515,6 +518,11 @@ function validateCard(card) {
 			}
 		case 'fielding':
 			// die optionResult had eigenlijk een 'let' er voor staan
+			if (checkOptionsFlag == false) {
+				hasComp = false;
+				isError = false;
+				[hasComp, compCard] = playError();
+			}
 			optionResult = Math.abs(card.rank - objOtherPlay.topCard().rank);
 			if (objOtherPlay.topCard().faceCard) { // connect = SAC
 				if (card.faceCard) {
@@ -592,9 +600,23 @@ function validateCard(card) {
  */
 async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCard 
 	console.log('[executePlay] ==============================>>>>> inside executePlay with outcome: ', outcome);
+	
 	// check Deck op aantal kaarten
 	checkDeck();
 	await sleep(2000);
+
+	// spelen van een eventuele ERROR-card
+	if (hasComp == true) {
+		if (confirm('Error-card ' + objOtherHand[compCard].name + ' can be played')) {
+			isError = true;
+			vAtBat ? hErrors++ : vErrors++; // error counter op scoreboard
+			objOtherPlay.addCard(objOtherHand[compCard]);
+			objOtherHand.render();
+			objOtherPlay.render();
+		} else {
+			isError = false;
+		}
+	}
 	switch (outcome) {
 		case ('swing') :
 			atBatStatus = 'swing';
@@ -664,7 +686,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			changePlayer()
 			break;
 		case ('SAC') :
-			sendMessage ('SAC attempt') ;
+			sendMessage ('Sacrifice attempt') ;
 			atBatStatus = 'fielding';
 			changePlayer()
 			break;
@@ -697,36 +719,61 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			newBatter();
 			break;
 		case ('TRIPLE') :
-			sendMessage ('TRIPLE');
-			moveRunners ('triple');
+			if(!isError) {
+				sendMessage ('TRIPLE');
+				moveRunners ('triple');
+			} else {
+				sendMessage('TRIPLE + ERROR !');
+				moveRunners('homerun');
+			}
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
 			newBatter();
 			break;
 		case ('DOUBLE') :
-			sendMessage ('DOUBLE');
-			moveRunners ('double');
+			if(!isError) {
+				sendMessage ('DOUBLE');
+				moveRunners ('double');
+			} else {
+				sendMessage ('DOUBLE + ERROR !');
+				moveRunners ('triple');
+			}
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
 			newBatter();
 			break;
 		case ('SINGLE') :
-			sendMessage ('SINGLE');
-			moveRunners ('single');
+			if (!isError) {
+				sendMessage ('SINGLE');
+				moveRunners ('single');
+			} else {
+				sendMessage ('SINGLE + ERROR !');
+				moveRunners ('double');
+			}
 			addHitsInning();
 			cleanRefill()
 			await sleep(2000);
 			newBatter();
 			break;
 		case('OUT') :
-			numOuts += 1;
-			sendMessage('OUT');
-			updateScoreboard();
-			cleanRefill();
-			await sleep(2000);
-			newBatter();
+			if(!isError) {
+				if (isLongFly) {
+					sendMessage('FLY OUT');
+					isLongFly = false;
+				} else {
+					sendMessage('GROUND OUT');
+				}
+				numOuts += 1;
+				updateScoreboard();
+				cleanRefill();
+				await sleep(2000);
+				newBatter();
+			} else {
+				sendMessage('On Base by ERROR!');
+				moveRunners('single');
+			}
 			break;
 		case ('newball'):
 			sendMessage('New Balls request &#013 Two facecards');
