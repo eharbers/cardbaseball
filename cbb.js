@@ -124,6 +124,7 @@ $('#hNB').click(function () {
 	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+	sendMessage('New Balls request &#013 Two facecards');
 })
 
 // afhandelen van het klikken op visitor NB-button voor new balls
@@ -133,6 +134,7 @@ $('#vNB').click(function () {
 	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+	sendMessage('New Balls request &#013 Two facecards');
 })
 
 // RP knop
@@ -592,6 +594,11 @@ function validateCard(card) {
 						break;
 				}
 			}
+			break;
+		case 'newball':
+			console.log('[atBatStatus = newball]');
+			sendMessage('New Balls request &#013 Two facecards');
+			outcome = 'newball';
 			break;
 		default:
 			outcome = '#NA#';
