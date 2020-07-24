@@ -613,7 +613,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 	await sleep(2000);
 
 	// spelen van een eventuele ERROR-card
-	if (hasComp == true) {
+	if (hasComp == true && objPlay.length == 2 && turnVisitor == true) {
 		if (confirm('Error-card ' + objOtherHand[compCard].name + ' can be played')) {
 			isError = true;
 			vAtBat ? hErrors++ : vErrors++; // error counter op scoreboard

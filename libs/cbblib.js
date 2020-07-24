@@ -595,7 +595,7 @@ function playCatchFoul() {
 			compCard = i;
 		}
 	}
-	if (hasComp == true) {
+	/* if (hasComp == true) {
 		if (confirm('Catch Foul')) {
 			// BATTER = OUT!
 			console.log('[playCatchFoul] FOUL caught - OUT');
@@ -610,8 +610,8 @@ function playCatchFoul() {
 			//refillHand(objHand);
 		} else {
 			isCatchFoul = false;
-		}
-	}
+		} 
+	}*/
 }
 
 /**

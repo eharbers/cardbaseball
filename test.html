@@ -13,26 +13,45 @@
 
 	<img class="preload" src="img/cards.png" />
     <div id="card-table">
-        <table id="scoreboard">
-			<tr>
-				<th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>X</th><th>R</th><th>H</th><th>E</th><th>||</th><th>I:</th><th>0</th>
-			</tr>
-			<tr>
-				<td>V</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>B:</td><td>0</td>
-			</tr>
-			<tr>
-				<td>H</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>||</td><td>S:</td><td>0</td>
-			</tr>
-			<tr>
-				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>||</td><td>O:</td><td>0</td>
-			</tr>
-        </table>
+        <div id="multiPlay">
+            <input type="button" id ="multiPlayBtn" value="Multi Player Game"/>
+        </div>
         
+
         <div id="varTable">
 
         </div>
+
+        <div style="display:hidden; width:200px; height:100px; background-color:blue;" id="popupBox">
+            <input type="button" id="createBtn" value="Create"/>
+            <input type="button" id="joinBtn" value="Join"/>
+        </div>
+
     </div>
 </body>
+
+<script>
+    $(document).ready(function()
+{
+    $("#popupBox").hide();
+    
+    $("#multiPlayBtn").click(function()
+    {
+        $("#popupBox").show();
+    });
+    
+
+    $("#deleteBtn").click(function()
+    {
+        //handle button
+    });
+
+    $("#deactivateBtn").click(function()
+    {
+        //handle button
+    });
+});
+</script>
 
 <script>
     let maxScoreInnings = 6;
