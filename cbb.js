@@ -620,7 +620,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 	await sleep(2000);
 
 	// spelen van een eventuele ERROR-card
-	if (hasComp == true && objPlay.length == 2 && turnVisitor == true) {
+	if (hasComp == true && objPlay.length == 2) {
 		if (confirm('Error-card ' + objOtherHand[compCard].name + ' can be played')) {
 			isError = true;
 			vAtBat ? hErrors++ : vErrors++; // error counter op scoreboard
@@ -801,6 +801,10 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			} else {
 				sendMessage('On Base by ERROR!');
 				moveRunners('single');
+				updateScoreboard();
+				cleanRefill();
+				await sleep(2000);
+				newBatter();
 			}
 			break;
 		case ('newball'):
@@ -822,9 +826,10 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 					//console.log('atBatStatus: newball');
 					moveCards(objPlay, discardPile);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
 					refillHand(objHand);
-					await sleep(2000);
+					await sleep(1000);
+					newBallFlag = false;
 					atBatStatus = 'pitch'; // new pitch
 					displayStatus(atBatStatus);
 					sendMessage('Play Ball!');
