@@ -860,8 +860,14 @@ function sendOption(option) {
  * EINDE WEDSTRIJD
  */
 function gameOver() {
+	let winner = '';
 	console.log('[gameOver]');
-	sendMessage('GAME OVER');
+	if (hRun > vRun) {
+		winner = 'HOME has WON!';
+	} else {
+		winner = 'VISITOR has WON!';
+	}
+	sendMessage('GAME OVER &#013' + winner);
 }
 
 

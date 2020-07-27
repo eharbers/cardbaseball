@@ -345,21 +345,44 @@ function checkAtBat() {
  */
 function checkInning() {
 	console.log('[checkInning] Inside checkInning');
+	// bepalen van de stand....
+	var hTotalRun = 0;
+	var vTotalRun = 0 ;
+
+	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
+		vTotalRun = vTotalRun + vRun[i];
+	}	
+	for (i = 1; i < hRun.length; i++) { //starten bij index 1)
+		hTotalRun = hTotalRun + hRun[i];
+	}
+
+
 	if (inning <= maxInnings) {
 		if (numOuts >= 3) { // dubbelspel met 2 nullen ??
 			sendMessage('3-OUTS Change fields')
 			console.log('[checkInning] 3-OUTS Change fields');
 			if (vAtBat) {
-				vAtBat = false;
-				hAtBat = true;
-				hRun[inning] = 0;
-				hitsInning = 0;
+				if (inning == maxInnings && vTotalRun < hTotalRun) {
+						hRun[inning] = 'X';
+						endOfGame = true;
+						return;
+					} else {
+						vAtBat = false;
+						hAtBat = true;
+						hRun[inning] = 0;
+						hitsInning = 0;
+					}
 			} else {
-				hAtBat = false;
-				vAtBat = true;
-				inning++;
-				vRun[inning] = 0;
-				hitsInning = 0;
+				if (inning == maxInnings && hTotalRun > vTotalRun) {
+					endOfGame = true;
+					return;
+				} else {
+					hAtBat = false;
+					vAtBat = true;
+					inning++;
+					vRun[inning] = 0;
+					hitsInning = 0;
+				}
 			}
 			for (i = 0; i <= 3; i++) {
 				baseRunners[i] = 0;
