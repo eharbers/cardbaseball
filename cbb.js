@@ -436,8 +436,23 @@ function newBatter() {
  */
 async function changePlayer() {
 	console.log('[changePlayer]');
-
+		
+	// wisselen van speler
 	if (turnHome) {
+		// toggle grey out voor NB-knoppen, mits getoond en defense 
+		if($('#hNB').is(":visible") && vAtBat == true && atBatStatus == 'pitch') {
+			console.log('disable hNB');
+			$('#hNB').attr('disabled', true);
+		} else {
+			console.log('GEEN KNOP hNB')
+		}
+		if($('#vNB').is(":visible") && hAtBat == true && atBatStatus == 'pitch') {
+			console.log('enable vNB');
+			$('#vNB').attr('disabled', false);
+		} else {
+			console.log('GEEN KNOP vNB')
+		}
+
 		turnVisitor = true;
 		turnHome = false;
 		displayStatus(atBatStatus);
@@ -448,6 +463,19 @@ async function changePlayer() {
 		console.log('[changePlayer] Change player from turnHome to turnVisitor');
 		await sleep(500);
 	} else {
+		// toggle grey out voor NB-knoppen, mits getoond en defense 
+		if($('#hNB').is(":visible") && vAtBat == true && atBatStatus == 'pitch') {
+			console.log('enable hNB');
+			$('#hNB').attr('disabled', false);
+		} else {
+			console.log('GEEN KNOP hNB')
+		}
+		if($('#vNB').is(":visible") && hAtBat == true && atBatStatus == 'pitch') {
+			console.log('disable vNB');
+			$('#vNB').attr('disabled', true);
+		} else {
+			console.log('GEEN KNOP vNB')
+		} 
 		turnHome = true;
 		turnVisitor = false;
 		displayStatus(atBatStatus);
@@ -621,7 +649,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 
 	// spelen van een eventuele ERROR-card
 	if (hasComp == true && objPlay.length == 2) {
-		if (confirm('Error-card ' + objOtherHand[compCard].name + ' can be played')) {
+		if (confirm('Error-card ' + objOtherHand[compCard].longName + ' of ' + objOtherHand[compCard].suitName + ' can be played')) {
 			isError = true;
 			vAtBat ? hErrors++ : vErrors++; // error counter op scoreboard
 			objOtherPlay.addCard(objOtherHand[compCard]);

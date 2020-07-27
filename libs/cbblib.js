@@ -9,18 +9,22 @@ function addCardProperties() {
 			case 'd':
 				card.color = 'red';
 				card.symbol = '&diams;';
+				card.suitName = 'diamonds';
 				break;
 			case 'h':
 				card.color = 'red';
 				card.symbol = '&hearts;'
+				card.suitName = 'hearts';
 				break;
 			case 's':
 				card.color = 'black';
 				card.symbol = '&spades;';
+				card.suitName = 'spades';
 				break;
 			case 'c':
 				card.color = 'black';
 				card.symbol = '&clubs;';
+				card.suitName = 'clubs';
 				break;
 			default:
 				break;
@@ -30,22 +34,27 @@ function addCardProperties() {
 			case 1:
 				card.letter ='A';
 				card.faceCard = false;
+				card.longName ='Ace';
 				break;
 			case 11:
 				card.letter = 'J';
 				card.faceCard = true;
+				card.longName = 'Jack';
 				break;
 			case 12:
 				card.letter = 'Q';
 				card.faceCard = true;
+				card.longName = 'Queen';
 				break;
 			case 13:
 				card.letter = 'K';
 				card.faceCard = true;
+				card.longName = 'King';
 				break;
 			default:
 				card.faceCard = false;
 				card.letter= card.rank;
+				card.longName = card.rank;
 				break;
 		}
 	}
