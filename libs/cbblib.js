@@ -9,22 +9,22 @@ function addCardProperties() {
 			case 'd':
 				card.color = 'red';
 				card.symbol = '&diams;';
-				card.suitName = 'diamonds';
+				card.suitName = 'Diamonds';
 				break;
 			case 'h':
 				card.color = 'red';
 				card.symbol = '&hearts;'
-				card.suitName = 'hearts';
+				card.suitName = 'Hearts';
 				break;
 			case 's':
 				card.color = 'black';
 				card.symbol = '&spades;';
-				card.suitName = 'spades';
+				card.suitName = 'Spades';
 				break;
 			case 'c':
 				card.color = 'black';
 				card.symbol = '&clubs;';
-				card.suitName = 'clubs';
+				card.suitName = 'Clubs';
 				break;
 			default:
 				break;
