@@ -862,7 +862,21 @@ function sendOption(option) {
 function gameOver() {
 	let winner = '';
 	console.log('[gameOver]');
-	if (hRun > vRun) {
+
+	// bepalen van de stand....
+	var hTotalRun = 0;
+	var vTotalRun = 0 ;
+
+	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
+		vTotalRun = vTotalRun + vRun[i];
+	}	
+	for (i = 1; i < hRun.length; i++) { //starten bij index 1)
+		hTotalRun = hTotalRun + hRun[i];
+	}
+
+	if (hTotalRun == vTotalRun) {
+		winner = 'No winner !';
+	} else if (hTotalRun > vTotalRun) {
 		winner = 'HOME has WON!';
 	} else {
 		winner = 'VISITOR has WON!';

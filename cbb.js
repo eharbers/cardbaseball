@@ -373,7 +373,8 @@ function checkInning() {
 						hitsInning = 0;
 					}
 			} else {
-				if (inning == maxInnings && hTotalRun > vTotalRun) {
+				if (inning == maxInnings) {
+					// nog geen extra innings bij gelijke stand
 					endOfGame = true;
 					return;
 				} else {
