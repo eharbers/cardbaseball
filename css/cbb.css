@@ -238,49 +238,49 @@ footer a:hover {
   }
 */
   
-  #runnerAB {
-	width: 50px;
-	height: 50px;
-	position: absolute;
-	top: 150px;
-	left: 150px;
-	background-color: blue;
-	color: white;
-	font-size: 40px;
-  }
-  
-  #runner1B {
-	width: 50px;
-	height: 50px;
-	position: absolute;
-	top: 0px;
-	left: 150px;
-	background-color: blue;
-	color: white;
-	font-size: 40px;
-	text-align: center;
-	vertical-align: middle;
-  }
-  
-  #runner2B {
-	width: 50px;
-	height: 50px;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	background-color: blue;
-	color: white;
-	font-size: 40px;
-  }
-  
-  #runner3B {
-	width: 50px;
-	height: 50px;
-	position: absolute;
-	top: 150px;
-	left: 0px;
-	background-color: blue;
-	color: white;
-	font-size: 40px;
-  }
+#runnerAB {
+width: 50px;
+height: 50px;
+position: absolute;
+top: 150px;
+left: 150px;
+background-color: blue;
+color: white;
+font-size: 40px;
+}
+
+#runner1B {
+width: 50px;
+height: 50px;
+position: absolute;
+top: 0px;
+left: 150px;
+background-color: blue;
+color: white;
+font-size: 40px;
+text-align: center;
+vertical-align: middle;
+}
+
+#runner2B {
+width: 50px;
+height: 50px;
+position: absolute;
+top: 0px;
+left: 0px;
+background-color: blue;
+color: white;
+font-size: 40px;
+}
+
+#runner3B {
+width: 50px;
+height: 50px;
+position: absolute;
+top: 150px;
+left: 0px;
+background-color: blue;
+color: white;
+font-size: 40px;
+}
   
