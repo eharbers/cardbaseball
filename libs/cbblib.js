@@ -73,13 +73,13 @@ function createScoreBoard(maxScoreInnings) {
     tbody += '<th>X</th><th>R</th><th>H</th><th>E</th><th>||</th><th>I:</th><th>0</th>\n';
     tbody += '</tr>\n';
     // row 1
-    tbody += '<tr>\n<td>VST</td>';
+    tbody += '<tr>\n<td>VISIT</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
         tbody += '<td></td>';
     }
     tbody += '</td><td></td><td></td><td></td><td></td><td>||</td><td>B:</td><td>0</td>\n'
     // row 2
-    tbody += '<tr>\n<td>HME</td>';
+    tbody += '<tr>\n<td>HOME</td>';
     for (let i=1; i <= maxScoreInnings; i++) {
         tbody += '<td></td>';
     }

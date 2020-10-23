@@ -569,11 +569,11 @@ function validateCard(card) {
 				rating = 1;
 				break;
 			} else {
+				outcome = 'fielding';
 				if (card.rank === 9 || card.rank === 10) {
 					isLongFly = true;
 					indFly ='[F]';
 				}
-				outcome = 'fielding';
 				rating = 2;
 				break;
 			}
