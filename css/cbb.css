@@ -8,10 +8,10 @@ body {
 	box-shadow:black 0px 0px 2px; 
 	width: 800px; 
 	background:#FFF; 
-	margin:20px auto; 
+	margin:10px auto; 
 	border:solid 1px black; 
 	font-family: arial, sans-serif; 
-	padding:50px;  
+	padding:10px;  
 }
 #buttons {
 	text-align:center;
@@ -39,6 +39,7 @@ h1 {
 }
 
 #card-table {
+	position: relative;
 	background-color:green;
 	height:600px;
 	width:800px;

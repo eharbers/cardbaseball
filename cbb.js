@@ -574,6 +574,8 @@ function validateCard(card) {
 					isLongFly = true;
 					indFly ='[F]';
 				}
+				isLongFly = false;
+				indFly='';
 				rating = 2;
 				break;
 			}
