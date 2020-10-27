@@ -815,6 +815,30 @@ function playAICard(aiCard){
 	objHand.render();
 	deck.render();
 }
+/**
+ * AI functie voor newballs bij 2 face-cards in 
+ */
+function newballAI() {
+	console.log('[newballAI] AI switch 2 facecards')
+	numFaceCardsAI = 0;
+	for (let i = 0; i < objHand.length; i++) {
+		if(objHand[i].facecard) {
+			numFaceCardsAI++
+			objPlay.addCard(i);
+			objHand.render();
+		}
+		if (numFaceCardsAI === 2) {
+			moveCards(objPlay, discardPile);
+			refillHand(objHand);
+			//await sleep(1000);
+			refillHand(objHand);
+			//await sleep(1000);
+			// uit de loop indien er 2 facecards zijn gelegd
+			break;
+		}
+	}
+	
+}
 
 /**
  * Testen aantal FaceCards tbv NewBall
@@ -834,8 +858,13 @@ function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 
 	if (numFaceCards >= 2) {
 		vAtBat ? $('#hNB').show() : $('#vNB').show();
+		
+		if (playAI = true && hAtBat == true) {
+			// voor AI automatisch twee facecards vervangen door nieuwe van Deck
+			newballAI();
+		};
 	} else {
-		vAtBat ? $('#hNB').hide() : $('#vNB').hide();
+		vAtBat ? $('#hNB').hide() : $('#vNB').hide();		
 	}
 } // end checkNumFaceCards
 

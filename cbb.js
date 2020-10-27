@@ -114,6 +114,7 @@ let checkPlayAIFlag = false; // flag om de beurt van AI onder controle te houden
 
 // NB knop
 let newBallFlag = false;
+let numFaceCardsAI = 0; // voor het afhandelen van de gespeelde AI newball cards
 $('#hNB').hide();
 $('#vNB').hide();
 
