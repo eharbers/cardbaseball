@@ -518,7 +518,7 @@ async function changePlayer() {
  * @param {*} card 
  */
 function validateCard(card) {
-	console.log('[validateCard]');
+	console.log('[validateCard]', card);
 	let optionResult = 0 ; //mogelijk straks weer weghalen
 	let outcomeText = '';
 	//console.log('============================ inside validateCard', card);
