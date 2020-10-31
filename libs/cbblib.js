@@ -628,7 +628,7 @@ function playCatchFoul() {
  * @param {*} atBatStatus 
  */
 function displayStatus (atBatStatus) {
-	console.log('[displayStatus]');
+	console.log('[displayStatus]', atBatStatus);
 	if (turnHome) {
 		$("#home").css("background-color", "red");
 		$("#home").val(atBatStatus);
@@ -647,7 +647,7 @@ function displayStatus (atBatStatus) {
  * verversen van de gegevens op het scoreboard
  */
 function updateScoreboard() { 
-	console.log('[updateSCoreboard]');
+	console.log('[updateScoreboard]');
 	// update inning in cell rij 0 kolom maxInnings + 7
 	var inn = document.getElementById("scoreboard").rows[0].cells;
 	inn[parseInt(maxInnings) + 7 ].innerHTML = inning;
@@ -778,6 +778,20 @@ function checkOptions(hand) {
  * 
  */
 function playerAI () {
+	// check for 2 facecards
+	if ((playAI == true) && (hAtBat == true) && (atBatStatus == 'pitch')) {
+		let numFaceCards = 0
+		for (let i = 0; i < objHand.length; i++) {
+			if (objHand[i].faceCard) {
+				numFaceCards++
+			}
+		}
+		if (numFaceCards >= 2){
+			newballAI();
+		}
+	};
+
+	// bepalen van de AI-speelwaarde voor elke kaart
 	let ratingAI = checkOptions(objHand);
 	console.log('[playerAI] ', ratingAI);
 	console.log('[playerAI] playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
@@ -818,24 +832,36 @@ function playAICard(aiCard){
 /**
  * AI functie voor newballs bij 2 face-cards in 
  */
-async function newballAI() {
+function newballAI() {
 	console.log('[newballAI] AI switch 2 facecards')
+	
+	newBallFlag = true;
+	atBatStatus = 'newball';
+	displayStatus(atBatStatus);
+	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
+	sendMessage('New Balls request &#013 Two facecards');
+
 	numFaceCardsAI = 0;
 	for (let i = 0; i < objHand.length; i++) {
 		if(objHand[i].faceCard) {
+			console.log('[newballAI]: play face-card')
 			numFaceCardsAI++
 			objPlay.addCard(objHand[i]);
 			objHand.render()
-			await sleep(1000);
+			//await sleep(1000);
 		}
 		console.log('numFaceCardsAI: ', numFaceCardsAI);	
 		if (numFaceCardsAI === 2) {
 			moveCards(objPlay, discardPile);
 			refillHand(objHand);
-			await sleep(1000);
+			//await sleep(1000);
 			refillHand(objHand);
-			await sleep(1000);
+			//await sleep(1000);
 			// uit de loop indien er 2 facecards zijn gelegd
+			newBallFlag = false;
+			atBatStatus = 'pitch'; // new pitch
+			displayStatus(atBatStatus);
+			sendMessage('Play Ball!');
 			break;
 		}
 	}	
@@ -859,11 +885,6 @@ function checkNumFaceCards(hand) { // misschien moet dit toon NB-knop worden
 
 	if (numFaceCards >= 2) {
 		vAtBat ? $('#hNB').show() : $('#vNB').show();
-		
-		if (playAI == true && hAtBat == true) {
-			// voor AI automatisch twee facecards vervangen door nieuwe van Deck
-			newballAI();
-		};
 	} else {
 		vAtBat ? $('#hNB').hide() : $('#vNB').hide();		
 	}

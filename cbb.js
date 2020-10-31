@@ -243,9 +243,7 @@ window.requestAnimationFrame(playBall);
 // einde gameloop
 
 function playBall() {
-	// console.log('playBall atBatStatus: ', atBatStatus);
-
-
+	
 	if (checkOptionsFlag == true) {
 		checkOptions(objHand)
 	};
@@ -261,70 +259,69 @@ function playBall() {
 /**
  * functie om kaart te klikken uit de hand die aan de beurt is.
  */
-function playCard() { // kan dat ook op een 'naam' van het object-manier??
-	// nu ontstaat er volgens mij een tweede object...
-	// wellicht terugkopieren?
-	// if (checkOptionsFlag == true) { checkOptions(objHand) }; //verhuisd naar playBall
-
-	if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
-
-	if ((checkRelieverFlag == true) && hitsInning >= 2) { // controle of RP mag worden ingezet
-		if (vAtBat === true && hReliever == false ) {
-			checkReliever();
-		} else if ( hAtBat === true && vReliever === false) {
-			checkReliever();
-		}		
-	}
-
+function playCard() {
 	// bepalen of de AI-player aan de beurt is om een kaart te spelen
 	if (playAI && turnVisitor && checkPlayAIFlag) {
-		console.log('[playCard] playerAI will think and play');
+		console.log('[playCard] AI-Player plays');
 		playerAI();
-	}
+	} else {
+		// Human-plays
+		if ((checkFaceCardsFlag == true) && (atBatStatus == 'pitch')) { checkNumFaceCards(objHand) };
 
-	// wellicht dit de Human ge-else-d kan worden...
-	// ff los van het uit- en inschakel probleem rond de click-functie
-
-	// bepalen welke kaart door de HUMAN-player wordt geclickt om te spelen
-	objHand.click(function (card) {
-		document.getElementById("messageboard").innerHTML = "";
-		console.log('[playCard] Human plays: ', card);
-		
-		// testen of de geklikte card van de play-Hand is
-		let playable = false
-		for (i = 0; i < objHand.length; i++) {
-			if (card === objHand[i]) { // komt de geklikte kaart uit de actuele speel Hand?
-				playable = true;
-			};
-		} // end test voor playable
-		
-		if (playable === true) { //valid card-player 
-			objPlay.addCard(card);
-			objPlay.render();
-			objHand.render();
-			deck.render();
-
-			// de nieuwe versie(s)
-			detEquals(); //voordat validateCard wordt aangeroepen
-			[outcome, outcomeText, rating, optionResult] = validateCard(card);
-			//console.log('=====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
-			executePlay(outcome);
-		} else { // not a valid card-player 
-			let msgBeurt = "WACHTEN !";
-			if (turnHome) {
-				$("#visitor").val(msgBeurt);
-			} else {
-				$("#home").val(msgBeurt);
-			}
+		if ((checkRelieverFlag == true) && hitsInning >= 2) { // controle of RP mag worden ingezet
+			if (vAtBat === true && hReliever == false ) {
+				checkReliever();
+			} else if ( hAtBat === true && vReliever === false) {
+				checkReliever();
+			}		
 		}
-	}); // end click objHand (of objOtherHand) 
+
+		
+
+		// wellicht dit de Human ge-else-d kan worden...
+		// ff los van het uit- en inschakel probleem rond de click-functie
+
+		// bepalen welke kaart door de HUMAN-player wordt geclickt om te spelen
+		objHand.click(function (card) {
+			document.getElementById("messageboard").innerHTML = "";
+			console.log('[playCard] Human plays: ', card);
+			
+			// testen of de geklikte card van de play-Hand is
+			let playable = false
+			for (i = 0; i < objHand.length; i++) {
+				if (card === objHand[i]) { // komt de geklikte kaart uit de actuele speel Hand?
+					playable = true;
+				};
+			} // end test voor playable
+			
+			if (playable === true) { //valid card-player 
+				objPlay.addCard(card);
+				objPlay.render();
+				objHand.render();
+				deck.render();
+
+				// de nieuwe versie(s)
+				detEquals(); //voordat validateCard wordt aangeroepen
+				[outcome, outcomeText, rating, optionResult] = validateCard(card);
+				//console.log('=====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
+				executePlay(outcome);
+			} else { // not a valid card-player 
+				let msgBeurt = "WACHTEN !";
+				if (turnHome) {
+					$("#visitor").val(msgBeurt);
+				} else {
+					$("#home").val(msgBeurt);
+				}
+			}
+		}); // end click objHand (of objOtherHand)
+	} // end Human-plays
 } // end playCard
 
 /**
  * controleren van de slagbeurt (pitch2pitch)
  */
 function checkAtBat() {
-	console.log('[checkAtBat] Inside checkAtBat');
+	console.log('[checkAtBat] Inside checkAtBat B:S:O',numBalls,numStrikes,numOuts);
 	checkOptionsFlag = true; // vlag terugzetten zodat deze volgende keer met playCard kan worden uitgevoerd
 	if (playAI) { checkPlayAIFlag = true;} // aan zetten voor de volgende AI-play
 	checkFaceCardsFlag = true // vlag terugzetten
@@ -651,7 +648,7 @@ function validateCard(card) {
 			}
 			break;
 		case 'newball':
-			console.log('[atBatStatus = newball]');
+			console.log('[Vc: atBatStatus = newball]');
 			sendMessage('New Balls request &#013 Two facecards');
 			outcome = 'newball';
 			break;
