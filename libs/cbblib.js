@@ -1,3 +1,4 @@
+
 /**
  * functie om properties aan kaarten toe te voegen,
  * waar cards.js niet in voorziet

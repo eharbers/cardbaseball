@@ -303,7 +303,7 @@ function playCard() {
 				// de nieuwe versie(s)
 				detEquals(); //voordat validateCard wordt aangeroepen
 				[outcome, outcomeText, rating, optionResult] = validateCard(card);
-				//console.log('=====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
+				console.log('=====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
 				executePlay(outcome);
 			} else { // not a valid card-player 
 				let msgBeurt = "WACHTEN !";
@@ -571,9 +571,10 @@ function validateCard(card) {
 				if (card.rank === 9 || card.rank === 10) {
 					isLongFly = true;
 					indFly ='[F]';
-				}
+				} else {
 				isLongFly = false;
 				indFly='';
+				}
 				rating = 2;
 				break;
 			}
