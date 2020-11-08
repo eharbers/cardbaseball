@@ -303,7 +303,7 @@ function playCard() {
 				// de nieuwe versie(s)
 				detEquals(); //voordat validateCard wordt aangeroepen
 				[outcome, outcomeText, rating, optionResult] = validateCard(card);
-				console.log('=====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
+				console.log('[playCard] =====================================>>>> vCard ' + [outcome, outcomeText, rating, optionResult]);
 				executePlay(outcome);
 			} else { // not a valid card-player 
 				let msgBeurt = "WACHTEN !";
@@ -580,11 +580,7 @@ function validateCard(card) {
 			}
 		case 'fielding':
 			// die optionResult had eigenlijk een 'let' er voor staan
-			if (checkOptionsFlag == false) {
-				hasComp = false;
-				isError = false;
-				[hasComp, compCard] = playError();
-			}
+			
 			optionResult = Math.abs(card.rank - objOtherPlay.topCard().rank);
 			if (objOtherPlay.topCard().faceCard) { // connect = SAC
 				if (card.faceCard) {
@@ -699,6 +695,11 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			atBatStatus = 'fielding';
 			changePlayer();
 			displayStatus(atBatStatus);
+			if (checkOptionsFlag == false) {
+				hasComp = false;
+				isError = false;
+				[hasComp, compCard] = playError();
+			}
 			break;
 		case ('BALL') : // pitch of swing
 			numBalls += 1;

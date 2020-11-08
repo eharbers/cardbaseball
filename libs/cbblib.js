@@ -99,7 +99,7 @@ function createScoreBoard(maxScoreInnings) {
 /**
  * Deck controleren op het aantal kaarten
  */
-function checkDeck() { // TODO hier gaat nog iets fout...maar inmiddels beter
+function checkDeck() { 
 	console.log('[checkDeck]');
 	if (deck.length < 7) {
 		console.log('[checkDeck] Het worden er te weinig')
@@ -130,7 +130,7 @@ function shuffle(deck) {
 	deck.render();
 }
 
-
+/*
 function countCards() {
 	console.log('[countCards]');
 	console.log('==> atBatStatus: ', atBatStatus);
@@ -139,7 +139,13 @@ function countCards() {
 	console.log('==> objHand: ' + objHand.length + ' | objPlay: ' + objPlay.length);
 	console.log('==> objOtherHand: ' + objOtherHand.length + ' | objOtherPlay: ' + objOtherPlay.length);
 }
+*/
 
+
+
+/**
+ * opruimen en completeer Hands tot 6
+ */
 function cleanRefill() {
 	console.log('[cleanRefill]');
 	if (objPlay.length > 0) {
@@ -162,7 +168,7 @@ function cleanRefill() {
 }
 
 /**
- * functie om de Hand aan te vullen met een kaart van deck
+ * functie om de Hand aan te vullen met 1 kaart van deck
  * @param {*} fillHand 
  */
 function refillHand(fillHand) {
@@ -779,14 +785,17 @@ function checkOptions(hand) {
  * 
  */
 function playerAI () {
+	console.log('[playerAI] playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
 	// check for 2 facecards
-	if ((playAI == true) && (hAtBat == true) && (atBatStatus == 'pitch')) {
+	if ((playAI === true) && (vAtBat === false) && (atBatStatus === 'pitch')) {
+		console.log('[playerAI]: Check facecards for AI');
 		let numFaceCards = 0
 		for (let i = 0; i < objHand.length; i++) {
 			if (objHand[i].faceCard) {
 				numFaceCards++
 			}
 		}
+		console.log('[playerAI]: numFaceCards = ',numFaceCards);
 		if (numFaceCards >= 2){
 			newballAI();
 		}
@@ -794,12 +803,11 @@ function playerAI () {
 
 	// bepalen van de AI-speelwaarde voor elke kaart
 	let ratingAI = checkOptions(objHand);
-	console.log('[playerAI] ', ratingAI);
-	console.log('[playerAI] playAI: ' + playAI + ' and turnVisitor: ' + turnVisitor);
+	console.log('[playerAI] ', ratingAI);	
 	let maxRatingAI = 0;
 	let maxRatingAIId = 0;
 	for (let i = 0; i < objHand.length; i++) {
-		console.log('[playerAI] ',i + ': ' + ratingAI[i] + ' => ' + objHand[i].shortName)
+		console.log('[playerAI] ', i + ': ' + objHand[i].shortName + ' => : ' + ratingAI[i] );
 		if (ratingAI[i] > maxRatingAI) {
 			maxRatingAI = ratingAI[i];
 			maxRatingAIId = i;
@@ -847,11 +855,11 @@ function newballAI() {
 		if(objHand[i].faceCard) {
 			console.log('[newballAI]: play face-card')
 			numFaceCardsAI++
-			objPlay.addCard(objHand[i]);
-			objHand.render()
+			playAICard(objHand[i]);
 			//await sleep(1000);
 		}
-		console.log('numFaceCardsAI: ', numFaceCardsAI);	
+	
+		console.log('[newballAI]: numFaceCardsAI: ', numFaceCardsAI);	
 		if (numFaceCardsAI === 2) {
 			moveCards(objPlay, discardPile);
 			refillHand(objHand);
@@ -865,7 +873,7 @@ function newballAI() {
 			sendMessage('Play Ball!');
 			break;
 		}
-	}	
+	}		
 }
 
 /**
