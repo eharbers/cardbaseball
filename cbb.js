@@ -6,7 +6,7 @@ cards.init({ table: '#card-table' });
 deck = new cards.Deck();
 //By default it's in the middle of the container, put it slightly to the side
 deck.x -= 150;
-deck.y -= -40;
+deck.y -= -1;
 
 
 
@@ -20,7 +20,7 @@ deck.render({ immediate: true });
 // deze moeten later weer worden toegevoegd aan deck
 discardPile = new cards.Deck({ faceUp: false });
 discardPile.x -= 150;
-discardPile.y -= 80;
+discardPile.y -= 120;
 
 //Now lets create a couple of hands, one face down (now up), one face up.
 visitorHand = new cards.Hand({ faceUp: true, y: 60 });
@@ -275,12 +275,6 @@ function playCard() {
 				checkReliever();
 			}		
 		}
-
-		
-
-		// wellicht dit de Human ge-else-d kan worden...
-		// ff los van het uit- en inschakel probleem rond de click-functie
-
 		// bepalen welke kaart door de HUMAN-player wordt geclickt om te spelen
 		objHand.click(function (card) {
 			document.getElementById("messageboard").innerHTML = "";
@@ -695,11 +689,13 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 			atBatStatus = 'fielding';
 			changePlayer();
 			displayStatus(atBatStatus);
+			/*
 			if (checkOptionsFlag == false) {
 				hasComp = false;
 				isError = false;
 				[hasComp, compCard] = playError();
 			}
+			*/
 			break;
 		case ('BALL') : // pitch of swing
 			numBalls += 1;

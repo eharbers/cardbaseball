@@ -856,16 +856,13 @@ function newballAI() {
 			console.log('[newballAI]: play face-card')
 			numFaceCardsAI++
 			playAICard(objHand[i]);
-			//await sleep(1000);
 		}
 	
 		console.log('[newballAI]: numFaceCardsAI: ', numFaceCardsAI);	
 		if (numFaceCardsAI === 2) {
 			moveCards(objPlay, discardPile);
 			refillHand(objHand);
-			//await sleep(1000);
 			refillHand(objHand);
-			//await sleep(1000);
 			// uit de loop indien er 2 facecards zijn gelegd
 			newBallFlag = false;
 			atBatStatus = 'pitch'; // new pitch
