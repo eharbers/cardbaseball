@@ -167,8 +167,14 @@ a:visited {color:blue;}
 
 #toggleCards {
 	position: absolute;
-	left: 10px;
-	top: 30px;
+	left: 40px;
+	top: 0 px;
+}
+
+#toggleHelp {
+	position: absolute;
+	left: 40px;
+	top: 50px;
 }
 
 #visitor {

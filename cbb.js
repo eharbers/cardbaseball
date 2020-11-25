@@ -176,6 +176,7 @@ $('#hRP').click(function () {
 	hReliever = true; // de reliever is ingezet
 	refillHand(objHand);
 	refillHand(objHand);
+	$('#hRP').hide();
 })
 
 // afhandelen van het klikken op visitor RP-button voor Relief Pitcher
@@ -185,6 +186,7 @@ $('#vRP').click(function () {
 	vReliever = true; // de reliever is ingezet
 	refillHand(objHand);
 	refillHand(objHand);
+	$('#vRP').hide();
 })
 
 // endOfGame indicator
@@ -192,6 +194,7 @@ let endOfGame = false;
 
 let playAI = false;
 let showCards = true; // met toggleCards-button bedienen
+let showHelp = true; // met toggleHelp-button bedienen
 
 $('#aiDeal').click(function () {
 	playAI = true;
@@ -214,6 +217,19 @@ $('#toggleCards').click(function () {
 		$('#toggleCards').text("Hide Cards")
 	}
 })
+
+$('#toggleHelp').click(function () {
+	if (showHelp) {
+		showHelp = false;
+		document.getElementById("help").style.display = 'none'; 
+		$('#toggleHelp').text("Show Help")
+	} else {
+		showHelp = true;
+		document.getElementById("help").style.display = 'block';
+		$('#toggleHelp').text("Hide Help")
+	}
+})
+
 
 let maxInnings = 9; // max aantal te spelen voordat endOfGame wordt bepaald in checkInning
 // This allows to use up and down arrows on the input, but doesn't allow keyboard input.

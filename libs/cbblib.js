@@ -932,7 +932,7 @@ function updateHelp() {
 			helpText = helpText + ' < pitch => BALL' + '&#013'
 			helpText = helpText + '&#013'
 			helpText = helpText + ' face card => FOUL' + '&#013'
-			helpText = helpText + ' companion => HBP' + '&#013'
+			helpText = helpText + ' companion #9,#10 => HBP' + '&#013'
 			helpText = helpText + '&#013'
 			helpText = helpText + ' other => STRIKE' + '&#013'
 			break;
@@ -949,6 +949,9 @@ function updateHelp() {
 			helpText = helpText + ' 5 - 6 => Double' + '&#013'
 			helpText = helpText + ' 7 - 8 => Triple' + '&#013'
 			helpText = helpText + ' 0 - 2 => Home Run' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' face card => SAC' + '&#013'
+			helpText = helpText + ' #9, #10 => Long Fly' + '&#013'
 			break;
 		case ('fielding'):
 			helpText = '@fielding' + '&#013' + '&#013';
