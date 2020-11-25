@@ -105,6 +105,21 @@ a:visited {color:blue;}
 	top: 550px;
 }
 
+#help {
+	position: absolute;
+	border-radius: 5px;
+	resize: none;
+	overflow: hidden;
+	background-color: black;
+	left: 10px;
+	top: 100px;
+	height: 250px;
+	width: 150px;
+	font-size: 12px;
+	color: yellow;
+	text-align: left;
+}
+
 #messageboard {
 	position: absolute;
 	border-radius: 5px;

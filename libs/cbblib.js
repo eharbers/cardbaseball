@@ -647,6 +647,7 @@ function displayStatus (atBatStatus) {
 		$("#home").css("background-color", "green");
 		$("#home").val("");
 	}
+	updateHelp();
 } 
 
 
@@ -912,6 +913,70 @@ function checkReliever() {
 function sendOption(option) {
 	document.getElementById("option").innerHTML = option;
 }
+
+/**
+ * op basis van de atBatStatus bepalen welke Help-tekst moet worden getoond
+ */
+function updateHelp() {
+	let helpText = ''
+	switch (atBatStatus) {
+		case ('pitch') :
+			helpText = '@pitch' + '&#013' + '&#013';
+			helpText = helpText + ' # 1 - 10 => swing' + '&#013'
+			helpText = helpText + ' face card => BALL' + '&#013'
+			break;
+		case ('swing') :
+			helpText = '@swing' + '&#013' + '&#013';
+			helpText = helpText + ' same suit:' + '&#013'
+			helpText = helpText + ' > pitch => connect' + '&#013'
+			helpText = helpText + ' < pitch => BALL' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' face card => FOUL' + '&#013'
+			helpText = helpText + ' companion => HBP' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' other => STRIKE' + '&#013'
+			break;
+		case ('connect') :
+			helpText = '@connect' + '&#013' + '&#013';
+			helpText = helpText + ' connect - fielding' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' same suit  : x1' + '&#013'
+			helpText = helpText + ' same color : x2' + '&#013'
+			helpText = helpText + ' other color: x3' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' 0 - 2 => OUT' + '&#013'
+			helpText = helpText + ' 3 - 4 => Single' + '&#013'
+			helpText = helpText + ' 5 - 6 => Double' + '&#013'
+			helpText = helpText + ' 7 - 8 => Triple' + '&#013'
+			helpText = helpText + ' 0 - 2 => Home Run' + '&#013'
+			break;
+		case ('fielding'):
+			helpText = '@fielding' + '&#013' + '&#013';
+			helpText = helpText + ' connect - fielding' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' same suit  : x1' + '&#013'
+			helpText = helpText + ' same color : x2' + '&#013'
+			helpText = helpText + ' other color: x3' + '&#013'
+			helpText = helpText + '&#013'
+			helpText = helpText + ' 0 - 2 => OUT' + '&#013'
+			helpText = helpText + ' 3 - 4 => Single' + '&#013'
+			helpText = helpText + ' 5 - 6 => Double' + '&#013'
+			helpText = helpText + ' 7 - 8 => Triple' + '&#013'
+			helpText = helpText + ' 9 -  => Home Run' + '&#013'
+			break;
+		case ('newball') :
+			helpText = '@newball';
+			break;
+		case ('SAC') :
+			helpText = '@SAC';
+			break;
+		default:
+			helpText = '@default';
+			break;
+	}
+
+	document.getElementById("help").innerHTML = helpText;
+} // einde updateHelp
 
 /**
  * EINDE WEDSTRIJD

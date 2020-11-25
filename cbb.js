@@ -123,6 +123,22 @@ $('#hNB').click(function () {
 	//console.log('hNB-clicked');
 	newBallFlag = true;
 	//console.log('newBallFlag = true');
+
+	/*
+	// poging om alleen faceCards faceUp te tonen	
+	for (let i = 0; i < homeHand.length; i++) {
+		if (homeHand[i].faceCard) {
+			homeHand[i].faceUp = true;
+			homeHand.render();
+		} else {
+			homeHand[i].faceUp = false;
+			homeHand.render();
+		}
+	}
+	*/
+	
+
+
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
 	sendMessage('New Balls request &#013 Two facecards');
@@ -860,7 +876,6 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 		case ('newball'):
 			sendMessage('New Balls request &#013 Two facecards');
 			if (objPlay.length == 2) {
-
 				// testen of beide kaarten faceCards zijn
 				let numNewBallFaceCards = 0;
 				for (let i=0; i < objPlay.length; i++) {
