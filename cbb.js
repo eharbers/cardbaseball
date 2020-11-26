@@ -710,17 +710,15 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 		case ('swing') :
 			atBatStatus = 'swing';
 			changePlayer();
-			displayStatus(atBatStatus)
 			// kaarten laten liggen
 			break;
 		case ('connect') :
 			atBatStatus = 'connect';
-			displayStatus(atBatStatus);
+			displayStatus(atBatStatus)
 			break;
 		case ('fielding') :
 			atBatStatus = 'fielding';
 			changePlayer();
-			displayStatus(atBatStatus);
 			/*
 			if (checkOptionsFlag == false) {
 				hasComp = false;
@@ -798,6 +796,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 		case ('SAC') :
 			sendMessage ('Sacrifice attempt') ;
 			atBatStatus = 'fielding';
+			updateHelp('SAC');
 			changePlayer()
 			break;
 		case ('SAC DOUBLE PLAY') :
