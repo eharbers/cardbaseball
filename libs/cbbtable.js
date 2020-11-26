@@ -1,3 +1,8 @@
+
+/**
+ * scoreboard aanmaken obv opgegeven innings
+ * @param {*} maxScoreInnings 
+ */
 function createScoreBoard(maxScoreInnings) {
 	console.log('[createScoreBoard]');
 	let tbody = '';
@@ -262,3 +267,132 @@ function renderRunners() {
 		bottomRow[5].innerHTML = "O";
 	} 
 } //einde renderRunners
+
+/**
+ * EINDE WEDSTRIJD
+ */
+function gameOver() {
+	let winner = '';
+	console.log('[gameOver]');
+
+	// bepalen van de stand....
+	var hTotalRun = 0;
+	var vTotalRun = 0 ;
+
+	for (i = 1; i < vRun.length; i++) { //starten bij index 1)
+		vTotalRun = vTotalRun + vRun[i];
+	}	
+	for (i = 1; i < hRun.length; i++) { //starten bij index 1)
+		hTotalRun = hTotalRun + hRun[i];
+	}
+
+	if (hTotalRun == vTotalRun) {
+		winner = 'No winner !';
+	} else if (hTotalRun > vTotalRun) {
+		winner = 'HOME has WON!';
+	} else {
+		winner = 'VISITOR has WON!';
+	}
+	sendMessage('GAME OVER &#013' + winner);
+} // einde gameOver
+
+
+// Alternatieve manier om honkloper te laten bewegen
+
+/*
+#animBases {
+	top: 150px;
+	left: 530px;
+	width: 250px;
+	height: 250px;
+	position: relative;
+	background: rgb(255, 94, 0);
+  }
+*/
+
+function createDiamond() {
+	$('#animBases').css("top","350px");
+	$('#animBases').css("left","0px");
+	$('#animBases').css("width","200px");
+	$('#animBases').css("height","200px");
+	$('#animBases').css("position","relative");
+	$('#animBases').css("background","rgb(255, 94, 0)");
+
+}
+
+// animated baserunners
+function moveAnimRunners() {
+	// $('#runnerAB').hide();
+	$('#runner1B').hide();
+	$('#runner2B').hide();
+	$('#runner3B').hide();
+	
+	moveAB1B();
+	move1B2B();
+	move2B3B();
+	move3BHB();
+}
+
+function moveAB1B(runner) {
+	console.log('[moveAB1B]');
+	var elem = document.getElementById(runner);   
+	var xposAB = 150;
+	var yposAB = 150;
+	var id = setInterval(frame, 5);
+	function frame() {
+		if (xposAB == 0) {
+		clearInterval(id);
+		} else {
+		xposAB--; 
+		elem.style.top = xposAB + 'px';  
+		}
+	}
+}
+
+function move1B2B(runner) {
+	console.log('[move1B2B]');
+	var elem = document.getElementById(runner);  
+	var xpos1B = 150; 
+	var ypos1B = 0;
+	var id = setInterval(frame, 5);
+	function frame() {
+		if (xpos1B == 0) {
+		clearInterval(id);
+		} else {
+		xpos1B--; 
+		elem.style.left = xpos1B + 'px'; 
+		}
+	}
+}
+
+function move2B3B(runner) {
+  var elem = document.getElementById(runner);   
+  var xpos2B = 0;
+  var ypos2B = 0;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (ypos2B == 150) {
+      clearInterval(id);
+    } else {
+      ypos2B++; 
+      elem.style.top = ypos2B + 'px'; 
+    }
+  }
+}
+
+function move3BHB(runner) {
+  var elem = document.getElementById(runner);  
+  var xpos3B = 0;
+  var ypos3B = 150;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (xpos3B == 150) {
+      clearInterval(id);
+    } else {
+      xpos3B++; 
+      elem.style.left = xpos3B + 'px'; 
+    }
+  }
+}
+
+
