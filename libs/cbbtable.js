@@ -123,34 +123,36 @@ function updateHelp(status) {
 			break;
 		case ('connect') :
 			helpText = '@connect' + '&#013' + '&#013';
-			helpText = helpText + ' connect - fielding' + '&#013'
+			helpText = helpText + ' difference between' + '&#013'
+			helpText = helpText + ' connect & fielding' + '&#013'
 			helpText = helpText + '&#013'
 			helpText = helpText + ' same suit  : x1' + '&#013'
 			helpText = helpText + ' same color : x2' + '&#013'
 			helpText = helpText + ' other color: x3' + '&#013'
 			helpText = helpText + '&#013'
-			helpText = helpText + ' 0 - 2 => OUT' + '&#013'
-			helpText = helpText + ' 3 - 4 => Single' + '&#013'
-			helpText = helpText + ' 5 - 6 => Double' + '&#013'
-			helpText = helpText + ' 7 - 8 => Triple' + '&#013'
-			helpText = helpText + ' 0 - 2 => Home Run' + '&#013'
+			helpText = helpText + ' 0 - 3 => OUT' + '&#013'
+			helpText = helpText + ' 4 - 5 => Single' + '&#013'
+			helpText = helpText + ' 6 - 7 => Double' + '&#013'
+			helpText = helpText + ' 8 - 9 => Triple' + '&#013'
+			helpText = helpText + ' 9 -   => Home Run' + '&#013'
 			helpText = helpText + '&#013'
 			helpText = helpText + ' face card => SAC' + '&#013'
 			helpText = helpText + ' #9, #10 => Long Fly' + '&#013'
 			break;
 		case ('fielding'):
 			helpText = '@fielding' + '&#013' + '&#013';
-			helpText = helpText + ' connect - fielding' + '&#013'
+			helpText = helpText + ' difference between' + '&#013'
+			helpText = helpText + ' connect & fielding' + '&#013'
 			helpText = helpText + '&#013'
 			helpText = helpText + ' same suit  : x1' + '&#013'
 			helpText = helpText + ' same color : x2' + '&#013'
 			helpText = helpText + ' other color: x3' + '&#013'
 			helpText = helpText + '&#013'
-			helpText = helpText + ' 0 - 2 => OUT' + '&#013'
-			helpText = helpText + ' 3 - 4 => Single' + '&#013'
-			helpText = helpText + ' 5 - 6 => Double' + '&#013'
-			helpText = helpText + ' 7 - 8 => Triple' + '&#013'
-			helpText = helpText + ' 9 -  => Home Run' + '&#013'
+			helpText = helpText + ' 0 - 3 => OUT' + '&#013'
+			helpText = helpText + ' 4 - 5 => Single' + '&#013'
+			helpText = helpText + ' 6 - 7 => Double' + '&#013'
+			helpText = helpText + ' 8 - 9 => Triple' + '&#013'
+			helpText = helpText + ' 9 -   => Home Run' + '&#013'
 			break;
 		case ('newball') :
 			helpText = '@newball';

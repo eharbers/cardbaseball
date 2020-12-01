@@ -122,6 +122,8 @@ $('#vNB').hide();
 $('#hNB').click(function () {
 	//console.log('hNB-clicked');
 	newBallFlag = true;
+	$('#hNB').css("border", "4px solid #f44336");
+
 	//console.log('newBallFlag = true');
 
 	/*
@@ -148,6 +150,7 @@ $('#hNB').click(function () {
 $('#vNB').click(function () {
 	//console.log('vNB-clicked');
 	newBallFlag = true;
+	$('#hNB').css("border", "4px solid #f44336");
 	//console.log('newBallFlag = true');
 	atBatStatus = 'newball';
 	turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
@@ -910,6 +913,7 @@ async function executePlay(outcome) { // gebaseerd op de UITKOMST van validateCa
 					refillHand(objHand);
 					await sleep(1000);
 					newBallFlag = false;
+					$('#hNB').css("border", "none");
 					atBatStatus = 'pitch'; // new pitch
 					displayStatus(atBatStatus);
 					sendMessage('Play Ball!');

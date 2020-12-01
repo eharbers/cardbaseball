@@ -691,6 +691,7 @@ function newballAI() {
 	console.log('[newballAI] AI switch 2 facecards')
 	
 	newBallFlag = true;
+	$('#hNB').css("border", "4px solid #f44336");
 	atBatStatus = 'newball';
 	displayStatus(atBatStatus);
 	//turnHome ? $("#home").val(atBatStatus) : $("#visitor").val(atBatStatus);
@@ -711,6 +712,7 @@ function newballAI() {
 			refillHand(objHand);
 			// uit de loop indien er 2 facecards zijn gelegd
 			newBallFlag = false;
+			$('#hNB').css("border", "none");
 			atBatStatus = 'pitch'; // new pitch
 			displayStatus(atBatStatus);
 			sendMessage('Play Ball!');
